@@ -1,0 +1,87 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  PYTHON_VERSION: "3.14"
+  COVERAGE_FLOOR: "81"
+
+jobs:
+  quality:
+    name: Release quality gate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+
+      - name: Ruff
+        run: uv run ruff check backend tests
+
+      - name: Mypy
+        run: uv run mypy backend
+
+      - name: Pytest and coverage
+        run: uv run pytest tests --cov=backend --cov-report=xml --cov-fail-under=${{ env.COVERAGE_FLOOR }}
+
+  publish:
+    name: Publish GitHub release
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract changelog section
+        id: changelog
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          python - "$VERSION" <<'PY' >> "$GITHUB_OUTPUT"
+          import re
+          import sys
+
+          version = sys.argv[1]
+          text = open("CHANGELOG.md", encoding="utf-8").read()
+          match = re.search(
+              rf"## \[{re.escape(version)}\][^\n]*\n(.*?)(?=\n## \[|\Z)",
+              text,
+              re.DOTALL,
+          )
+          body = match.group(1).strip() if match else f"DRIFT {version}"
+          print("body<<CHANGELOG_BODY")
+          print(body)
+          print("CHANGELOG_BODY")
+          PY
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "DRIFT ${{ github.ref_name }}"
+          body: ${{ steps.changelog.outputs.body }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') }}

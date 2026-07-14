@@ -1,0 +1,57 @@
+# DRIFT source configuration
+# Each source is a GitHub repo's built-in Atom release feed:
+#   https://github.com/{repo}/releases.atom
+# This is a real, GitHub-provided feed — no scraping, no auth needed.
+
+sources:
+  - id: pytorch
+    name: "PyTorch"
+    repo: "pytorch/pytorch"
+    feed_url: "https://github.com/pytorch/pytorch/releases.atom"
+    category: "framework"
+
+  - id: tensorrt
+    name: "NVIDIA TensorRT"
+    repo: "NVIDIA/TensorRT"
+    feed_url: "https://github.com/NVIDIA/TensorRT/releases.atom"
+    category: "inference"
+
+  - id: triton
+    name: "Triton"
+    repo: "triton-lang/triton"
+    feed_url: "https://github.com/triton-lang/triton/releases.atom"
+    category: "compiler"
+
+  - id: vllm
+    name: "vLLM"
+    repo: "vllm-project/vllm"
+    feed_url: "https://github.com/vllm-project/vllm/releases.atom"
+    category: "inference"
+
+  - id: transformers
+    name: "Hugging Face Transformers"
+    repo: "huggingface/transformers"
+    feed_url: "https://github.com/huggingface/transformers/releases.atom"
+    category: "framework"
+
+  - id: cutlass
+    name: "NVIDIA CUTLASS"
+    repo: "NVIDIA/cutlass"
+    feed_url: "https://github.com/NVIDIA/cutlass/releases.atom"
+    category: "kernels"
+
+  - id: jax
+    name: "JAX"
+    repo: "google/jax"
+    feed_url: "https://github.com/google/jax/releases.atom"
+    category: "framework"
+
+  - id: nccl
+    name: "NVIDIA NCCL"
+    repo: "NVIDIA/nccl"
+    feed_url: "https://github.com/NVIDIA/nccl/releases.atom"
+    category: "distributed"
+
+# Add/remove sources here — the Scout agent reads this file at startup.
+# Keep it curated (5-10 sources), not exhaustive — quality of reasoning
+# over few sources beats noisy ingestion of many.

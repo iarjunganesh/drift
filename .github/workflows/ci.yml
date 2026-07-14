@@ -1,0 +1,163 @@
+name: CI Quality Gate
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.14"
+  COVERAGE_FLOOR: "81"
+
+jobs:
+  lint:
+    name: Ruff lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+
+      - name: Ruff check
+        run: uv run ruff check backend tests
+
+  typecheck:
+    name: Mypy type check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+
+      - name: Mypy
+        run: uv run mypy backend
+
+  tests:
+    name: Tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+
+      - name: Run tests with coverage gate
+        run: >-
+          uv run pytest tests
+          --cov=backend
+          --cov-report=term-missing
+          --cov-report=xml
+          --cov-fail-under=${{ env.COVERAGE_FLOOR }}
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+          if-no-files-found: ignore
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          flags: pytest
+          name: drift-pytest
+          fail_ci_if_error: false
+
+  frontend:
+    name: Frontend build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check and build
+        run: npm run build
+
+  docs:
+    name: Documentation hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Require project documentation
+        run: |
+          test -f README.md
+          test -f docs/ARCHITECTURE.md
+          test -f docs/INITIATIVES.md
+          test -f CHANGELOG.md
+          test -f docs/adr/README.md
+          test -f docs/adr/001-fixture-first-judge-path.md
+
+      - name: Reject unfinished public documentation markers
+        run: |
+          if grep -RInE '\[to fill|TODO.*(README|ARCHITECTURE|CHANGELOG)' \
+            README.md docs/ARCHITECTURE.md CHANGELOG.md docs/adr docs/RUNBOOK.md; then
+            echo "Unfinished public documentation marker found."
+            exit 1
+          fi
+
+      - name: Check core documentation paths
+        run: |
+          for path in docs/ARCHITECTURE.md docs/INITIATIVES.md CHANGELOG.md \
+            docs/RUNBOOK.md docs/BUILD_SEQUENCE.md; do
+            test -f "$path"
+          done

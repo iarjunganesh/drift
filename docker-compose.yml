@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_DB: drift
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - drift-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d drift"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DRIFT_MODE: fixture
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/drift
+      FRONTEND_ORIGIN: http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  drift-postgres:

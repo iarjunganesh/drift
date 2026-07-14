@@ -1,0 +1,17 @@
+# Runtime requirements for Docker/Railway and simple pip users.
+# uv.lock plus the dev dependency group is the reproducible development setup.
+alembic>=1.18.5
+asyncpg>=0.31.0
+feedparser>=6.0.12
+fastapi>=0.139.0
+httpx>=0.28.1
+openai>=2.45.0
+pgvector>=0.5.0
+pydantic>=2.13.4
+pydantic-settings>=2.14.2
+python-multipart>=0.0.32
+pyyaml>=6.0.3
+sqlalchemy[asyncio]>=2.0.51
+structlog>=26.1.0
+tenacity>=9.1.4
+uvicorn[standard]>=0.51.0

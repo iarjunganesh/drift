@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "raw_item_ids": [101],
+    "title": "Example: review an inference-runtime release before rollout",
+    "summary": "This fixture demonstrates how DRIFT presents a release item that warrants a deployment review.",
+    "why_it_matters": "An inference-runtime upgrade can change kernel selection, memory use, or supported hardware. Treat this as an example workflow, not a claim about a specific version.",
+    "what_to_check": "Compare the release notes with your pinned runtime, GPU architecture, serving flags, and latency baseline before promoting the upgrade.",
+    "severity": "breaking",
+    "affected_libraries": ["vllm"],
+    "source_citations": ["https://github.com/vllm-project/vllm/releases"],
+    "confidence": 0.86,
+    "model_used": "fixture-curated",
+    "created_at": "2026-07-14T09:00:00Z"
+  },
+  {
+    "id": 2,
+    "raw_item_ids": [102],
+    "title": "Example: validate framework and compiler compatibility",
+    "summary": "This fixture shows a compatibility-oriented briefing item for a framework release.",
+    "why_it_matters": "Framework releases can expose compiler or extension incompatibilities that only appear in a production build or a less common model path.",
+    "what_to_check": "Run the affected training or inference smoke test with your pinned compiler and custom extensions before changing the production image.",
+    "severity": "minor",
+    "affected_libraries": ["pytorch", "triton"],
+    "source_citations": ["https://github.com/pytorch/pytorch/releases", "https://github.com/triton-lang/triton/releases"],
+    "confidence": 0.78,
+    "model_used": "fixture-curated",
+    "created_at": "2026-07-13T09:00:00Z"
+  },
+  {
+    "id": 3,
+    "raw_item_ids": [103],
+    "title": "Example: assess a distributed-communication update",
+    "summary": "This fixture demonstrates a lower-priority item with an explicit confidence signal.",
+    "why_it_matters": "Distributed communication changes can affect multi-node behavior without altering single-node development results.",
+    "what_to_check": "If you use multi-node training, run a representative collective-communication test before scheduling an upgrade.",
+    "severity": "security",
+    "affected_libraries": ["nccl"],
+    "source_citations": ["https://github.com/NVIDIA/nccl/releases"],
+    "confidence": 0.69,
+    "model_used": "fixture-curated",
+    "created_at": "2026-07-12T09:00:00Z"
+  }
+]

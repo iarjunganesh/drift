@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">DRIFT — Release intelligence for GPU and AI infrastructure</title>
+  <desc id="desc">A dark blue release intelligence banner with a signal path from source releases to cited engineering checks.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#eef5ff"/>
+      <stop offset="1" stop-color="#dfe9ff"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" x2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" rx="28" fill="url(#bg)"/>
+  <circle cx="1050" cy="34" r="220" fill="#2563eb" opacity=".08"/>
+  <circle cx="1160" cy="270" r="190" fill="#0f766e" opacity=".08"/>
+  <g fill="none" stroke="url(#line)" stroke-width="3" opacity=".86">
+    <path d="M720 84h78l44 43h92l50-50h122"/>
+    <path d="M720 150h130l42 42h82l55-55h78"/>
+    <path d="M720 216h82l44-42h105l42 42h90"/>
+  </g>
+  <g fill="#fff" stroke="#2563eb" stroke-width="3">
+    <circle cx="720" cy="84" r="9"/><circle cx="842" cy="127" r="9"/><circle cx="934" cy="127" r="9"/><circle cx="984" cy="77" r="9"/><circle cx="1106" cy="77" r="9"/>
+    <circle cx="720" cy="150" r="9"/><circle cx="850" cy="150" r="9"/><circle cx="892" cy="192" r="9"/><circle cx="974" cy="192" r="9"/><circle cx="1029" cy="137" r="9"/>
+    <circle cx="720" cy="216" r="9"/><circle cx="802" cy="216" r="9"/><circle cx="846" cy="174" r="9"/><circle cx="951" cy="174" r="9"/><circle cx="993" cy="216" r="9"/>
+  </g>
+  <text x="74" y="116" fill="#0b1b3a" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="66" font-weight="800" letter-spacing="8">DRIFT</text>
+  <text x="80" y="158" fill="#1e3a8a" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="22" font-weight="600">Release intelligence for GPU + AI infrastructure</text>
+  <text x="80" y="207" fill="#334155" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18">What changed?  Why does it matter?  What should we check?</text>
+  <rect x="80" y="232" width="226" height="34" rx="17" fill="#0f766e"/>
+  <text x="193" y="255" text-anchor="middle" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" font-weight="700">CITED · BOUNDED · INSPECTABLE</text>
+</svg>
