@@ -21,18 +21,23 @@ instead of Work & Productivity.
       reasoning is genuinely sharp. Don't fully delegate this step.
 
 ## Day 5 — Briefing + search + chat
-- [ ] Codex: `build_daily_briefing()`, pgvector search, `/chat` endpoint
-- [ ] Model tier: dev for briefing, live (Terra) for chat
+- [x] Codex: deterministic `build_daily_briefing()`, fixture search, and
+      `/chat`; local `DRIFT_MODE=live` is retrieve-first chat over cited
+      fixture evidence
+- [ ] Codex: pgvector search and live-store retrieval
+- [x] Model tier: live (Terra) for bounded local grounded chat
 
 ## Day 6-7 — Frontend
-- [ ] Codex: briefing hero screen, citation badges, confidence-flag UI
+- [x] Codex: fixture briefing hero screen with severity, confidence, and
+      source-aware presentation
 - [ ] No new model calls — UI wiring only
 
 ## Day 8 — Final content + docs
 - [ ] Re-run best 3-5 real examples on Tier.FINAL (Sol), save outputs
 - [ ] Fill in README's "How Codex and GPT-5.6 were used" section —
       required for submission, judged under Technological Implementation
-- [ ] Capture the /feedback Codex Session ID from your main build session
+- [x] Record the primary `/feedback` Codex Session ID:
+      `019f62b9-10b7-7d82-a463-e6eb1192141c`
 - [ ] docs/ARCHITECTURE.md polish, screenshots
 
 ## Day 9 — Record, submit
@@ -64,14 +69,15 @@ to its repository-specific Codecov badge.
    Verify Railway CORS allows the Vercel origin before treating the hosted
    briefing as browser-connected.
 
-The checked-in `codecov.yml` already defines the pytest project, report path,
-and 81% project/patch floor. The floor is intentionally separate from the
-99–100% engineering target so live-stage implementation can be tested honestly.
+The checked-in `codecov.yml` defines the pytest project, report path, and a
+100% project/patch floor for implemented code. Explicit live-stage stubs keep
+their `NotImplementedError` boundary visible while excluding only that boundary
+until the stage is implemented and tested.
 
 ## Codex project initiatives
 
-The baseline and hosted-deployment follow-up are supported by three project
-initiatives:
+The baseline, hosted-deployment follow-up, and current release candidate are
+supported by four project initiatives:
 
 - Foundation and inspectable vertical slice —
   `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -79,5 +85,7 @@ initiatives:
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`
 - Hosted deployment and README follow-up —
   `019f6253-ddfc-7272-8077-e34dfb3aee84`
+- Grounded live chat, resilience, and locked delivery (primary candidate
+  initiative) — `019f62b9-10b7-7d82-a463-e6eb1192141c`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.

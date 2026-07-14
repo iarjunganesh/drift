@@ -9,7 +9,13 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+
+# Local development uses a gitignored .env file. Existing process environment
+# variables win so deployed environments retain their secret-management model.
+load_dotenv(REPOSITORY_ROOT / ".env", override=False)
 
 
 @dataclass(frozen=True)
@@ -29,11 +35,29 @@ class Settings:
     max_spend_usd: float = float(os.environ.get("DRIFT_MAX_SPEND_USD", "10"))
     spend_alert_usd: float = float(os.environ.get("DRIFT_SPEND_ALERT_USD", "5"))
     max_call_usd: float = float(os.environ.get("DRIFT_MAX_CALL_USD", "1"))
+    model_timeout_seconds: float = float(os.environ.get("DRIFT_MODEL_TIMEOUT_SECONDS", "20"))
+    model_queue_timeout_seconds: float = float(
+        os.environ.get("DRIFT_MODEL_QUEUE_TIMEOUT_SECONDS", "2")
+    )
+    model_max_attempts: int = int(os.environ.get("DRIFT_MODEL_MAX_ATTEMPTS", "3"))
+    model_retry_base_seconds: float = float(
+        os.environ.get("DRIFT_MODEL_RETRY_BASE_SECONDS", "0.25")
+    )
+    model_retry_max_seconds: float = float(
+        os.environ.get("DRIFT_MODEL_RETRY_MAX_SECONDS", "2")
+    )
+    model_circuit_failure_threshold: int = int(
+        os.environ.get("DRIFT_MODEL_CIRCUIT_FAILURE_THRESHOLD", "3")
+    )
+    model_circuit_reset_seconds: float = float(
+        os.environ.get("DRIFT_MODEL_CIRCUIT_RESET_SECONDS", "30")
+    )
+    model_max_concurrency: int = int(os.environ.get("DRIFT_MODEL_MAX_CONCURRENCY", "2"))
     spend_ledger_path: str = os.environ.get(
         "DRIFT_SPEND_LEDGER_PATH", str(REPOSITORY_ROOT / ".drift" / "spend-ledger.json")
     )
     app_name: str = "DRIFT"
-    app_version: str = "0.1.0"
+    app_version: str = "0.2.0"
 
     def validate(self) -> None:
         if self.mode not in {"fixture", "live"}:
@@ -44,6 +68,22 @@ class Settings:
             raise RuntimeError("DRIFT_SPEND_ALERT_USD must be within the configured budget.")
         if not 0 < self.max_call_usd <= self.max_spend_usd:
             raise RuntimeError("DRIFT_MAX_CALL_USD must be within the configured budget.")
+        if not 0 < self.model_timeout_seconds <= 120:
+            raise RuntimeError("DRIFT_MODEL_TIMEOUT_SECONDS must be between 0 and 120.")
+        if not 0 < self.model_queue_timeout_seconds <= 30:
+            raise RuntimeError("DRIFT_MODEL_QUEUE_TIMEOUT_SECONDS must be between 0 and 30.")
+        if not 1 <= self.model_max_attempts <= 5:
+            raise RuntimeError("DRIFT_MODEL_MAX_ATTEMPTS must be between 1 and 5.")
+        if self.max_call_usd * self.model_max_attempts > self.max_spend_usd:
+            raise RuntimeError("DRIFT retry envelope must fit within DRIFT_MAX_SPEND_USD.")
+        if not 0 < self.model_retry_base_seconds <= self.model_retry_max_seconds <= 30:
+            raise RuntimeError("DRIFT model retry delays must be positive and no more than 30 seconds.")
+        if not 1 <= self.model_circuit_failure_threshold <= 10:
+            raise RuntimeError("DRIFT_MODEL_CIRCUIT_FAILURE_THRESHOLD must be between 1 and 10.")
+        if not 1 <= self.model_circuit_reset_seconds <= 300:
+            raise RuntimeError("DRIFT_MODEL_CIRCUIT_RESET_SECONDS must be between 1 and 300.")
+        if not 1 <= self.model_max_concurrency <= 20:
+            raise RuntimeError("DRIFT_MODEL_MAX_CONCURRENCY must be between 1 and 20.")
         if self.mode == "live" and not self.openai_api_key:
             raise RuntimeError(
                 "OPENAI_API_KEY is required when DRIFT_MODE=live. Copy .env.example "

@@ -15,13 +15,27 @@ NOT bring in anything related to its media-generation dependencies
 (Genblaze, FFmpeg, B2) — DRIFT has no media component.
 """
 
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.agents.briefing import answer_question, build_daily_briefing
+from backend.agents.briefing import (
+    answer_question,
+    answer_question_with_model,
+    build_daily_briefing,
+)
+from backend.core.budget import BudgetExceededError, SpendGuard
 from backend.core.config import settings
+from backend.core.model_router import Tier, create_async_client, get_model
+from backend.core.resilience import (
+    CircuitBreaker,
+    ModelCallResilience,
+    ModelCapacityExceededError,
+    ProviderCircuitOpenError,
+    RetryPolicy,
+)
 from backend.core.store import InsightStore
 from backend.models.schema import BriefingItem, ChatRequest, ChatResponse, Insight
 
@@ -29,10 +43,34 @@ from backend.models.schema import BriefingItem, ChatRequest, ChatResponse, Insig
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings.validate()
-    if settings.mode != "fixture":
-        raise RuntimeError("Live mode has not been enabled yet; use DRIFT_MODE=fixture.")
     app.state.insight_store = InsightStore.from_json(settings.fixture_path)
-    yield
+    client = None
+    if settings.mode == "live":
+        client = create_async_client(settings.openai_api_key, settings.model_timeout_seconds)
+        app.state.openai_client = client
+        app.state.model_call_limiter = asyncio.Semaphore(settings.model_max_concurrency)
+        app.state.model_resilience = ModelCallResilience(
+            retry_policy=RetryPolicy(
+                timeout_seconds=settings.model_timeout_seconds,
+                max_attempts=settings.model_max_attempts,
+                base_delay_seconds=settings.model_retry_base_seconds,
+                max_delay_seconds=settings.model_retry_max_seconds,
+            ),
+            circuit_breaker=CircuitBreaker(
+                failure_threshold=settings.model_circuit_failure_threshold,
+                reset_seconds=settings.model_circuit_reset_seconds,
+            ),
+        )
+        app.state.spend_guard = SpendGuard(
+            settings.spend_ledger_path,
+            settings.max_spend_usd,
+            settings.spend_alert_usd,
+        )
+    try:
+        yield
+    finally:
+        if client is not None:
+            await client.close()
 
 
 app = FastAPI(
@@ -126,9 +164,35 @@ async def chat(request: ChatRequest) -> ChatResponse:
     insights = app.state.insight_store.search(request.question, limit=3)
     if not insights:
         raise HTTPException(status_code=404, detail="No matching DRIFT insights.")
+    if settings.mode == "live":
+        try:
+            answer = await answer_question_with_model(
+                request.question,
+                insights,
+                client=app.state.openai_client,
+                spend_guard=app.state.spend_guard,
+                max_call_usd=settings.max_call_usd,
+                model_call_limiter=app.state.model_call_limiter,
+                model_queue_timeout_seconds=settings.model_queue_timeout_seconds,
+                resilience=app.state.model_resilience,
+            )
+        except BudgetExceededError as exc:
+            raise HTTPException(status_code=429, detail=str(exc)) from exc
+        except (ModelCapacityExceededError, ProviderCircuitOpenError) as exc:
+            raise HTTPException(status_code=503, detail=str(exc), headers={"Retry-After": "2"}) from exc
+        except Exception as exc:
+            raise HTTPException(
+                status_code=502,
+                detail="The grounded model response could not be completed.",
+            ) from exc
+        model_used = get_model(Tier.LIVE)
+    else:
+        answer = answer_question(request.question, insights)
+        model_used = "fixture-curated"
+
     return ChatResponse(
-        answer=answer_question(request.question, insights),
+        answer=answer,
         source_citations=sorted({url for item in insights for url in item.source_citations}),
-        model_used="fixture-curated",
+        model_used=model_used,
         grounded_insight_ids=[item.id for item in insights if item.id is not None],
     )

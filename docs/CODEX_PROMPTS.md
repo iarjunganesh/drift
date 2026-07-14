@@ -22,8 +22,8 @@ agent framework, following the pattern used in the sibling repo
 C:\ws\bankers-wrapped\backend\agents\base.py: an abstract BaseAgent with an
 async run(self, input_data) method that subclasses implement, and a
 __call__ wrapper that logs agent.start / agent.complete / agent.error via
-structlog around the call. Add structlog as a dependency in
-backend/requirements.txt if missing.
+structlog around the call. Add structlog to pyproject.toml if missing, then
+refresh uv.lock.
 
 Then implement backend/agents/scout.py fully (it currently has
 Codex: implement fetch_source()... TODOs). Requirements:
@@ -33,10 +33,9 @@ Codex: implement fetch_source()... TODOs). Requirements:
   be wired in a later step — for now assume an async SQLAlchemy session is
   passed in or accessible via backend/models/schema.py's session factory)
 - run_scout() iterates all sources in sources.yaml, calling fetch_source()
-  with retry/backoff. Use tenacity (@retry, stop_after_attempt(3),
-  exponential backoff) the same way
-  C:\ws\bankers-wrapped\backend\media\genblaze_client.py does it — add
-  tenacity to requirements.txt.
+  with bounded retry/backoff through backend/core/resilience.py. Keep timeout,
+  cancellation, and failure classification explicit; do not add a second retry
+  framework.
 - Every fetch logs source name, item count, and duration via structlog,
   following the BaseAgent pattern above.
 
@@ -57,7 +56,7 @@ TODO. Implement it fully:
   exist as placeholders, do not rename them) but make sure they're on
   properly declared SQLAlchemy ORM classes with pgvector's Vector column
   type for the insights embedding column (add pgvector to
-  backend/requirements.txt if missing)
+  pyproject.toml if missing, then refresh uv.lock)
 - Add a get_session() async context manager / dependency for FastAPI to use
 - Add an Alembic migration setup (alembic.ini + migrations/ dir) with one
   initial migration that creates all tables, including the pgvector
@@ -145,14 +144,15 @@ C:\ws\bankers-wrapped\tests\). At minimum:
   (use an in-memory or throwaway Postgres/pgvector — sqlite won't support
   pgvector, so either spin up a test Postgres via testcontainers or mark
   these tests to skip if no DATABASE_URL is set)
-- Add pytest-asyncio, pytest-mock, pytest-cov to backend/requirements.txt
+- Add pytest-asyncio, pytest-mock, pytest-cov to pyproject.toml's dev group
+  and refresh uv.lock
 
 Then add .github/workflows/ci.yml: install deps, ruff check, mypy
 backend/, pytest with --cov=backend --cov-fail-under=<pick a realistic
 number, e.g. 60> --cov-report=xml. Model the workflow structure on
 C:\ws\bankers-wrapped\.github\workflows\ci.yml but adapt the dependency
 install step to drift's actual stack (no ffmpeg/uv needed unless drift
-also adopts uv — plain pip is fine). Make sure the coverage number in the
+uses uv and its frozen lockfile). Make sure the coverage number in the
 workflow matches whatever you state in the README — don't let them drift
 apart like they do in the bankers-wrapped README (badge says 80%, CI
 enforces 70%).
@@ -162,7 +162,8 @@ enforces 70%).
 
 ```
 Working in C:\ws\drift. Add:
-- backend/Dockerfile (python slim base, install requirements, run uvicorn)
+- a root Dockerfile (python slim base, install from frozen `uv.lock`, run
+  uvicorn)
 - docker-compose.yml at repo root with three services: backend, a
   pgvector/pgvector Postgres service (with a volume + the vector extension
   pre-enabled), and frontend (once frontend has real source — if frontend
@@ -195,20 +196,22 @@ changes:
    copyright holder/year appropriately for this project (check with the
    repo owner if unsure — do not assume the same name unless it matches).
 
-2. Fill in README.md's "How Codex and GPT-5.6 were used" section — replace
-   the [to fill: ...] placeholders with an honest, specific account: which
-   parts Codex built end-to-end (agents, DB wiring, CI, docker), where
-   GPT-5.6 tiers (Luna/Terra/Sol) were used and why (Luna for
-   synthesizer clustering while iterating, Terra/Sol for higher-stakes
-   insight generation and chat), and what key decisions were made
+2. Fill in README.md's "How Codex and GPT-5.6 were used" section with an
+   honest, specific account: which parts Codex built end-to-end (typed agents,
+   bounded live chat, CI, Docker, and documentation), where GPT-5.6 tiers
+   were used and why, and what key decisions were made
    (e.g. why a hand-rolled agent pipeline instead of a framework, why
    pgvector over a separate vector DB). Base this on the actual git
    history/diffs once Prompts 1-6 have been run — don't fabricate specifics.
 
-3. Record the two project initiative Session IDs in `docs/INITIATIVES.md` and
-   the README. The supplied initiative IDs are:
+3. Record all project initiative Session IDs in `docs/INITIATIVES.md` and the
+   README. The supplied initiative IDs are:
    - `019f61e7-1ea1-7742-9acc-99d62f39b888` — foundation and vertical slice
    - `019f61fc-c32e-7d92-9d2e-0bd9083d08e7` — publication and judge readiness
+   - `019f6253-ddfc-7272-8077-e34dfb3aee84` — hosted deployment and README
+     follow-up
+   - `019f62b9-10b7-7d82-a463-e6eb1192141c` — primary core-functionality
+     session for the `0.2.0` release
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.

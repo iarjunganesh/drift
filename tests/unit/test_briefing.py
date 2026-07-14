@@ -34,3 +34,10 @@ def test_briefing_ranks_security_then_breaking() -> None:
 
 def test_chat_explains_when_no_insight_matches() -> None:
     assert "could not find" in answer_question("unknown", [])
+
+
+def test_chat_composes_retrieved_fixture_evidence() -> None:
+    answer = answer_question("vllm", [make_insight(1, ChangeSeverity.MINOR, 0.9)])
+
+    assert "Insight 1" in answer
+    assert "What to check" in answer

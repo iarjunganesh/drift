@@ -10,8 +10,26 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-15
+
+This release adds a bounded, evidence-grounded local live-chat path while
+preserving the fixture-first release-analysis boundary. It does not enable live
+feed ingestion, generated Insight records, embeddings, or pgvector retrieval.
+
 ### Added
 
+- Bounded live-model resilience: queue timeout, concurrency bulkhead,
+  per-attempt timeout, jittered transient retry, circuit breaker, and
+  cancellation-safe conservative spend settlement.
+- ADR-009 documenting model-call resilience and a single frozen dependency
+  resolution path.
+- Deterministic coverage for live-chat success, provider failure, budget
+  exhaustion, model routing, and typed agent orchestration.
+- `DRIFT_MODE=live` can now call the OpenAI Responses API for retrieve-first,
+  cited chat over the fixture store, with a local spend reservation.
+- Local `.env` loading for development without overriding deployed environment
+  variables.
+- ADR-008 documenting the limited live-chat boundary.
 - `GET /` service metadata endpoint for hosted API discovery.
 - Ordered OpenAPI groups for `system`, `briefing`, `search`, and `chat`.
 - Vercel configuration rooted at `frontend/`, with the Railway fixture API as
@@ -21,17 +39,32 @@ the annotated `v0.1.0` tag.
 
 ### Changed
 
+- Docker now installs from the frozen `uv.lock` dependency set.
+- Raised local, CI, release, and Codecov coverage enforcement to 100% for
+  implemented code; explicit future-stage `NotImplementedError` boundaries are
+  excluded only at the raise line.
 - Public documentation now links to the verified Railway fixture API at
   `https://drift-api-prod.up.railway.app` and the deployed Vercel frontend at
   `https://dr1ftless.vercel.app`.
 - The README uses the Codecov badge as the coverage signal and links releases
   to the GitHub releases page.
+- Package, API, and frontend metadata now identify this release as `0.2.0`.
+- The frontend lockfile overrides Next’s nested PostCSS to patched `8.5.14`;
+  the production dependency audit reports zero vulnerabilities.
+
+### Removed
+
+- The duplicate broad runtime requirements file and the unused direct
+  `tenacity` dependency; `uv.lock` is the single Python dependency resolution
+  authority.
 
 ### Fixed
 
 - Railway’s root URL returns DRIFT service metadata instead of a 404.
 - Uvicorn container output is redirected to stdout so Railway does not label
   informational startup logs as errors.
+- The frontend labels live mode as grounded chat over fixture evidence rather
+  than live release analysis.
 
 ## [0.1.0] - 2026-07-14
 
@@ -89,4 +122,5 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.2.0]: #020---2026-07-15
 [0.1.0]: #010---2026-07-14

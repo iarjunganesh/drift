@@ -7,7 +7,7 @@ truth boundary in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ## Fixture demo — current judge path
 
 1. Create a virtual environment and synchronize the locked development group:
-   `uv venv .venv` followed by `uv sync --group dev`.
+   `uv venv .venv` followed by `uv sync --locked --group dev`.
 2. Copy `.env.example` to `.env`; leave `DRIFT_MODE=fixture`.
 3. Start `uv run uvicorn backend.main:app --reload` from the repository root.
 4. Open `/docs`, inspect `/briefing`, search `vllm`, then send a chat question.
@@ -17,14 +17,24 @@ truth boundary in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 This path uses committed example data and makes no external calls.
 
-## Live demo — enable only after the live pipeline is verified
+## Live grounded-chat demo — fixture evidence, real model response
 
 1. Copy `.env.example` to `.env`; keep the file untracked.
 2. Add `OPENAI_API_KEY` locally. Do not send it through chat, issues, or commits.
-3. Confirm `DRIFT_MAX_SPEND_USD=10`, alert `$5`, and per-call reservation `$1`.
-4. Run one small source fixture first, inspect `.drift/spend-ledger.json`, then
-   run only the selected 3–5 final examples.
-5. Capture source release URLs and the output’s model/audit field for the demo.
+3. Set `DRIFT_MODE=live`, then confirm `DRIFT_MAX_SPEND_USD=10`, alert `$5`,
+   and per-attempt reservation `$1`. Keep
+   `DRIFT_MAX_CALL_USD * DRIFT_MODEL_MAX_ATTEMPTS` within the project spend
+   ceiling.
+4. Start the API and ask one question that matches a fixture insight. Inspect
+   `.drift/spend-ledger.json`; the response should report `gpt-5.6-terra` and
+   preserve the retrieved source citations.
+5. The request is queue-bounded and uses a per-attempt timeout, jittered
+   transient retry, and a circuit breaker. A `503` with `Retry-After` means
+   model capacity is busy or the circuit is open; retry later. A `429` means
+   the local spend guard blocked the request.
+6. This is model-backed chat over fixture evidence, not live release analysis.
+   Scout, Synthesizer, embeddings, and generated Insight records remain future
+   work.
 
 ## Recording order
 
@@ -41,10 +51,11 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The three Codex initiatives associated with this baseline and deployment
-follow-up are listed in
+The four Codex initiatives associated with this baseline, deployment follow-up,
+and current release candidate are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
 
 - Foundation: `019f61e7-1ea1-7742-9acc-99d62f39b888`
 - Publication/readiness: `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`
 - Hosted deployment/README follow-up: `019f6253-ddfc-7272-8077-e34dfb3aee84`
+- Primary live-chat/resilience work: `019f62b9-10b7-7d82-a463-e6eb1192141c`

@@ -13,6 +13,8 @@ decisions compose.
 | [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; implementation in progress |
 | [006](006-ci-quality-gates.md) | CI quality gates and coverage ratchet | Accepted |
 | [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted fixture endpoints live, browser CORS verification pending |
+| [008](008-live-grounded-chat.md) | Live grounded chat over the fixture store | Accepted |
+| [009](009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery | Accepted |
 
 When implementation invalidates a decision, amend the original record or add a
 new ADR. Do not silently rewrite the decision history in code comments or

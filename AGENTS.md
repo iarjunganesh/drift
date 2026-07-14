@@ -6,11 +6,12 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.1.0` fixture-first baseline. The deterministic API and
-small Next.js briefing view are usable; feed retrieval, PostgreSQL/pgvector
-persistence, embeddings, and model-backed insight generation are still
-implementation boundaries. The committed fixture path is not live release
-analysis.
+**Current phase:** `v0.2.0` fixture-first release. The deterministic API and
+small Next.js briefing view are usable. `DRIFT_MODE=live` adds bounded,
+retrieve-first model chat over cited fixture evidence only; feed retrieval,
+PostgreSQL/pgvector persistence, embeddings, and model-backed Insight
+generation are still implementation boundaries. The committed fixture path is
+not live release analysis.
 
 ## Key commands
 
@@ -84,6 +85,18 @@ records as fresh release analysis.
   `npm --prefix frontend run build`.
 - For documentation or architecture changes, verify the required Markdown
   paths and the generated assets under `assets/architecture/`.
+
+## Git history
+
+- Write a concise, conventional commit subject that names the substantive
+  capability or fix; never use a generic message such as `release: vX.Y.Z` on
+  its own.
+- For a multi-surface change, include a body derived from the relevant
+  `CHANGELOG.md` summary: user-facing behavior, reliability or safety changes,
+  dependency/delivery changes, and verification where material.
+- Before tagging, ensure the commit message, version metadata, and changelog
+  describe the same ground truth. If a local tag points at an amended commit,
+  recreate that local tag before any push.
 
 ## Deployment and demo boundary
 

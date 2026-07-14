@@ -54,7 +54,7 @@ def generate_insight(
     and model_used from the resolved model name (audit trail — reuse
     the provenance-manifest pattern from bankers-wrapped).
     """
-    raise NotImplementedError
+    raise NotImplementedError  # pragma: no cover - explicit live-insight boundary
 
 
 def run_insight_batch(

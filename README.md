@@ -99,9 +99,10 @@ fresh live release analysis.
 
 <sub>Click to enlarge: <a href="assets/architecture/architecture-diagram-light.svg">light SVG</a> / <a href="assets/architecture/architecture-diagram-dark.svg">dark SVG</a> · Downloadable <a href="assets/architecture/architecture-diagram-light.png">light PNG</a> / <a href="assets/architecture/architecture-diagram-dark.png">dark PNG</a> · Source: <a href="assets/architecture/architecture-diagram.mmd"><code>architecture-diagram.mmd</code></a></sub>
 
-**In short:** the fixture path is complete and no-key; the feed, Postgres,
-pgvector, embedding, and model stages are explicit implementation boundaries,
-not hidden claims of production readiness.
+**In short:** the fixture path is complete and no-key; a bounded local
+model-backed chat path is available over its cited evidence. Feed ingestion,
+Postgres, pgvector, embeddings, and generated Insight stages remain explicit
+implementation boundaries, not hidden claims of production readiness.
 
 > **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
@@ -109,19 +110,37 @@ not hidden claims of production readiness.
 
 ### Codex project initiatives
 
-The baseline and publication follow-up are tied to three project initiatives:
+The baseline, publication follow-up, and current release candidate are tied to
+four project initiatives. The final row is the primary implementation session
+for this release candidate.
 
 | Initiative | Session ID | Focus |
 | --- | --- | --- |
 | Foundation and inspectable vertical slice | `019f61e7-1ea1-7742-9acc-99d62f39b888` | Fixture API, typed contracts, agent boundaries, safety invariants, tests |
 | Publication and judge-readiness baseline | `019f61fc-c32e-7d92-9d2e-0bd9083d08e7` | Documentation, architecture assets, CI/Codecov, deployment and submission surfaces |
 | Hosted deployment and README follow-up | `019f6253-ddfc-7272-8077-e34dfb3aee84` | Railway/Vercel URLs, release badges, and public demo documentation |
+| Grounded live chat, resilience, and locked delivery | `019f62b9-10b7-7d82-a463-e6eb1192141c` | Primary `0.2.0` candidate work: local live chat, async safeguards, locked delivery, and full implemented-code coverage |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
+### How Codex and GPT-5.6 were used
+
+Codex was used to build and audit the typed FastAPI stages, fixture contracts,
+tests, deployment files, architecture records, and the bounded async
+model-call path. The primary core-functionality session is
+`019f62b9-10b7-7d82-a463-e6eb1192141c`; the earlier initiative records preserve
+the foundation and publication work.
+
+GPT-5.6 is used only when a local operator enables `DRIFT_MODE=live` and
+provides an API key. The `live` tier receives at most three retrieved,
+citation-bearing fixture insights as untrusted data and answers only from that
+evidence. Fixture mode makes no provider call. This is not live release
+analysis, and Scout, embeddings, generated Insight records, and pgvector
+retrieval remain explicit implementation boundaries.
+
 ### Architecture Decision Records
 
-Seven decisions currently constrain the implementation. They are intentionally
+Nine decisions currently constrain the implementation. They are intentionally
 short; the architecture document explains how they compose.
 
 | ADR | Decision |
@@ -131,8 +150,10 @@ short; the architecture document explains how they compose.
 | [003](docs/adr/003-citations-and-visible-uncertainty.md) | Citations, confidence, audit labels, and uncertainty are visible |
 | [004](docs/adr/004-local-budget-guard.md) | Local spend guard around live iteration |
 | [005](docs/adr/005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store |
-| [006](docs/adr/006-ci-quality-gates.md) | CI gates with an 81% floor and a 99–100% target |
+| [006](docs/adr/006-ci-quality-gates.md) | CI gates with a 100% implemented-code floor |
 | [007](docs/adr/007-vercel-railway-deployment.md) | Vercel frontend + Railway API/database deployment shape |
+| [008](docs/adr/008-live-grounded-chat.md) | Live grounded chat over the cited fixture store |
+| [009](docs/adr/009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery |
 
 ---
 
@@ -144,7 +165,7 @@ Agent code must not hard-code provider model names. The intended tiers are:
 | Tier | Intended job | Status |
 | --- | --- | --- |
 | `dev` / Luna | Classification, clustering, and prompt iteration | Routed boundary prepared |
-| `live` / Terra | Retrieve-first grounded chat | Target path |
+| `live` / Terra | Retrieve-first grounded chat | Bounded local live path |
 | `final` / Sol | Three to five reviewed demo insights | Target path |
 
 Every live insight must preserve:
@@ -160,6 +181,11 @@ must never become model instructions or authorization to act on infrastructure.
 
 The local [SpendGuard](backend/core/budget.py) is a development safeguard;
 provider-side limits remain required for a deployed service.
+
+Live model requests are additionally bounded by a queue timeout and concurrency
+bulkhead, a per-attempt timeout, transient-failure retries with jitter, and a
+closed/open/half-open circuit breaker. A cancelled or uncertain provider attempt
+is accounted for conservatively; it is never silently treated as free.
 
 ---
 
@@ -178,10 +204,10 @@ provider-side limits remain required for a deployed service.
 | **Hosting** | [![Railway](https://img.shields.io/badge/Backend-Railway-0B0D0E?logo=railway&logoColor=white)](https://railway.app/) [![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/) | Railway API/database; Vercel Next.js frontend |
 | **Observability** | [![structlog](https://img.shields.io/badge/structlog-JSON-4A90E2)](https://www.structlog.org/) | Structured logs and explicit request/stage boundaries |
 
-Python dependencies are declared in [pyproject.toml](pyproject.toml), resolved
-in [uv.lock](uv.lock), and mirrored for container deployment in
-[backend/requirements.txt](backend/requirements.txt). JavaScript dependencies
-are locked in [frontend/package-lock.json](frontend/package-lock.json).
+Python dependencies are declared in [pyproject.toml](pyproject.toml) and
+resolved once in [uv.lock](uv.lock); local, CI, and container installs all use
+that frozen lockfile. JavaScript dependencies are locked in
+[frontend/package-lock.json](frontend/package-lock.json).
 
 ---
 
@@ -239,7 +265,7 @@ Copy-Item .env.example .env
 
 # 3. Install locked Python dependencies
 uv venv .venv
-uv sync --group dev
+uv sync --locked --group dev
 
 # 4. Start the API
 uv run uvicorn backend.main:app --reload
@@ -296,7 +322,6 @@ drift/
 │   ├── models/           # Pydantic domain and API contracts
 │   ├── main.py           # FastAPI app: health, briefing, search, chat
 │   ├── sources.yaml      # Primary release-feed configuration
-│   └── requirements.txt  # Runtime-only container requirements
 ├── frontend/             # Next.js + React + TypeScript briefing view
 │   ├── .nvmrc            # Node.js 24.x local/runtime selection
 │   └── vercel.json       # Vercel build settings and Railway API URL
@@ -311,9 +336,9 @@ drift/
 │   ├── INITIATIVES.md      # Codex project initiative/session records
 │   ├── BUILD_SEQUENCE.md  # Implementation sequence and GitHub/Codecov setup
 │   ├── RUNBOOK.md         # Fixture/live demo procedure
-│   └── adr/               # Architecture Decision Records 001–007
+│   └── adr/               # Architecture Decision Records 001–009
 ├── submission/            # Developer Tools handoff, checklist, and demo script
-├── Dockerfile             # Railway-compatible FastAPI image
+├── Dockerfile             # Railway image built from frozen uv.lock
 ├── docker-compose.yml     # Local API + PostgreSQL + frontend wiring
 ├── railway.json           # Railway build and health-check configuration
 ├── pyproject.toml         # Python project, Ruff, mypy, pytest, coverage
@@ -326,20 +351,20 @@ drift/
 ## Production & Quality
 
 ```text
-push → Ruff → mypy → pytest (≥81% coverage gate) → Codecov → frontend build → docs hygiene
+push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **20 tests passed and 81.52% coverage**. The
-enforceable floor is **81%**, deliberately above 80%; the engineering target is
-**99–100% line coverage** for implemented behavior, with branch-critical error
-paths covered explicitly. The floor will ratchet upward as live stages land.
+The current local result is **48 tests passed and 100.00% coverage**. The
+enforceable floor is **100% for implemented code**, including branch-critical
+error paths. Explicit, documented live-pipeline stubs remain visible and are
+excluded only at their `NotImplementedError` boundary.
 
 Run the gates locally:
 
 ```powershell
 uv run ruff check backend tests
 uv run mypy backend
-uv run pytest tests --cov=backend --cov-report=term-missing --cov-fail-under=81
+uv run pytest tests --cov=backend --cov-report=term-missing --cov-fail-under=100
 npm --prefix frontend ci
 npm --prefix frontend run build
 ```
@@ -349,9 +374,10 @@ the repository-specific [Codecov report](https://codecov.io/gh/iarjunganesh/drif
 
 ### Load & Resilience
 
-Load tests are not yet represented as complete. The next reliability slice is
-to add bounded feed retries, provider timeout tests, Postgres failure behavior,
-and a small HTTP smoke test before making production-readiness claims.
+The live-chat boundary has deterministic timeout, retry, capacity, circuit, and
+provider-failure tests. Load testing, feed retry behavior, PostgreSQL failure
+behavior, and a hosted HTTP smoke test remain future work before any
+production-readiness claim.
 
 ---
 
@@ -380,9 +406,10 @@ configuration, and a local Next.js briefing view.
 - add Alembic migrations and async PostgreSQL/pgvector persistence;
 - implement embeddings, deduplication, clustering, and retrieval;
 - implement structured Insight generation with mocked provider tests;
-- raise coverage toward 99–100% as each stage becomes real;
+- maintain 100% implemented-code coverage as each live stage becomes real;
 - confirm the Codecov upload and complete the hosted CORS/browser smoke check;
-- capture reproducible live-path evidence before enabling model-backed claims.
+- capture reproducible live-release-analysis evidence before broadening the
+  bounded model-backed chat claim.
 
 Full decisions and sequencing live in [docs/adr/](docs/adr/),
 [docs/BUILD_SEQUENCE.md](docs/BUILD_SEQUENCE.md),

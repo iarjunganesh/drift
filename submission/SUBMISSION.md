@@ -5,12 +5,14 @@
 - [ ] Confirm **Developer Tools** as the single selected category.
 - [ ] Create a public repository with a license, or share the private repository
       with `testing@devpost.com` and `build-week-event@openai.com`.
-- [x] Record both project initiative Session IDs in the README and initiative
+- [x] Record all project initiative Session IDs in the README and initiative
       register:
       - Foundation: `019f61e7-1ea1-7742-9acc-99d62f39b888`
       - Publication/readiness: `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`
-- [ ] Confirm which initiative is the primary `/feedback` Session ID if the
-      Devpost form accepts only one primary ID.
+      - Hosted deployment/README follow-up: `019f6253-ddfc-7272-8077-e34dfb3aee84`
+      - Primary core-functionality session: `019f62b9-10b7-7d82-a463-e6eb1192141c`
+- [x] Use `019f62b9-10b7-7d82-a463-e6eb1192141c` as the primary `/feedback`
+      Session ID if the Devpost form accepts only one.
 - [ ] Add real, saved GPT-5.6 output examples and cite their primary release URLs.
 - [ ] Provide a judge path: hosted app, sandbox, or verified one-command local demo.
 - [ ] Upload a public YouTube video under three minutes with English narration.
@@ -21,8 +23,8 @@
 - [ ] Add the video URL, code URL, category, description, and Session ID in Devpost.
 
 See [`docs/INITIATIVES.md`](../docs/INITIATIVES.md) for initiative scope and
-the distinction between the core-functionality session and the
-publication/readiness session.
+the distinction between the primary core-functionality session and the earlier
+foundation, publication, and hosted-demo sessions.
 
 ## Do not claim until verified
 

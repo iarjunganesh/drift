@@ -1,13 +1,13 @@
 .PHONY: install dev test lint type-check ci demo clean frontend-install frontend-build
 
 install:
-	uv sync --group dev
+	uv sync --locked --group dev
 
 dev:
 	uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 
 test:
-	uv run pytest tests --cov=backend --cov-report=term-missing --cov-fail-under=81
+	uv run pytest tests --cov=backend --cov-report=term-missing --cov-fail-under=100
 
 lint:
 	uv run ruff check backend tests

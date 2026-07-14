@@ -4,12 +4,13 @@ DRIFT is a release-intelligence workbench for GPU and AI-infrastructure teams.
 This document explains the checked-in architecture visual, the boundaries behind
 it, and the evidence required before the live path can be called complete.
 
-The initial implementation and publication work are recorded in the two
-[Codex project initiatives](INITIATIVES.md).
+The implementation, publication, and current release work are recorded in the
+four [Codex project initiatives](INITIATIVES.md).
 
-> **Current truth:** the fixture path is working and reproducible. Feed
-> ingestion, persistence, embeddings, model generation, and public deployment
-> are prepared boundaries, not completed claims.
+> **Current truth:** the fixture path is working and reproducible, and local
+> live chat is bounded to cited fixture evidence. Feed ingestion, durable
+> persistence, embeddings, generated Insight model output, and a
+> browser-connected hosted path remain implementation boundaries.
 
 ## Visual source of truth
 
@@ -50,7 +51,7 @@ what must be demonstrated before each stage moves to complete.
 | Scout | Typed boundary and source contract prepared | Normalized `RawItem`, canonical URL dedupe, persisted fetch telemetry |
 | Synthesizer | Typed boundary and severity vocabulary prepared | Embeddings, clustering, dedupe, and mocked provider tests |
 | Insight | Contract and prompt boundary prepared | Structured output validation, citations, confidence, and provenance tests |
-| Briefing | Deterministic fixture ranking works | Retrieval-backed ranking and grounded live chat |
+| Briefing | Deterministic fixture ranking, retrieval, and bounded grounded live chat work over the fixture store | Live-store and pgvector retrieval-backed ranking |
 | API | Fixture FastAPI surface works | Live repository adapter and reproducible deployment |
 | Frontend | Local Next.js briefing view builds | Hosted view at `https://dr1ftless.vercel.app`; browser API fetch awaits CORS verification |
 
@@ -83,9 +84,11 @@ GitHub Atom feeds → Scout → RawItem → Synthesizer → Insight → Briefing
                                       └─ embeddings  └─ citations + bounded action
 ```
 
-The intended durable store is PostgreSQL with pgvector. The live path must not
-be enabled by changing one environment variable until migrations, provider
-mocks, controlled feed data, saved provenance, and an end-to-end run exist.
+The intended durable store is PostgreSQL with pgvector. Feed ingestion and
+generated Insight records must not be enabled by changing one environment
+variable until migrations, provider mocks, controlled feed data, saved
+provenance, and an end-to-end run exist. `DRIFT_MODE=live` currently enables
+only model-backed chat over the cited fixture store.
 
 ## Small request flows
 
@@ -180,14 +183,15 @@ retrieval time, and model/audit record cannot be recovered.
 | `GET /health` | status, mode, version | Working |
 | `GET /briefing?top_n=1..10` | `BriefingItem[]` | Working; severity/confidence/recency ranking |
 | `GET /search?q=2..300 chars` | `Insight[]` | Working; fixture token relevance |
-| `POST /chat` | `ChatRequest → ChatResponse` | Working; fixture-grounded composition |
+| `POST /chat` | `ChatRequest → ChatResponse` | Fixture composition by default; retrieve-first model answer in live mode |
 | `GET /docs` | Swagger UI | FastAPI-generated |
 | `GET /openapi.json` | OpenAPI document | FastAPI-generated; not checked in |
 
-The fixture chat path retrieves matching insights first. If no matching evidence
-exists, it returns an evidence-not-found response rather than answering from
-general model knowledge. The live path will retain this rule with pgvector
-retrieval and the `live` model tier.
+The chat path retrieves matching insights first. If no matching evidence exists,
+it returns an evidence-not-found response rather than answering from general
+model knowledge. In `DRIFT_MODE=live`, the `live` tier answers from the
+retrieved, citation-bearing fixture evidence; pgvector retrieval remains future
+work.
 
 ## Model, budget, and safety boundaries
 
@@ -210,6 +214,27 @@ raises review priority; it never authorizes automation.
 usage, alerts at the configured threshold, and blocks the project ceiling. It
 does not replace provider-side account limits or secret management.
 
+### Live chat resilience
+
+The bounded local live-chat path applies these controls in order:
+
+```text
+queue timeout → concurrency bulkhead → retry-envelope reservation
+→ per-attempt timeout/retry with jitter → circuit breaker → cost settlement
+```
+
+The OpenAI SDK's own retries are disabled so the application's retry budget is
+the only retry authority. Transient connection, timeout, rate-limit, and 5xx
+failures retry up to the configured attempt limit; input and authentication
+errors fail immediately. After repeated transient failures the circuit opens,
+then permits one recovery probe after its cooldown. If a cancelled or failed
+attempt might have reached the provider, DRIFT settles its configured maximum
+cost rather than silently releasing that budget.
+
+The bulkhead and circuit are process-local. They protect this single-process
+demo service; horizontally scaled production use still needs shared rate limits,
+durable spend accounting, and provider-side quotas.
+
 ## Failure handling
 
 | Failure | Required behavior |
@@ -217,10 +242,12 @@ does not replace provider-side account limits or secret management.
 | Feed unavailable | Bounded retry, structured error, preserve last good record |
 | Malformed feed | Reject the item, record source error, continue other sources |
 | Duplicate URL | Keep one canonical source record |
-| Embedding/model timeout | Fail the stage; do not emit an ungrounded insight |
+| Model timeout or retryable provider failure | Retry only within the configured application budget; then return a clear failure and never emit an ungrounded insight |
 | Invalid structured output | Retry within budget or reject; never silently coerce evidence |
 | No retrieval match | Return evidence-not-found |
 | Budget exceeded | Block before the provider call |
+| Live-chat capacity exhausted or circuit open | Return retryable `503` with `Retry-After`; do not reserve budget until a bulkhead slot is acquired |
+| Live-chat provider failure after retries | Return `502` without provider details and settle potentially billable attempts conservatively |
 | Database unavailable | Clear service error; fixture mode remains independently usable |
 
 ## Deployment topology
@@ -261,19 +288,20 @@ The repository quality sequence is:
 Ruff → mypy → pytest + coverage → Codecov upload → frontend build → docs hygiene
 ```
 
-The enforceable floor is 81%; the current fixture baseline is 81.52%. The
-engineering target is 99–100% line coverage for implemented behavior. The floor
-must rise as live stages become real.
+The enforceable floor is 100% for implemented code; the current local suite is
+100.00%. Deliberately unimplemented live-stage raises remain explicit and are
+excluded only at the boundary itself. New live behavior must arrive with tests
+that preserve the 100% floor.
 
 Before the live path is called complete:
 
 - [ ] migrations apply to a clean PostgreSQL instance;
 - [ ] feed success, timeout, malformed, and duplicate cases are tested;
-- [ ] provider calls are behind the router and mocked;
-- [ ] source text is tested as untrusted data;
+- [x] local live-chat provider calls are behind the router and mocked;
+- [x] local live-chat source text is tested as untrusted data;
 - [ ] every emitted insight satisfies the provenance contract;
 - [ ] retrieval constrains chat context;
-- [ ] budget and provider failures are tested; and
+- [x] local live-chat budget, capacity, and provider failures are tested; and
 - [ ] a controlled end-to-end run is saved and repeatable.
 
 ## Decision records
@@ -287,6 +315,8 @@ The ADR index is [`docs/adr/README.md`](adr/README.md):
 - [ADR-005 — PostgreSQL and pgvector](adr/005-postgres-pgvector-live-store.md)
 - [ADR-006 — CI gates and coverage ratchet](adr/006-ci-quality-gates.md)
 - [ADR-007 — Vercel and Railway deployment](adr/007-vercel-railway-deployment.md)
+- [ADR-008 — live grounded chat over the fixture store](adr/008-live-grounded-chat.md)
+- [ADR-009 — bounded model resilience and locked delivery](adr/009-bounded-model-resilience-and-locked-delivery.md)
 
 When a boundary changes, amend the relevant ADR or add a new one. Do not hide
 an unfinished implementation by rewriting decision history.

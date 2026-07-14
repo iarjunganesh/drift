@@ -35,7 +35,7 @@ def fetch_source(source: dict) -> list[RawItem]:
     TODO(codex): implement with feedparser.parse(source["feed_url"]),
     map entries -> RawItem, dedupe against already-seen entries by URL.
     """
-    raise NotImplementedError
+    raise NotImplementedError  # pragma: no cover - explicit live-ingestion boundary
 
 
 def run_scout() -> list[RawItem]:
@@ -48,6 +48,6 @@ def run_scout() -> list[RawItem]:
     return all_items
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover - manual CLI convenience path
     items = run_scout()
     print(f"Fetched {len(items)} raw items across {len(load_sources())} sources.")

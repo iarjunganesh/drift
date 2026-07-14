@@ -1,9 +1,9 @@
 # DRIFT project initiatives
 
-These are the three Codex project initiatives associated with the DRIFT baseline
-and publication follow-up. They are submission evidence pointers for the build
-work; they are not model-run provenance and do not turn fixture records into
-live analysis.
+These are the four Codex project initiatives associated with the DRIFT baseline,
+publication follow-up, and `0.2.0` release candidate. They are submission
+evidence pointers for the build work; they are not model-run provenance and do
+not turn fixture records into live analysis.
 
 ## Initiative 01 — Foundation and inspectable vertical slice
 
@@ -45,9 +45,27 @@ This initiative records the hosted publication follow-up:
 - continued separation between the hosted fixture path and the future live
   release-analysis pipeline.
 
+## Initiative 04 — Grounded live chat, resilience, and locked delivery
+
+**Codex Session ID:** `019f62b9-10b7-7d82-a463-e6eb1192141c`
+
+This is the primary implementation initiative for the current release
+candidate. It delivered:
+
+- retrieve-first, citation-preserving local live chat over the fixture store,
+  without representing fixture evidence as live release analysis;
+- `.env` development loading without reading, logging, or overriding secrets;
+- a single application-owned async resilience policy: queue-bounded
+  concurrency, per-attempt timeout, jittered transient retry, circuit breaker,
+  cancellation-safe cleanup, and conservative spend settlement;
+- a single frozen Python dependency resolution path through `uv.lock` for
+  local development, CI, and the Railway image; and
+- deterministic tests covering the implemented behavior at a 100% coverage
+  floor, with future live-stage raises left explicit.
+
 ## Submission usage
 
-All three IDs should be retained in the project README and submission notes. The
-final Devpost form should identify the initiative containing the majority of
-core functionality as the primary `/feedback` session if Devpost requires one
-primary ID, and list the others as the publication/documentation initiatives.
+All four IDs should be retained in the project README and submission notes. If
+Devpost requires one primary `/feedback` session, use Initiative 04:
+`019f62b9-10b7-7d82-a463-e6eb1192141c`. List the earlier sessions as the
+foundation, publication, and hosted-demo follow-up initiatives.

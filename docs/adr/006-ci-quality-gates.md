@@ -22,3 +22,11 @@ encourage meaningless tests; no threshold would let regressions pass silently.
 - Provider calls must be mocked in unit tests.
 - The coverage floor should move toward 99–100% once Scout, persistence,
   retrieval, and Insight behavior are implemented and tested.
+
+## Amendment — 2026-07-15
+
+The implemented fixture and live-grounded-chat paths now run at 100% line
+coverage. CI and Codecov enforce a 100% floor. Explicit `NotImplementedError`
+boundaries for Scout retrieval, Synthesizer embedding/clustering/classification,
+and generated Insight output remain visible and are excluded only until each
+stage has real behavior and tests.

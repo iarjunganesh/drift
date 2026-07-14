@@ -15,7 +15,13 @@ Tiers:
                            tier deliberately — don't burn it on iteration.
 """
 
+from dataclasses import dataclass
 from enum import StrEnum
+from typing import Any
+
+from openai import AsyncOpenAI
+
+from backend.core.resilience import ModelCallResilience
 
 
 class Tier(StrEnum):
@@ -30,7 +36,21 @@ MODEL_MAP = {
     Tier.FINAL: "gpt-5.6-sol",
 }
 
+_PRICE_PER_MILLION_TOKENS = {
+    "gpt-5.6-luna": (1.0, 6.0),
+    "gpt-5.6-terra": (2.5, 15.0),
+    "gpt-5.6-sol": (5.0, 30.0),
+}
+
 EMBEDDING_MODEL = "text-embedding-3-small"
+
+
+@dataclass(frozen=True)
+class TextResponse:
+    """A provider response with the number of potentially billable attempts."""
+
+    response: Any
+    attempts: int
 
 
 def get_model(tier: Tier | str) -> str:
@@ -43,3 +63,41 @@ def get_model(tier: Tier | str) -> str:
     if isinstance(tier, str):
         tier = Tier(tier)
     return MODEL_MAP[tier]
+
+
+def estimate_response_cost_usd(model: str, input_tokens: int, output_tokens: int) -> float:
+    """Calculate token cost using the router's explicit model-price schedule."""
+    if input_tokens < 0 or output_tokens < 0:
+        raise ValueError("Token counts cannot be negative.")
+    input_price, output_price = _PRICE_PER_MILLION_TOKENS[model]
+    return (input_tokens * input_price + output_tokens * output_price) / 1_000_000
+
+
+def create_async_client(api_key: str, timeout_seconds: float) -> AsyncOpenAI:
+    """Create the sole OpenAI client used by live DRIFT agent calls."""
+    return AsyncOpenAI(api_key=api_key, max_retries=0, timeout=timeout_seconds)
+
+
+async def create_text_response(
+    client: AsyncOpenAI,
+    *,
+    tier: Tier,
+    instructions: str,
+    input_text: str,
+    max_output_tokens: int,
+    resilience: ModelCallResilience | None = None,
+) -> TextResponse:
+    """Generate text through the Responses API with a router-resolved model."""
+    async def operation() -> Any:
+        return await client.responses.create(
+            model=get_model(tier),
+            instructions=instructions,
+            input=input_text,
+            max_output_tokens=max_output_tokens,
+            reasoning={"effort": "low"},
+        )
+
+    if resilience is None:
+        return TextResponse(response=await operation(), attempts=1)
+    result = await resilience.execute(operation)
+    return TextResponse(response=result.value, attempts=result.attempts)
