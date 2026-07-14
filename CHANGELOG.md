@@ -10,14 +10,28 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
-Work planned after the initial baseline:
+### Added
 
-- implement Scout feed retrieval with bounded retries and telemetry;
-- add Alembic migrations and the PostgreSQL/pgvector repository;
-- implement embeddings, clustering, structured Insight generation, and live
-  provenance persistence;
-- activate the GitHub repository and Codecov project; and
-- deploy fixture mode to Railway with the Next.js view on Vercel.
+- `GET /` service metadata endpoint for hosted API discovery.
+- Ordered OpenAPI groups for `system`, `briefing`, `search`, and `chat`.
+- Vercel configuration rooted at `frontend/`, with the Railway fixture API as
+  `NEXT_PUBLIC_API_URL`.
+- Node.js 24.x runtime declarations for Vercel, CI, local frontend work, and
+  the frontend container.
+
+### Changed
+
+- Public documentation now links to the verified Railway fixture API at
+  `https://drift-api-prod.up.railway.app` and the deployed Vercel frontend at
+  `https://dr1ftless.vercel.app`.
+- The README uses the Codecov badge as the coverage signal and links releases
+  to the GitHub releases page.
+
+### Fixed
+
+- Railway’s root URL returns DRIFT service metadata instead of a 404.
+- Uvicorn container output is redirected to stdout so Railway does not label
+  informational startup logs as errors.
 
 ## [0.1.0] - 2026-07-14
 

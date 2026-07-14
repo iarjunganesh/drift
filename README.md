@@ -10,9 +10,8 @@
 </p>
 
 [![CI](https://github.com/iarjunganesh/drift/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/iarjunganesh/drift/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/pytest%20coverage-81.25%25%20%7C%20gate%2081%25-f2c94c?logo=pytest&logoColor=111827)](#production--quality)
 [![Codecov](https://codecov.io/gh/iarjunganesh/drift/graph/badge.svg)](https://codecov.io/gh/iarjunganesh/drift)
-[![Release](https://img.shields.io/badge/release-unreleased-6b7280?logo=github&logoColor=white)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-latest-2ea44f?logo=github&logoColor=white)](https://github.com/iarjunganesh/drift/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Watch Video](https://img.shields.io/badge/%E2%96%B6_Watch-3--min_demo-FF0000?logo=youtube&logoColor=white)](#live--interactive-demo)
 
@@ -25,9 +24,9 @@
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.10-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.7-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![Railway](https://img.shields.io/badge/Railway-backend-0B0D0E?logo=railway&logoColor=white)](https://railway.app/)
-[![Vercel](https://img.shields.io/badge/Vercel-frontend-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-24-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Railway](https://img.shields.io/badge/Railway-backend-0B0D0E?logo=railway&logoColor=white)](https://drift-api-prod.up.railway.app/docs)
+[![Vercel](https://img.shields.io/badge/Vercel-frontend-000000?logo=vercel&logoColor=white)](https://dr1ftless.vercel.app)
 
 ---
 
@@ -110,12 +109,13 @@ not hidden claims of production readiness.
 
 ### Codex project initiatives
 
-The initial baseline is tied to two project initiatives:
+The baseline and publication follow-up are tied to three project initiatives:
 
 | Initiative | Session ID | Focus |
 | --- | --- | --- |
 | Foundation and inspectable vertical slice | `019f61e7-1ea1-7742-9acc-99d62f39b888` | Fixture API, typed contracts, agent boundaries, safety invariants, tests |
 | Publication and judge-readiness baseline | `019f61fc-c32e-7d92-9d2e-0bd9083d08e7` | Documentation, architecture assets, CI/Codecov, deployment and submission surfaces |
+| Hosted deployment and README follow-up | `019f6253-ddfc-7272-8077-e34dfb3aee84` | Railway/Vercel URLs, release badges, and public demo documentation |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -187,19 +187,26 @@ are locked in [frontend/package-lock.json](frontend/package-lock.json).
 
 ## Live & Interactive Demo
 
+The Railway fixture API and Vercel frontend are live. The Vercel project deploys
+from `frontend/` using its checked-in build configuration. Keep the Vercel Root
+Directory set to `frontend` and the deployment in fixture mode.
+
 | | |
 | --- | --- |
 | **Mode** | `fixture` — deterministic, no credentials, no network, no database |
-| **API** | `http://127.0.0.1:8000` after the local start command |
-| **Swagger** | [`/docs`](http://127.0.0.1:8000/docs) |
-| **OpenAPI** | [`/openapi.json`](http://127.0.0.1:8000/openapi.json) |
-| **Briefing** | [`/briefing`](http://127.0.0.1:8000/briefing) |
-| **Frontend** | `http://localhost:3000` after `npm --prefix frontend run dev` |
+| **Frontend** | [https://dr1ftless.vercel.app](https://dr1ftless.vercel.app) |
+| **API** | [https://drift-api-prod.up.railway.app](https://drift-api-prod.up.railway.app) |
+| **Swagger** | [`/docs`](https://drift-api-prod.up.railway.app/docs) |
+| **OpenAPI** | [`/openapi.json`](https://drift-api-prod.up.railway.app/openapi.json) |
+| **Briefing** | [`/briefing`](https://drift-api-prod.up.railway.app/briefing) |
 | **Demo Video** | [`https://youtu.be/TBD`](https://youtu.be/TBD) *(≤ 3 min, record before submission)* |
-| **Public demo** | Not deployed yet; GitHub + Codecov + Railway/Vercel setup is next |
+| **Public demo** | Vercel frontend and Railway fixture API are live; hosted briefing requests still require the Railway CORS origin to be enabled |
 
 The live feed → Postgres → embedding → model path is not yet claimed as
 working. The fixture path is the reproducible demo for reviewers today.
+
+The Swagger contract groups the backend into **System**, **Briefing**,
+**Search**, and **Chat** sections so reviewers can navigate the API by job.
 
 ---
 
@@ -220,7 +227,7 @@ as a completed hosted product.
 
 ## Quick Start
 
-Requirements: Python 3.14, `uv`, and Node.js 22 for the frontend.
+Requirements: Python 3.14, `uv`, and Node.js 24.x for the frontend.
 
 ```powershell
 # 1. Clone after the GitHub repository is published
@@ -291,6 +298,8 @@ drift/
 │   ├── sources.yaml      # Primary release-feed configuration
 │   └── requirements.txt  # Runtime-only container requirements
 ├── frontend/             # Next.js + React + TypeScript briefing view
+│   ├── .nvmrc            # Node.js 24.x local/runtime selection
+│   └── vercel.json       # Vercel build settings and Railway API URL
 ├── assets/
 │   ├── architecture/     # Mermaid source plus themed SVG/PNG renders
 │   └── brand/            # Repository-native DRIFT hero banners
@@ -320,7 +329,7 @@ drift/
 push → Ruff → mypy → pytest (≥81% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **19 tests passed and 81.25% coverage**. The
+The current local result is **20 tests passed and 81.52% coverage**. The
 enforceable floor is **81%**, deliberately above 80%; the engineering target is
 **99–100% line coverage** for implemented behavior, with branch-critical error
 paths covered explicitly. The floor will ratchet upward as live stages land.
@@ -335,10 +344,8 @@ npm --prefix frontend ci
 npm --prefix frontend run build
 ```
 
-Pytest writes `coverage.xml`. CI uploads it with [codecov.yml](codecov.yml).
-The repository-specific [Codecov report](https://codecov.io/gh/iarjunganesh/drift)
-is ready to show the first uploaded run once the repository is activated in
-Codecov.
+Pytest writes `coverage.xml`. CI uploads it with [codecov.yml](codecov.yml) to
+the repository-specific [Codecov report](https://codecov.io/gh/iarjunganesh/drift).
 
 ### Load & Resilience
 
@@ -348,23 +355,24 @@ and a small HTTP smoke test before making production-readiness claims.
 
 ---
 
-## GitHub + Codecov Setup
+## GitHub + Codecov Operations
 
-The remaining publication steps are documented in
+GitHub `main`, the Railway fixture API, and the Vercel frontend are published.
+The remaining hosted verification operations are documented in
 [docs/BUILD_SEQUENCE.md](docs/BUILD_SEQUENCE.md#github-and-codecov-setup):
 
-1. push the initial `main` baseline and verify the CI workflow;
-2. activate `iarjunganesh/drift` in Codecov and confirm the `pytest` upload;
-3. enable branch protection requiring the CI quality gate; and
-4. only then deploy the fixture API to Railway and the frontend to Vercel.
+1. confirm the `pytest` upload in Codecov;
+2. enable branch protection requiring the CI quality gate; and
+3. configure Railway CORS for `https://dr1ftless.vercel.app` and verify that
+   the hosted briefing loads in a browser.
 
 ---
 
 ## Future Roadmap
 
-**Working now:** fixture API, typed contracts, model-router boundary,
-architecture evidence, CI gates, Codecov upload configuration, and a local
-Next.js briefing view.
+**Working now:** hosted fixture API, deployed Vercel frontend, typed contracts,
+model-router boundary, architecture evidence, CI gates, Codecov upload
+configuration, and a local Next.js briefing view.
 
 **Next implementation slices:**
 
@@ -373,7 +381,7 @@ Next.js briefing view.
 - implement embeddings, deduplication, clustering, and retrieval;
 - implement structured Insight generation with mocked provider tests;
 - raise coverage toward 99–100% as each stage becomes real;
-- publish the repository, activate Codecov, and deploy fixture mode;
+- confirm the Codecov upload and complete the hosted CORS/browser smoke check;
 - capture reproducible live-path evidence before enabling model-backed claims.
 
 Full decisions and sequencing live in [docs/adr/](docs/adr/),

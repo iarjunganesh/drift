@@ -41,8 +41,10 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The two Codex initiatives associated with this baseline are listed in
+The three Codex initiatives associated with this baseline and deployment
+follow-up are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
 
 - Foundation: `019f61e7-1ea1-7742-9acc-99d62f39b888`
 - Publication/readiness: `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`
+- Hosted deployment/README follow-up: `019f6253-ddfc-7272-8077-e34dfb3aee84`

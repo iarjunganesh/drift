@@ -48,8 +48,8 @@ instead of Work & Productivity.
 The public repository is `iarjunganesh/drift`, and the README already points
 to its repository-specific Codecov badge.
 
-1. Push `main` and verify `.github/workflows/ci.yml`.
-2. Activate the repository in Codecov and confirm the `pytest` upload appears.
+1. GitHub `main` is published; continue verifying `.github/workflows/ci.yml`.
+2. Confirm the `pytest` upload appears in Codecov.
 3. Confirm the README badge resolves to the project report:
 
    ```markdown
@@ -57,8 +57,12 @@ to its repository-specific Codecov badge.
    ```
 
 4. Protect the default branch and require the CI quality gate.
-5. Deploy fixture mode to Railway, then point a Vercel `frontend/` project at
-   the Railway HTTPS API with `NEXT_PUBLIC_API_URL`.
+5. The Railway fixture API is live at
+   `https://drift-api-prod.up.railway.app`, and the Vercel frontend is live at
+   `https://dr1ftless.vercel.app`. Keep the Vercel Root Directory set to
+   `frontend/`; its checked-in configuration supplies `NEXT_PUBLIC_API_URL`.
+   Verify Railway CORS allows the Vercel origin before treating the hosted
+   briefing as browser-connected.
 
 The checked-in `codecov.yml` already defines the pytest project, report path,
 and 81% project/patch floor. The floor is intentionally separate from the
@@ -66,11 +70,14 @@ and 81% project/patch floor. The floor is intentionally separate from the
 
 ## Codex project initiatives
 
-The initial baseline is supported by two project initiatives:
+The baseline and hosted-deployment follow-up are supported by three project
+initiatives:
 
 - Foundation and inspectable vertical slice —
   `019f61e7-1ea1-7742-9acc-99d62f39b888`
 - Publication and judge-readiness baseline —
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`
+- Hosted deployment and README follow-up —
+  `019f6253-ddfc-7272-8077-e34dfb3aee84`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.

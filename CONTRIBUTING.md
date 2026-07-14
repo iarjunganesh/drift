@@ -6,7 +6,7 @@ evidence, model reasoning, and fixture examples.
 
 ## Setup
 
-Requirements: Python 3.14, `uv`, and Node.js 22 for frontend work.
+Requirements: Python 3.14, `uv`, and Node.js 24.x for frontend work.
 
 ```powershell
 git clone <DRIFT-GITHUB-URL>

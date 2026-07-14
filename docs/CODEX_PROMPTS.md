@@ -225,6 +225,10 @@ rules/FAQ reference copy, not drift's submission draft.
 
 - Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
 - Confirm which supplied initiative is the primary `/feedback` session for the
-  Devpost form; retain both IDs in README.md and the submission notes.
-- `git init`, commit, push to a GitHub repo, share with `testing@devpost.com` and `build-week-event@openai.com` if private
-- Decide whether to also stand up a live-hosted demo instance (bankers-wrapped kept its Railway/Vercel deploy live through judging — optional for drift but worth considering if time allows)
+  Devpost form; retain all three IDs in README.md and the submission notes.
+- Verify branch protection and the Codecov upload on the published GitHub
+  repository.
+- Verify the deployed Vercel frontend at `https://dr1ftless.vercel.app` against
+  the Railway fixture API at `https://drift-api-prod.up.railway.app`; enable
+  the Vercel origin in Railway CORS before calling the hosted briefing fully
+  connected.

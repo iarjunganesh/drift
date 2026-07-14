@@ -1,8 +1,9 @@
 # DRIFT project initiatives
 
-These are the two Codex project initiatives associated with the initial DRIFT
-baseline. They are submission evidence pointers for the build work; they are
-not model-run provenance and do not turn fixture records into live analysis.
+These are the three Codex project initiatives associated with the DRIFT baseline
+and publication follow-up. They are submission evidence pointers for the build
+work; they are not model-run provenance and do not turn fixture records into
+live analysis.
 
 ## Initiative 01 — Foundation and inspectable vertical slice
 
@@ -30,9 +31,23 @@ This initiative prepared the repository for public judging and continued work:
 - local Next.js briefing view and three-minute demo script; and
 - GitHub publication, `v0.1.0`, Codecov activation, and submission handoff plan.
 
+## Initiative 03 — Hosted deployment and README follow-up
+
+**Codex Session ID:** `019f6253-ddfc-7272-8077-e34dfb3aee84`
+
+This initiative records the hosted publication follow-up:
+
+- Railway Docker deployment URL and `/health` route alignment;
+- Vercel frontend and Railway API links in the public README;
+- public endpoints `https://dr1ftless.vercel.app` and
+  `https://drift-api-prod.up.railway.app`;
+- release badge and demo-surface cleanup; and
+- continued separation between the hosted fixture path and the future live
+  release-analysis pipeline.
+
 ## Submission usage
 
-Both IDs should be retained in the project README and submission notes. The
+All three IDs should be retained in the project README and submission notes. The
 final Devpost form should identify the initiative containing the majority of
 core functionality as the primary `/feedback` session if Devpost requires one
-primary ID, and list the other as the publication/documentation initiative.
+primary ID, and list the others as the publication/documentation initiatives.

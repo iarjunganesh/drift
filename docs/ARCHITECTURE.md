@@ -52,7 +52,7 @@ what must be demonstrated before each stage moves to complete.
 | Insight | Contract and prompt boundary prepared | Structured output validation, citations, confidence, and provenance tests |
 | Briefing | Deterministic fixture ranking works | Retrieval-backed ranking and grounded live chat |
 | API | Fixture FastAPI surface works | Live repository adapter and reproducible deployment |
-| Frontend | Local Next.js briefing view builds | Hosted view connected to verified API |
+| Frontend | Local Next.js briefing view builds | Hosted view at `https://dr1ftless.vercel.app`; browser API fetch awaits CORS verification |
 
 ## Runtime paths
 
@@ -237,9 +237,21 @@ flowchart TB
 ```
 
 The prepared deployment uses Vercel for `frontend/` and Railway for the root
-FastAPI Docker service. The first public deployment is fixture mode. Railway’s
+FastAPI Docker service. The public fixture frontend is
+[`https://dr1ftless.vercel.app`](https://dr1ftless.vercel.app), and Railway’s
 $5 plan is a small-demo budget constraint, not a production availability
-guarantee. See [ADR-007](adr/007-vercel-railway-deployment.md).
+guarantee. The verified fixture API is
+[`https://drift-api-prod.up.railway.app`](https://drift-api-prod.up.railway.app),
+with `/health`, `/docs`, and `/openapi.json` exposed publicly. See
+[ADR-007](adr/007-vercel-railway-deployment.md).
+
+The current API returns valid briefing data, but its public response still
+needs `Access-Control-Allow-Origin: https://dr1ftless.vercel.app` before the
+browser can consume that data from the hosted frontend.
+
+The generated Swagger contract keeps route ownership visible through four
+groups: `system` for metadata and liveness, `briefing` for ranked insights,
+`search` for cited retrieval, and `chat` for grounded questions.
 
 ## Verification and readiness
 
@@ -249,7 +261,7 @@ The repository quality sequence is:
 Ruff → mypy → pytest + coverage → Codecov upload → frontend build → docs hygiene
 ```
 
-The enforceable floor is 81%; the current fixture baseline is 81.25%. The
+The enforceable floor is 81%; the current fixture baseline is 81.52%. The
 engineering target is 99–100% line coverage for implemented behavior. The floor
 must rise as live stages become real.
 

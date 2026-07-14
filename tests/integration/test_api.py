@@ -1,11 +1,31 @@
 def test_health_and_briefing(api_client) -> None:
+    root = api_client.get("/")
     health = api_client.get("/health")
     briefing = api_client.get("/briefing")
 
+    assert root.status_code == 200
+    assert root.json()["service"] == "DRIFT"
+    assert root.json()["docs"] == "/docs"
     assert health.status_code == 200
     assert health.json()["mode"] == "fixture"
     assert briefing.status_code == 200
     assert briefing.json()[0]["insight"]["source_citations"]
+
+
+def test_openapi_routes_have_clear_groups(api_client) -> None:
+    schema = api_client.get("/openapi.json").json()
+
+    assert [tag["name"] for tag in schema["tags"]] == [
+        "system",
+        "briefing",
+        "search",
+        "chat",
+    ]
+    assert schema["paths"]["/"]["get"]["tags"] == ["system"]
+    assert schema["paths"]["/health"]["get"]["tags"] == ["system"]
+    assert schema["paths"]["/briefing"]["get"]["tags"] == ["briefing"]
+    assert schema["paths"]["/search"]["get"]["tags"] == ["search"]
+    assert schema["paths"]["/chat"]["post"]["tags"] == ["chat"]
 
 
 def test_search_and_grounded_chat(api_client) -> None:

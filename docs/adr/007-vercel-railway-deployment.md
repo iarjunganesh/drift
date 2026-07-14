@@ -10,6 +10,14 @@ the FastAPI backend from the repository root to Railway using the root
 `Dockerfile` and `railway.json`. Use Railway PostgreSQL with pgvector for the
 live store when that stage is implemented.
 
+The public Vercel frontend is `https://dr1ftless.vercel.app`. The Vercel
+project must keep `frontend/` as its Root Directory. The checked-in
+`frontend/vercel.json` defines the Next.js build and points the public
+`NEXT_PUBLIC_API_URL` at the verified Railway fixture API:
+`https://drift-api-prod.up.railway.app`. The frontend `package.json` and
+`.nvmrc` declare Node.js `24.x`, which Vercel, CI, and the frontend container
+use consistently.
+
 The first public deployment must use `DRIFT_MODE=fixture`. Live mode is enabled
 only after migrations, provider-boundary tests, provenance persistence, and a
 reproducible end-to-end run exist.
@@ -29,11 +37,15 @@ capacity commitment.
 ## Consequences
 
 - The browser talks to a Railway HTTPS API through `NEXT_PUBLIC_API_URL`.
-- CORS remains explicit through `FRONTEND_ORIGIN`; platform URLs must be set as
-  deployment secrets or environment variables.
+- CORS remains explicit through `FRONTEND_ORIGIN`; the Railway deployment must
+  allow `https://dr1ftless.vercel.app` before hosted browser requests are
+  considered verified.
 - Railway's private `DATABASE_URL` stays server-side and is never exposed to
   the frontend.
 - Fixture mode can be deployed without OpenAI credentials or a database.
+- The verified fixture API endpoint is
+  `https://drift-api-prod.up.railway.app`; its public health check is
+  `/health`.
 - Vercel and Railway have separate logs, deploys, and usage limits to monitor.
 - A future alternative may consolidate the frontend and API, but that would
   require a new ADR because it changes operational boundaries.
