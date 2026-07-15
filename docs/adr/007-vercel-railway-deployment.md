@@ -21,9 +21,10 @@ use consistently.
 The first public deployment used `DRIFT_MODE=fixture`. The current hosted
 deployment was switched to bounded `DRIFT_MODE=live` on 2026-07-15 after the
 live-chat provider-boundary tests and CORS verification were in place. This
-does not claim that migrations, provenance persistence, live feeds, embeddings,
-or hosted live-store population/retrieval are complete; `/briefing` remains
-fixture-backed.
+does not establish the current capture-path behavior. The local code now has
+migrations, provenance persistence, embeddings, and a one-shot capture job, but
+the hosted service must be redeployed and verified before `/briefing` can be
+described as live-store-backed.
 
 ## Context
 

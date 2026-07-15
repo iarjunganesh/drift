@@ -10,10 +10,11 @@ CI coverage-gate, provenance-manifest). Do NOT reuse its media stack
 (Genblaze, FFmpeg, Backblaze B2, NVIDIA NIM) — drift has no media component.
 
 > Execution status (2026-07-15): the Day 1 Scout/database, Day 2 Synthesizer,
-> Day 3/4 standalone structured Insight, and local Day 5 pgvector retrieval
-> requirements below are implemented and verified in this repository. The
-> prompts remain the original build specification; current completion status
-> is maintained in `docs/BUILD_SEQUENCE.md`.
+> Day 3/4 structured Insight, Day 5 pgvector retrieval, and bounded one-shot
+> capture/provenance path are implemented locally. The prompts remain an
+> historical build specification; current completion status is maintained in
+> `docs/BUILD_SEQUENCE.md`. The capture path still needs a real PostgreSQL run,
+> reviewed paid outputs, redeployment, and hosted verification.
 
 ---
 
@@ -238,12 +239,12 @@ rules/FAQ reference copy, not drift's submission draft.
 
 - Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
 - Confirm which supplied initiative is the primary `/feedback` session for the
-  Devpost form; retain all six IDs in README.md and the submission notes.
+   Devpost form; retain all seven IDs in the README, changelog, and submission
+   notes.
 - Verify branch protection and the Codecov upload on the published GitHub
   repository.
-- Run one hosted `/chat` smoke test against `https://drift-api-prod.up.railway.app`
-  and record only verified provider output; the hosted API is configured for
-  bounded `DRIFT_MODE=live` as of 2026-07-15 and CORS allows the Vercel origin.
-  The hosted `/briefing` response remains fixture-backed until the live feed,
-  persistence, embedding, and Insight pipeline is implemented and the updated
-  deployment is verified; local pgvector retrieval does not broaden that claim.
+- Apply the capture-provenance migration to PostgreSQL, create and review a
+  small captured store, deploy the updated service, then run one hosted
+  `/briefing`, `/search`, and `/chat` smoke test. The existing 2026-07-15
+  health/CORS verification predates this capture path and does not establish
+  hosted live-release analysis.

@@ -74,6 +74,21 @@ def test_generate_insight_parses_structured_output_and_derives_provenance() -> N
     assert client.closed is False
 
 
+def test_generate_insight_with_audit_hashes_evidence_and_output() -> None:
+    client = FakeClient()
+
+    generated = insight.generate_insight_with_audit(
+        [make_item(1, "Release evidence")],
+        ChangeSeverity.MINOR,
+        client=client,
+    )
+
+    assert generated.insight.model_used == "gpt-5.6-luna"
+    assert len(generated.audit.evidence_sha256) == 64
+    assert len(generated.audit.output_sha256) == 64
+    assert generated.audit.attempts == 1
+
+
 def test_generate_insight_closes_owned_client(monkeypatch) -> None:
     client = FakeClient()
     monkeypatch.setattr(insight, "create_client", lambda *_args: client)
@@ -117,3 +132,22 @@ def test_generate_insight_rejects_schema_invalid_json() -> None:
 
     with pytest.raises(ValueError, match="failed schema validation"):
         insight.generate_insight([make_item(1)], ChangeSeverity.MINOR, client=client)
+
+
+def test_run_insight_batch_forwards_explicit_provider_controls(monkeypatch, tmp_path) -> None:
+    calls: list[dict] = []
+
+    def fake_generate(*_args, **kwargs):
+        calls.append(kwargs)
+        return make_item(1)  # type: ignore[return-value]
+
+    monkeypatch.setattr(insight, "generate_insight", fake_generate)
+
+    result = insight.run_insight_batch(
+        [([make_item(1)], ChangeSeverity.MINOR)],
+        client=object(),
+        spend_guard=insight.SpendGuard(tmp_path / "ledger.json", 1, 0.5),
+    )
+
+    assert result[0].id == 1
+    assert calls[0]["client"] is not None

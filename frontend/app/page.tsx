@@ -11,6 +11,7 @@ type Insight = {
   severity: "cosmetic" | "minor" | "breaking" | "security";
   confidence: number;
   source_citations: string[];
+  model_used: string;
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -67,11 +68,35 @@ export default function Home() {
       <section className="section" id="briefing">
         <div className="eyebrow">Top things that matter</div>
         <h2>Today&apos;s briefing</h2>
-        <p>Fixture examples are clearly labelled. Live analysis will arrive only after the feed and model pipeline is verified.</p>
+        <p>
+          Fixture examples are clearly labelled. Captured model output remains reviewable
+          through its model label, confidence, source links, and bounded next check.
+        </p>
         <div className="items">
           {insights.map((insight) => (
             <article className="item" key={insight.id ?? insight.title}>
-              <div><strong>{insight.title}</strong><br /><small>{insight.what_to_check}</small></div>
+              <div className="item-body">
+                <div className="item-heading">
+                  <strong>{insight.title}</strong>
+                  <span className="audit-label">
+                    {insight.model_used === "fixture-curated" ? "Fixture example" : "Captured model output"}
+                  </span>
+                </div>
+                <p>{insight.summary}</p>
+                <p><strong>Why it matters:</strong> {insight.why_it_matters}</p>
+                <p><strong>What to check:</strong> {insight.what_to_check}</p>
+                <div className="evidence-row">
+                  <span>Confidence {Math.round(insight.confidence * 100)}%</span>
+                  <span>Model {insight.model_used}</span>
+                </div>
+                <div className="citations" aria-label={`Sources for ${insight.title}`}>
+                  {insight.source_citations.map((citation) => (
+                    <a key={citation} href={citation} target="_blank" rel="noreferrer">
+                      Source ↗
+                    </a>
+                  ))}
+                </div>
+              </div>
               <span className={`pill ${insight.severity}`}>{insight.severity}</span>
             </article>
           ))}

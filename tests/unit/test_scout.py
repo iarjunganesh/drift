@@ -226,6 +226,7 @@ async def test_store_raw_items_persists_new_urls(monkeypatch) -> None:
     assert count == 1
     assert session.commits == 1
     assert session.added[0].url == "https://example.com/1"
+    assert len(session.added[0].content_sha256) == 64
 
 
 @pytest.mark.asyncio
@@ -262,3 +263,40 @@ async def test_store_raw_items_skips_empty_input() -> None:
 
     assert await scout.store_raw_items(session, []) == 0
     assert session.commits == 0
+
+
+@pytest.mark.asyncio
+async def test_load_persisted_raw_items_preserves_durable_ids() -> None:
+    row = scout.RawItemRow(
+        id=7,
+        source_id="example",
+        title="Release",
+        url="https://example.com/1",
+        published_at=datetime(2026, 7, 15, tzinfo=UTC),
+        raw_content="Evidence",
+        fetched_at=datetime(2026, 7, 15, tzinfo=UTC),
+    )
+
+    class LoadedSession:
+        async def scalars(self, _statement):
+            return FakeScalarResult([row])
+
+    loaded = await scout.load_persisted_raw_items(LoadedSession(), [row.url])
+
+    assert loaded[0].id == 7
+    assert loaded[0].raw_content == "Evidence"
+
+
+@pytest.mark.asyncio
+async def test_load_persisted_raw_items_rejects_missing_rows() -> None:
+    class EmptySession:
+        async def scalars(self, _statement):
+            return FakeScalarResult([])
+
+    with pytest.raises(RuntimeError, match="did not return"):
+        await scout.load_persisted_raw_items(EmptySession(), ["https://example.com/missing"])
+
+
+@pytest.mark.asyncio
+async def test_load_persisted_raw_items_skips_empty_urls() -> None:
+    assert await scout.load_persisted_raw_items(FakeSession(), []) == []

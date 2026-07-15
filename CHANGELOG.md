@@ -12,6 +12,57 @@ the annotated `v0.1.0` tag.
 
 No unreleased changes.
 
+## [0.5.0] - 2026-07-15
+
+Bounded local capture-path release with persisted source and model provenance.
+
+### Added
+
+- Added a bounded one-shot `backend.pipeline` capture job that persists and
+  reloads primary-source evidence, generates and embeds Insights, writes the
+  live store, and records optional human review notes.
+- Added Alembic revision `0002_capture_provenance` with source-content hashes,
+  durable `model_runs` audit rows, Insight-to-run linkage, and review metadata.
+- Added bounded spend reservation and retry/circuit handling to synchronous
+  embedding, classification, and Insight-generation provider calls.
+- Added local live-store-backed `/briefing` and frontend cards that expose
+  source links, confidence, model/audit label, rationale, and bounded action.
+
+### Changed
+
+- Corrected the generic NCCL fixture from an unsupported `security` label to
+  `minor`; fixture records remain examples, not release findings.
+- Removed the superseded `docs/DRIFT_Realistic_Next_Steps.md` plan and
+  synchronized current-state documentation with the capture boundary.
+- Verified 118 tests at 100.00% backend coverage with Ruff, mypy, and the
+  frontend production build passing.
+
+### Remaining operator gates
+
+- Apply the new migration to a clean PostgreSQL/pgvector instance, run and
+  review real model captures, then deploy and verify the updated hosted path.
+- Record the public narrated demo and submit the Developer Tools entry.
+
+### Codex session record
+
+All project-session IDs are retained here in addition to
+[`docs/INITIATIVES.md`](docs/INITIATIVES.md):
+
+- Foundation and inspectable vertical slice —
+  `019f61e7-1ea1-7742-9acc-99d62f39b888`
+- Publication and judge-readiness baseline —
+  `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`
+- Hosted deployment and README follow-up —
+  `019f6253-ddfc-7272-8077-e34dfb3aee84`
+- Grounded live chat, resilience, and locked delivery (primary `/feedback`
+  candidate) — `019f62b9-10b7-7d82-a463-e6eb1192141c`
+- Day 1 feed/database and Day 2 Synthesizer —
+  `019f62e8-6715-70e2-a92a-fe28254f7b71`
+- Day 3/Day 4 Insight structured output —
+  `019f6336-3690-7022-a8ef-c8c0947e240f`
+- Bounded capture/provenance and documentation cleanup —
+  `019f66b4-78b8-7943-a41d-91e836d28f00`
+
 ## [0.4.0] - 2026-07-15
 
 This bounded minor release adds structured Insight generation and local
@@ -208,6 +259,7 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.5.0]: #050---2026-07-15
 [0.4.0]: #040---2026-07-15
 [0.3.1]: #031---2026-07-15
 [0.3.0]: #030---2026-07-15

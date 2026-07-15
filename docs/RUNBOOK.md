@@ -17,14 +17,26 @@ truth boundary in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 This path uses committed example data and makes no external calls.
 
-## Day 1 feed and database verification
+## Local capture-path verification
 
 1. Start the local PostgreSQL/pgvector service from `docker-compose.yml`.
 2. Run `make migrate` to apply the initial `sources`, `raw_items`, and
    `insights` migration.
 3. Run `uv run python -m backend.agents.scout` to fetch and normalize the
    configured primary release feeds. Source failures are bounded and logged;
-   no model call is made.
+   no model call or database write is made by this inspection command.
+4. After reviewing source candidates, set `DRIFT_MODE=live` and run the
+   bounded capture command. It persists/reloads raw items, generates and embeds
+   Insights, and writes model-run/source-hash provenance:
+
+   ```powershell
+   $env:DRIFT_MODE='live'
+   uv run python -m backend.pipeline --source vllm --source tensorrt --source pytorch --tier dev
+   ```
+
+5. Inspect the stored result and its citations before writing any optional
+   `--review-notes`. Re-run only selected examples on `--tier final`; this is a
+   paid provider operation bounded by the local spend ledger.
 
 ## Live grounded-chat demo — local live store, real model response
 
@@ -34,21 +46,20 @@ This path uses committed example data and makes no external calls.
    and per-attempt reservation `$1`. Keep
    `DRIFT_MAX_CALL_USD * DRIFT_MODEL_MAX_ATTEMPTS` within the project spend
    ceiling.
-4. Apply the migration, then ensure the `insights` table contains persisted
-   rows with 1536-value embeddings before starting the API. Ask one question
-   that matches a stored Insight. Inspect `.drift/spend-ledger.json`; the
-   response should report `gpt-5.6-terra` and preserve source citations.
-   The repository does not yet provide the scheduled producer that populates
-   those rows; use the fixture demo until a prepared live store is available.
+4. Apply the migration, then use `backend.pipeline` to create a deliberately
+   small reviewed capture. It writes `insights` rows with 1536-value embeddings
+   and linked `model_runs` records. Start the API and inspect live `/briefing`,
+   `/search`, and one matching chat question. Inspect `.drift/spend-ledger.json`;
+   chat should report `gpt-5.6-terra` and preserve source citations.
 5. The request is queue-bounded and uses a per-attempt timeout, jittered
    transient retry, and a circuit breaker. A `503` with `Retry-After` means
    model capacity is busy or the circuit is open; retry later. A `429` means
    the local spend guard blocked the request.
-6. Local live `/search` and `/chat` now use pgvector retrieval. This still is
-   not live release analysis: scheduled Scout persistence, embedding
-   persistence, generated Insight persistence, and end-to-end wiring remain
-   future work. The hosted deployment remains on its previously verified
-   fixture-backed behavior until redeployed and checked.
+6. Local live `/briefing`, `/search`, and `/chat` now read the captured store.
+   This still is not live release analysis until the capture is human-reviewed,
+   saved as evidence, deployed, and verified. Scheduled population remains
+   future work. The hosted deployment predates this local path until redeployed
+   and checked.
 
 ## Recording order
 
@@ -65,9 +76,9 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The six Codex initiatives associated with this baseline, deployment follow-up,
-the bounded v0.4.0 release, and Day 1/Day 2 and Day 3/Day 4 implementation
-follow-ups are listed in
+The seven Codex initiatives associated with this baseline, deployment follow-up,
+the v0.4.0 baseline, v0.5.0 capture-path release, and implementation follow-ups
+are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
 
 - Foundation: `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -76,3 +87,5 @@ follow-ups are listed in
 - Primary live-chat/resilience work: `019f62b9-10b7-7d82-a463-e6eb1192141c`
 - Day 1/Day 2 implementation follow-up: `019f62e8-6715-70e2-a92a-fe28254f7b71`
 - Day 3/Day 4 Insight structured output: `019f6336-3690-7022-a8ef-c8c0947e240f`
+- Bounded capture/provenance and documentation cleanup:
+  `019f66b4-78b8-7943-a41d-91e836d28f00`

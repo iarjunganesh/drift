@@ -65,3 +65,17 @@ async def retrieve_live_insights(
         raise RuntimeError("Embedding provider returned no query vector.")
     query_embedding = [float(value) for value in data[0].embedding]
     return await search_live_insights(session, query_embedding, limit=limit)
+
+
+async def latest_live_insights(
+    session: AsyncSession,
+    *,
+    limit: int = 5,
+) -> list[Insight]:
+    """Return the most recent cited Insights for a live-store briefing."""
+    if limit < 1:
+        raise ValueError("Briefing limit must be at least 1.")
+    rows = (
+        await session.scalars(select(InsightRow).order_by(InsightRow.created_at.desc()).limit(limit))
+    ).all()
+    return [_row_to_insight(row) for row in rows]

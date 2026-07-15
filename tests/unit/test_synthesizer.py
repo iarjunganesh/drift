@@ -69,6 +69,13 @@ def test_embed_items_empty_input_does_not_call_provider() -> None:
     assert synthesizer.embed_items([]) == []
 
 
+def test_embed_texts_uses_the_requested_operation_label() -> None:
+    client = FakeClient()
+
+    assert synthesizer.embed_texts(["Insight body"], client=client, operation_name="insight.embed")
+    assert client.embedding_calls[0]["input"] == ["Insight body"]
+
+
 def test_embed_items_closes_owned_client(monkeypatch) -> None:
     client = FakeClient()
     monkeypatch.setattr(synthesizer, "create_client", lambda *_args: client)

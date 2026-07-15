@@ -22,17 +22,21 @@ Cost discipline: iterate prompts on Tier.DEV (Luna). Only the final
 """
 
 import json
+from dataclasses import dataclass
+from hashlib import sha256
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
+from backend.core.budget import SpendGuard
 from backend.core.config import settings
 from backend.core.model_router import (
     Tier,
     create_client,
-    create_structured_response,
+    create_structured_response_with_audit,
     get_model,
 )
+from backend.core.resilience import ModelCallResilience
 from backend.models.schema import ChangeSeverity, Insight, RawItem
 
 INSIGHT_SYSTEM_PROMPT = """You are DRIFT's reasoning core. You explain \
@@ -99,6 +103,27 @@ class _InsightPayload(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
 
 
+@dataclass(frozen=True)
+class InsightCallAudit:
+    """Provider metadata retained when an Insight is persisted."""
+
+    model_used: str
+    evidence_sha256: str
+    output_sha256: str
+    input_tokens: int | None
+    output_tokens: int | None
+    settled_usd: float
+    attempts: int
+
+
+@dataclass(frozen=True)
+class GeneratedInsight:
+    """A validated Insight paired with its model-run provenance."""
+
+    insight: Insight
+    audit: InsightCallAudit
+
+
 def _evidence_payload(cluster: list[RawItem]) -> str:
     """Serialize bounded release evidence as data, never as instructions."""
     evidence = [
@@ -137,8 +162,30 @@ def generate_insight(
     tier: Tier = Tier.DEV,
     *,
     client: Any | None = None,
+    spend_guard: SpendGuard | None = None,
+    resilience: ModelCallResilience | None = None,
 ) -> Insight:
     """Generate one cited Insight from a classified release cluster."""
+    return generate_insight_with_audit(
+        cluster,
+        severity,
+        tier,
+        client=client,
+        spend_guard=spend_guard,
+        resilience=resilience,
+    ).insight
+
+
+def generate_insight_with_audit(
+    cluster: list[RawItem],
+    severity: ChangeSeverity,
+    tier: Tier = Tier.DEV,
+    *,
+    client: Any | None = None,
+    spend_guard: SpendGuard | None = None,
+    resilience: ModelCallResilience | None = None,
+) -> GeneratedInsight:
+    """Generate one Insight and retain immutable model-run audit metadata."""
     if not cluster:
         raise ValueError("Cannot generate an insight from an empty cluster.")
     if any(item.id is None for item in cluster):
@@ -152,16 +199,19 @@ def generate_insight(
     )
     try:
         model_name = get_model(tier)
-        response = create_structured_response(
+        evidence = _evidence_payload(cluster)
+        call_result = create_structured_response_with_audit(
             active_client,
             tier=tier,
             instructions=INSIGHT_SYSTEM_PROMPT,
-            input_text=_evidence_payload(cluster),
+            input_text=evidence,
             schema=_INSIGHT_SCHEMA,
             max_output_tokens=600,
+            spend_guard=spend_guard,
+            resilience=resilience,
         )
-        payload = _parse_insight_output(response)
-        return Insight(
+        payload = _parse_insight_output(call_result.response)
+        insight = Insight(
             raw_item_ids=[item.id for item in cluster if item.id is not None],
             title=payload.title,
             summary=payload.summary,
@@ -173,6 +223,21 @@ def generate_insight(
             confidence=payload.confidence,
             model_used=model_name,
         )
+        usage = getattr(call_result.response, "usage", None)
+        input_tokens = getattr(usage, "input_tokens", None)
+        output_tokens = getattr(usage, "output_tokens", None)
+        return GeneratedInsight(
+            insight=insight,
+            audit=InsightCallAudit(
+                model_used=model_name,
+                evidence_sha256=sha256(evidence.encode("utf-8")).hexdigest(),
+                output_sha256=sha256(insight.model_dump_json().encode("utf-8")).hexdigest(),
+                input_tokens=input_tokens if isinstance(input_tokens, int) else None,
+                output_tokens=output_tokens if isinstance(output_tokens, int) else None,
+                settled_usd=call_result.settled_usd,
+                attempts=call_result.attempts,
+            ),
+        )
     finally:
         if owned_client:
             active_client.close()
@@ -181,8 +246,24 @@ def generate_insight(
 def run_insight_batch(
     classified_clusters: list[tuple[list[RawItem], ChangeSeverity]],
     tier: Tier = Tier.DEV,
+    *,
+    client: Any | None = None,
+    spend_guard: SpendGuard | None = None,
+    resilience: ModelCallResilience | None = None,
 ) -> list[Insight]:
+    if client is None and spend_guard is None and resilience is None:
+        return [
+            generate_insight(cluster, severity, tier)
+            for cluster, severity in classified_clusters
+        ]
     return [
-        generate_insight(cluster, severity, tier)
+        generate_insight(
+            cluster,
+            severity,
+            tier,
+            client=client,
+            spend_guard=spend_guard,
+            resilience=resilience,
+        )
         for cluster, severity in classified_clusters
     ]

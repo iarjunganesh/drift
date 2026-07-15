@@ -5,14 +5,14 @@ This document explains the checked-in architecture visual, the boundaries behind
 it, and the evidence required before the live path can be called complete.
 
 The implementation, publication, and current release work are recorded in the
-six [Codex project initiatives](INITIATIVES.md).
+seven [Codex project initiatives](INITIATIVES.md).
 
-> **Current truth:** the fixture path is working and reproducible, local live
-> chat is bounded to cited retrieved evidence, and the hosted browser API path
-> is connected. Standalone structured Insight model output and local pgvector
-> live-store retrieval are implemented and tested; feed scheduling, embedding
-> persistence, Insight provenance persistence, hosted verification, and
-> end-to-end wiring remain implementation boundaries.
+> **Current truth:** the fixture path is working and reproducible. The local
+> one-shot capture job now persists/reloads primary source evidence, generates
+> and embeds cited Insights, preserves source/model-run/review provenance, and
+> exposes them through live briefing/search/chat. Scheduled population, a real
+> PostgreSQL integration run, reviewed real-model captures, redeployment, and
+> hosted verification remain operator gates.
 
 ## Visual source of truth
 
@@ -50,12 +50,12 @@ what must be demonstrated before each stage moves to complete.
 | Stage | Current implementation | Live completion evidence |
 | --- | --- | --- |
 | Source configuration | `backend/sources.yaml` contains eight curated GitHub Atom feeds | Feed success, timeout, malformed-feed, and retry tests |
-| Scout | Bounded feed fetch, normalized `RawItem`, canonical URL dedupe, structured source logging, and async raw-item persistence helper | Persisted fetch telemetry and controlled end-to-end scheduling |
-| Synthesizer | Routed embeddings, deterministic cosine clustering, and narrow Tier.DEV severity classification with mocked tests | Persisted vectors and controlled end-to-end scheduling |
-| Insight | Routed structured output parsing, strict contract validation, citations, confidence, and model provenance with mocked tests | Persisted Insight records, durable provenance, and a controlled end-to-end run |
-| Briefing | Deterministic fixture ranking plus bounded grounded chat; local live routes retrieve through pgvector | Live-store-backed briefing ranking and controlled end-to-end scheduling |
-| API | Fixture FastAPI surface works | Live repository adapter and reproducible deployment |
-| Frontend | Local Next.js briefing view builds | Hosted view at `https://dr1ftless.vercel.app`; browser API fetch and CORS verified |
+| Scout | Bounded feed fetch, normalized `RawItem`, canonical URL dedupe, structured source logging, source-content hash, and async persistence | Scheduled fetch telemetry |
+| Synthesizer | Bounded routed embeddings, deterministic cosine clustering, and narrow Tier.DEV severity classification with mocked tests | A reviewed production-quality capture corpus |
+| Insight | Structured output, strict validation, trusted citations/severity/model provenance, persisted model-run audit data, and optional review notes | Reviewed real-model capture |
+| Briefing | Deterministic fixture ranking; live briefing/search/chat over persisted pgvector rows | Scheduled end-to-end population |
+| API | Fixture and local live-store adapters work | Reproducible deployed capture path |
+| Frontend | Local briefing cards expose confidence, model/audit label, and source links | Hosted view of captured data after redeploy |
 
 ## Runtime paths
 
@@ -86,13 +86,12 @@ GitHub Atom feeds → Scout → RawItem → Synthesizer → Insight → Briefing
                                       └─ embeddings  └─ citations + bounded action
 ```
 
-The intended durable store is PostgreSQL with pgvector. The Day 1 feed
-normalization and schema/migration foundation now exist. Standalone Insight
-generation validates structured model output and the live adapter can retrieve
-populated rows with pgvector, but generated records, saved provenance, and a
-controlled end-to-end run remain incomplete. `DRIFT_MODE=live` uses the live
-store in the current code; the last hosted verification remains the earlier
-fixture-backed deployment.
+The intended durable store is PostgreSQL with pgvector. The local capture job
+provides the controlled Scout → Synthesizer → Insight persistence path, writes
+insight embeddings and model-run provenance, and the live adapter retrieves
+those rows. It has not yet been run against a real database or real model and
+is not deployed. `DRIFT_MODE=live` uses the live store in the current code;
+the last hosted verification predates this capture path.
 
 ## Small request flows
 
@@ -146,7 +145,7 @@ The Pydantic contracts live in
 ### RawItem
 
 ```text
-id · source_id · title · url · published_at · raw_content · fetched_at
+id · source_id · title · url · published_at · raw_content · content_sha256 · fetched_at
 ```
 
 The canonical URL is the deduplication key. `raw_content` is untrusted source
@@ -167,15 +166,15 @@ An insight is not displayable unless it has:
 3. an exact model identifier or explicit fixture audit label; and
 4. a concrete, bounded `what_to_check` action.
 
-The planned live database keeps raw items, insights, embeddings, and model-run
+The local capture database keeps raw items, insights, embeddings, and model-run
 audit data durable:
 
 | Record | Purpose |
 | --- | --- |
 | `sources` | Curated feed list and enabled state |
-| `raw_items` | Source evidence and fetch metadata |
-| `insights` | User-facing contract plus embedding/provenance pointer |
-| `model_runs` | Tier, model, latency, usage, cost estimate, and outcome |
+| `raw_items` | Source evidence, fetch metadata, and source-content hash |
+| `insights` | User-facing contract, embedding, model-run pointer, and optional review notes |
+| `model_runs` | Operation, model, evidence/output hashes, usage, bounded settlement, and attempts |
 
 A citation URL alone is not sufficient provenance if the source content,
 retrieval time, and model/audit record cannot be recovered.
@@ -185,7 +184,7 @@ retrieval time, and model/audit record cannot be recovered.
 | Endpoint | Contract | Current behavior |
 | --- | --- | --- |
 | `GET /health` | status, mode, version | Working |
-| `GET /briefing?top_n=1..10` | `BriefingItem[]` | Working; severity/confidence/recency ranking |
+| `GET /briefing?top_n=1..10` | `BriefingItem[]` | Fixture ranking by default; live mode ranks persisted captured rows |
 | `GET /search?q=2..300 chars` | `Insight[]` | Fixture token relevance by default; live mode uses async query embeddings and pgvector |
 | `POST /chat` | `ChatRequest → ChatResponse` | Fixture composition by default; retrieve-first model answer in live mode |
 | `GET /docs` | Swagger UI | FastAPI-generated |
@@ -194,10 +193,10 @@ retrieval time, and model/audit record cannot be recovered.
 The chat path retrieves matching insights first. If no matching evidence exists,
 it returns an evidence-not-found response rather than answering from general
 model knowledge. In `DRIFT_MODE=live`, the `live` tier answers from the
-retrieved, citation-bearing evidence. In the current code, live `/search` and
-`/chat` retrieve from populated `insights.embedding` rows with pgvector;
-fixture mode remains the no-key path. The current hosted deployment predates
-this live-store wiring and remains documented separately as fixture-backed.
+retrieved, citation-bearing evidence. In the current code, live `/briefing`,
+`/search`, and `/chat` read populated `insights` rows; search and chat use
+pgvector retrieval. Fixture mode remains the no-key path. The current hosted
+deployment predates this live-store wiring and remains documented separately.
 
 ## Model, budget, and safety boundaries
 
@@ -216,13 +215,17 @@ source text inside an explicit data boundary and tests must include
 prompt-injection-shaped release text. A high `security` or `breaking` severity
 raises review priority; it never authorizes automation.
 
-`SpendGuard` reserves estimated cost before a provider call, settles actual
-usage, alerts at the configured threshold, and blocks the project ceiling. It
-does not replace provider-side account limits or secret management.
+`SpendGuard` reserves a retry envelope before every provider call, settles
+reported Responses usage when available, and conservatively settles a call cap
+when usage/pricing is not available. It alerts at the configured threshold and
+blocks the project ceiling; it does not replace provider-side account limits or
+secret management.
 
-### Live chat resilience
+### Provider-call resilience
 
-The bounded local live-chat path applies these controls in order:
+The synchronous capture calls apply client timeout → retry-envelope reservation
+→ transient retry with jitter → circuit breaker → settlement. Interactive live
+chat additionally applies a queue timeout and concurrency bulkhead:
 
 ```text
 queue timeout → concurrency bulkhead → retry-envelope reservation
@@ -280,9 +283,10 @@ with `/health`, `/docs`, and `/openapi.json` exposed publicly. As of
 See
 [ADR-007](adr/007-vercel-railway-deployment.md).
 
-The browser can consume the hosted API from Vercel. The `/briefing` response
-still uses committed fixture data; only grounded `/chat` uses the live model
-tier when the provider configuration is available.
+The browser can consume the hosted API from Vercel. The last verification
+predates the capture implementation; after redeployment, live `/briefing` must
+read captured rows and live `/search`/`chat` must be smoke-tested against that
+same cited store before any broader claim.
 
 The generated Swagger contract keeps route ownership visible through four
 groups: `system` for metadata and liveness, `briefing` for ranked insights,
@@ -304,15 +308,16 @@ that preserve the 100% floor.
 Before the live path is called complete:
 
 - [ ] migrations apply to a clean PostgreSQL instance;
-- [ ] feed success, timeout, malformed, and duplicate cases are tested;
+- [x] feed success, timeout, malformed, and duplicate cases are tested;
 - [x] local live-chat provider calls are behind the router and mocked;
 - [x] local live-chat source text is tested as untrusted data;
 - [x] standalone generated Insights satisfy the provenance contract in mocked
       provider tests;
-- [ ] every persisted/emitted live insight satisfies the provenance contract;
+- [x] the local capture code persists source hashes, model-run metadata,
+      embeddings, citations, and optional review notes;
 - [x] local live pgvector retrieval constrains chat context;
 - [x] local live-chat budget, capacity, and provider failures are tested; and
-- [ ] a controlled end-to-end run is saved and repeatable.
+- [ ] a paid, human-reviewed controlled end-to-end run is saved and repeatable.
 
 ## Decision records
 

@@ -13,9 +13,12 @@
       - Primary core-functionality session: `019f62b9-10b7-7d82-a463-e6eb1192141c`
       - Day 1/Day 2 implementation follow-up: `019f62e8-6715-70e2-a92a-fe28254f7b71`
       - Day 3/Day 4 Insight structured output: `019f6336-3690-7022-a8ef-c8c0947e240f`
+      - Bounded capture/provenance and documentation cleanup:
+        `019f66b4-78b8-7943-a41d-91e836d28f00`
 - [x] Use `019f62b9-10b7-7d82-a463-e6eb1192141c` as the primary `/feedback`
       Session ID if the Devpost form accepts only one.
-- [ ] Add real, saved GPT-5.6 output examples and cite their primary release URLs.
+- [ ] Run and human-review real, saved GPT-5.6 output examples through
+      `backend.pipeline`, then cite their primary release URLs.
 - [ ] Provide a judge path: hosted app, sandbox, or verified one-command local demo.
 - [ ] Upload a public YouTube video under three minutes with English narration.
 - [ ] Replace the placeholder with the final video URL:

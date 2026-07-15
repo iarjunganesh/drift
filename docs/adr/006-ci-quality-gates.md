@@ -26,10 +26,7 @@ encourage meaningless tests; no threshold would let regressions pass silently.
 
 ## Amendment — 2026-07-15
 
-The implemented fixture and live-grounded-chat paths now run at 100% line
-coverage. CI and Codecov enforce a 100% floor. Explicit future boundaries for
-scheduled Scout persistence, live-store population, and database integration
-remain visible until each stage has real behavior and tests.
-The standalone structured Insight generator is now implemented with mocked
-provider coverage; durable Insight persistence and end-to-end wiring remain
-outside this amendment.
+The implemented fixture, live-grounded-chat, and bounded local capture paths
+run at a 100% line-coverage floor. CI and Codecov enforce that floor. The
+capture job has mocked provider/persistence coverage; scheduled population and
+real PostgreSQL integration remain explicit verification boundaries.

@@ -73,6 +73,34 @@ async def test_resilience_opens_then_recovers_circuit_with_one_probe() -> None:
     breaker.before_call()
 
 
+def test_resilience_retries_synchronous_provider_calls() -> None:
+    attempts = 0
+    resilience = ModelCallResilience(policy(), CircuitBreaker(failure_threshold=2, reset_seconds=10))
+
+    def operation() -> str:
+        nonlocal attempts
+        attempts += 1
+        if attempts < 2:
+            raise TimeoutError("slow provider")
+        return "ok"
+
+    result = resilience.execute_sync(operation)
+
+    assert result.value == "ok"
+    assert result.attempts == 2
+
+
+def test_resilience_records_terminal_synchronous_transient_failure() -> None:
+    breaker = CircuitBreaker(failure_threshold=1, reset_seconds=10)
+    resilience = ModelCallResilience(policy(max_attempts=1), breaker)
+
+    with pytest.raises(TimeoutError):
+        resilience.execute_sync(lambda: (_ for _ in ()).throw(TimeoutError("slow provider")))
+
+    with pytest.raises(ProviderCircuitOpenError):
+        breaker.before_call()
+
+
 @pytest.mark.asyncio
 async def test_resilience_releases_half_open_probe_on_cancellation() -> None:
     now = [10.0]

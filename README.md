@@ -63,7 +63,7 @@ production changes.
 ## How It Works
 
 1. **Scout** reads configured primary release feeds and normalizes source items.
-2. **Synthesizer** will deduplicate, embed, cluster, and classify substantive
+2. **Synthesizer** deduplicates, embeds, clusters, and classifies substantive
    changes.
 3. **Insight** produces a structured explanation with citations, confidence,
    severity, and a bounded `what_to_check` action.
@@ -99,12 +99,12 @@ fresh live release analysis.
 
 <sub>Click to enlarge: <a href="assets/architecture/architecture-diagram-light.svg">light SVG</a> / <a href="assets/architecture/architecture-diagram-dark.svg">dark SVG</a> · Downloadable <a href="assets/architecture/architecture-diagram-light.png">light PNG</a> / <a href="assets/architecture/architecture-diagram-dark.png">dark PNG</a> · Source: <a href="assets/architecture/architecture-diagram.mmd"><code>architecture-diagram.mmd</code></a></sub>
 
-**In short:** the fixture path is complete and no-key; a bounded local
-model-backed chat path is available over its cited evidence. Scout ingestion,
-Day 2 embedding/clustering/classification, standalone structured Insight
-generation, local pgvector live-store retrieval, and the database foundation
-exist; feed scheduling, embedding/Insight persistence, hosted verification, and
-end-to-end generated briefing wiring remain explicit implementation boundaries.
+**In short:** the fixture path is complete and no-key. The local live capture
+path can persist source evidence, generate and embed Insights, preserve
+model-run/review provenance, and serve captured results through
+briefing/search/chat. Scheduled population, a real PostgreSQL run, reviewed
+real captures, hosted redeployment, and hosted verification remain explicit
+operator gates.
 
 > **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
@@ -113,8 +113,9 @@ end-to-end generated briefing wiring remain explicit implementation boundaries.
 ### Codex project initiatives
 
 The baseline, publication follow-up, bounded release milestones, and
-documentation follow-up are tied to six project initiatives. The grounded
-live-chat row remains the primary implementation session for the v0.4.0 release.
+documentation follow-up are tied to seven project initiatives. The grounded
+live-chat row remains the primary v0.4.0 implementation session; v0.5.0 adds
+the bounded local capture path.
 
 | Initiative | Session ID | Focus |
 | --- | --- | --- |
@@ -124,6 +125,7 @@ live-chat row remains the primary implementation session for the v0.4.0 release.
 | Day 1/Day 2 implementation follow-up | `019f62e8-6715-70e2-a92a-fe28254f7b71` | Scout feeds, async PostgreSQL/pgvector foundation, Tier.DEV embeddings/clustering/classification, session instructions, and status cleanup |
 | Grounded live chat, resilience, and locked delivery | `019f62b9-10b7-7d82-a463-e6eb1192141c` | Primary `0.2.0` candidate work: local live chat, async safeguards, locked delivery, and full implemented-code coverage |
 | Day 3/Day 4 Insight structured output | `019f6336-3690-7022-a8ef-c8c0947e240f` | Standalone `generate_insight()` structured parsing, strict validation, citations, confidence, and model provenance |
+| Bounded capture, provenance, and status cleanup | `019f66b4-78b8-7943-a41d-91e836d28f00` | One-shot persisted capture, all-call budget/retry controls, live briefing adapter, evidence UI, and documentation synchronization |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -139,14 +141,13 @@ the Day 3/Day 4 Insight implementation session is
 `019f6336-3690-7022-a8ef-c8c0947e240f`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
-provides an API key; the hosted Railway service was last verified in that mode
-on 2026-07-15. In that hosted verification, the `live` tier received at most
-three retrieved, citation-bearing fixture insights as untrusted data and
-answered only from that evidence. Fixture mode makes no provider call. This is not live release
-analysis, and scheduled Scout persistence, embedding persistence, generated
-Insight records, and the controlled live-release path
-remain explicit implementation boundaries; local live `/search` and `/chat`
-now use pgvector retrieval when the store is populated.
+provides an API key. The local capture job routes embeddings, classification,
+and structured Insight generation through the bounded provider boundary; it
+records source-content hashes and model-run metadata alongside persisted
+Insights. Fixture mode makes no provider call. No paid capture is committed or
+claimed yet. The hosted Railway service was last health/CORS-verified on
+2026-07-15 before this capture path was deployed, so it is not evidence of live
+release analysis.
 
 ### Architecture Decision Records
 
@@ -174,9 +175,9 @@ Agent code must not hard-code provider model names. The intended tiers are:
 
 | Tier | Intended job | Status |
 | --- | --- | --- |
-| `dev` / Luna | Classification, clustering, and prompt iteration | Embeddings, deterministic clustering, and narrow severity classification implemented and mocked |
-| `live` / Terra | Retrieve-first grounded chat | Bounded local live path |
-| `final` / Sol | Three to five reviewed demo insights | Target path |
+| `dev` / Luna | Classification, clustering, and prompt iteration | Bounded local capture path; run only with an explicit live key |
+| `live` / Terra | Retrieve-first grounded chat | Bounded local live path over captured pgvector rows |
+| `final` / Sol | Three to five reviewed demo insights | Capture path ready; no reviewed real output saved yet |
 
 Every live insight must preserve:
 
@@ -192,10 +193,11 @@ must never become model instructions or authorization to act on infrastructure.
 The local [SpendGuard](backend/core/budget.py) is a development safeguard;
 provider-side limits remain required for a deployed service.
 
-Live model requests are additionally bounded by a queue timeout and concurrency
-bulkhead, a per-attempt timeout, transient-failure retries with jitter, and a
-closed/open/half-open circuit breaker. A cancelled or uncertain provider attempt
-is accounted for conservatively; it is never silently treated as free.
+Live model requests are additionally bounded by a retry envelope, local spend
+reservation, configured client timeout, and a closed/open/half-open circuit
+breaker. Interactive chat also has a queue timeout and concurrency bulkhead. A
+cancelled, failed, or usage-unknown provider attempt is accounted for
+conservatively; it is never silently treated as free.
 
 ---
 
@@ -225,12 +227,13 @@ that frozen lockfile. JavaScript dependencies are locked in
 
 The Railway API and Vercel frontend are live. The Vercel project deploys from
 `frontend/` using its checked-in build configuration. The hosted API was last
-verified on 2026-07-15 in bounded `DRIFT_MODE=live`; live mode applies only to
-grounded `/chat` over fixture evidence. The briefing remains fixture-backed.
+health/CORS-verified on 2026-07-15 in `DRIFT_MODE=live`. That verification
+predates the local capture path, so the current hosted briefing/search/chat
+behavior must be rechecked after a database-backed redeploy.
 
 | | |
 | --- | --- |
-| **Mode** | `live` — bounded grounded chat over cited fixture evidence |
+| **Last verified mode** | `live` — health and Vercel CORS only; capture-path behavior not yet deployed |
 | **Frontend** | [https://dr1ftless.vercel.app](https://dr1ftless.vercel.app) |
 | **API** | [https://drift-api-prod.up.railway.app](https://drift-api-prod.up.railway.app) |
 | **Swagger** | [`/docs`](https://drift-api-prod.up.railway.app/docs) |
@@ -239,8 +242,9 @@ grounded `/chat` over fixture evidence. The briefing remains fixture-backed.
 | **Demo Video** | [`https://youtu.be/TBD`](https://youtu.be/TBD) *(≤ 3 min, record before submission)* |
 | **Public demo** | Vercel frontend and Railway API are live; Vercel-to-Railway CORS was verified on 2026-07-15 |
 
-The live feed → Postgres → embedding → model path is not yet claimed as
-working. The fixture path is the reproducible demo for reviewers today.
+The local capture command is implemented but no reviewed real-model run is
+saved or hosted yet. The fixture path remains the reproducible demo for
+reviewers today.
 
 The Swagger contract groups the backend into **System**, **Briefing**,
 **Search**, and **Chat** sections so reviewers can navigate the API by job.
@@ -256,9 +260,9 @@ both SVG and PNG formats:
 | --- | --- |
 | [![DRIFT architecture light](assets/architecture/architecture-diagram-light.png)](assets/architecture/architecture-diagram-light.svg) | [![DRIFT architecture dark](assets/architecture/architecture-diagram-dark.png)](assets/architecture/architecture-diagram-dark.svg) |
 
-The Next.js briefing view is intentionally small while the live pipeline is
-being built; it is verified by the production build gate rather than presented
-as a completed hosted product.
+The Next.js briefing view exposes each record's status label, confidence,
+model/audit label, rationale, bounded action, and source links. The current
+hosted UI remains a separately verified deployment boundary.
 
 ---
 
@@ -307,6 +311,20 @@ For the durable PostgreSQL path, start the configured database and run
 `make migrate` (or `uv run alembic upgrade head`) before connecting a live
 store. The fixture path does not require a database.
 
+To create a bounded capture after the migration, enable live mode and provide
+an API key, then select a deliberately small source set. Start with `dev` for
+prompt iteration. Use `final` only after reviewing the source material and add
+review notes only after checking the generated record:
+
+```powershell
+$env:DRIFT_MODE='live'
+uv run python -m backend.pipeline --source vllm --source tensorrt --source pytorch --tier dev
+uv run python -m backend.pipeline --source vllm --tier final --review-notes "Verified against the linked primary release."
+```
+
+This command makes paid provider calls and writes durable rows. It is not a
+scheduled feed service and does not, by itself, verify the hosted deployment.
+
 ---
 
 ## Synthetic Fixture Data
@@ -336,6 +354,7 @@ drift/
 │   ├── fixtures/        # Deterministic citation-backed example insights
 │   ├── models/           # Pydantic domain and API contracts
 │   ├── main.py           # FastAPI app: health, briefing, search, chat
+│   ├── pipeline.py        # Bounded one-shot live capture CLI
 │   ├── sources.yaml      # Primary release-feed configuration
 ├── frontend/             # Next.js + React + TypeScript briefing view
 │   ├── .nvmrc            # Node.js 24.x local/runtime selection
@@ -355,6 +374,7 @@ drift/
 ├── submission/            # Developer Tools handoff, checklist, and demo script
 ├── Dockerfile             # Railway image built from frozen uv.lock
 ├── docker-compose.yml     # Local API + PostgreSQL + frontend wiring
+├── migrations/             # Alembic schema and provenance revisions
 ├── railway.json           # Railway build and health-check configuration
 ├── pyproject.toml         # Python project, Ruff, mypy, pytest, coverage
 ├── uv.lock                # Reproducible Python dependency resolution
@@ -369,7 +389,8 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **95 tests passed and 100.00% coverage**. The
+The current local result is **118 tests passed and 100.00% backend coverage**.
+The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline boundaries remain visible while
 the fixture and standalone Insight stages are covered with tests.
@@ -389,10 +410,10 @@ the repository-specific [Codecov report](https://codecov.io/gh/iarjunganesh/drif
 
 ### Load & Resilience
 
-The live-chat boundary has deterministic timeout, retry, capacity, circuit, and
-provider-failure tests. Load testing, feed retry behavior, PostgreSQL failure
-behavior, and a hosted HTTP smoke test remain future work before any
-production-readiness claim.
+The live-chat boundary and synchronous capture calls have deterministic budget,
+retry, circuit, and provider-failure coverage. A real PostgreSQL migration/run,
+load testing, and a hosted capture-path smoke test remain future work before
+any production-readiness claim.
 
 ---
 
@@ -405,32 +426,30 @@ The remaining hosted verification operations are documented in
 1. confirm the `pytest` upload in Codecov; and
 2. enable branch protection requiring the CI quality gate.
 
-Hosted CORS and browser connectivity were verified on 2026-07-15. The
-briefing is intentionally still fixture-backed; this is not live release
-analysis.
+Hosted health, CORS, and browser connectivity were verified on 2026-07-15.
+That deployment predates the capture path and must be redeployed and tested
+before any live-store claim.
 
 ---
 
 ## Future Roadmap
 
-**Working now:** standalone structured Insight generation, local pgvector
-retrieval for live `/search` and `/chat`, hosted bounded live-chat API over
-fixture evidence, deployed Vercel frontend, typed contracts, model-router
-boundary, architecture evidence, CI gates, Codecov upload configuration, and a
-local Next.js briefing view.
+**Working locally:** a bounded one-shot capture path from primary release feed
+to persisted raw evidence, structured Insight, pgvector embedding, model-run
+audit row, and live briefing/search/chat retrieval; the fixture demo, evidence
+UI, typed contracts, model-router boundary, architecture evidence, CI gates,
+and deployed Vercel frontend.
 
 **Next implementation slices:**
 
-- add scheduled Scout execution with durable raw-item telemetry;
-- exercise the Alembic migration against a clean PostgreSQL instance and add
-  async live-store integration coverage;
-- persist Day 2 embeddings into the live store and exercise end-to-end retrieval;
-- persist generated Insights and provenance, then wire the controlled
-  Scout → Synthesizer → Insight → Briefing run;
+- execute and human-review three to five bounded primary-source captures;
+- exercise the Alembic migration and capture path against a clean PostgreSQL
+  instance, then add a real integration run to delivery verification;
+- add scheduled Scout execution only after the reviewed capture path is proven;
 - maintain 100% implemented-code coverage as each live stage becomes real;
-- run and record one hosted live `/chat` provider smoke test;
-- capture reproducible live-release-analysis evidence before broadening the
-  bounded model-backed chat claim.
+- deploy the database-backed capture path and run/record one hosted briefing,
+  search, and chat smoke test;
+- record and submit the public narrated demo.
 
 Full decisions and sequencing live in [docs/adr/](docs/adr/),
 [docs/BUILD_SEQUENCE.md](docs/BUILD_SEQUENCE.md),

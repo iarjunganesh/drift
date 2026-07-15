@@ -1,6 +1,6 @@
 [project]
 name = "drift-release-intelligence"
-version = "0.4.0"
+version = "0.5.0"
 description = "Release intelligence for GPU and AI-infrastructure teams"
 readme = "README.md"
 requires-python = ">=3.14"

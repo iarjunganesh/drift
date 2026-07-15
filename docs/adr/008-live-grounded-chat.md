@@ -27,15 +27,15 @@ embedding retrieval, or durable model-run provenance exists.
   provider failures after retries return 502 without exposing provider details.
 - The retry, timeout, bulkhead, circuit, and conservative settlement mechanics
   are governed by ADR-009; this ADR remains the scope boundary for live chat.
-- Scheduled Scout persistence, live-store population, embedding persistence,
-  generated Insight records, and end-to-end Scout/Synthesizer wiring remain
+- Scheduled Scout population and a deployed, reviewed live-store capture remain
   implementation boundaries.
 
 ## Implementation addendum — 2026-07-15
 
 The original hosted/fixture boundary remains the verified deployment behavior.
-The current local code additionally supports live `/search` and `/chat` over
-populated PostgreSQL/pgvector Insight rows: it embeds the query, retrieves
-cited rows by cosine distance, and only then invokes the live chat model. This
-local path is not a hosted live-release-analysis claim until the database is
-populated, exercised against PostgreSQL, and redeployed/verified.
+The current local code supports a one-shot bounded capture job that populates
+PostgreSQL/pgvector Insight rows with source and model-run provenance. Local
+live `/briefing`, `/search`, and `/chat` read those rows; search and chat
+retrieve cited evidence before the model call. This is not a hosted
+live-release-analysis claim until the database is exercised, captures are
+reviewed, and the service is redeployed/verified.

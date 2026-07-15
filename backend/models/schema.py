@@ -13,7 +13,7 @@ bankers-wrapped reference repo without importing its unrelated dependencies.
 """
 
 from collections.abc import AsyncIterator
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 
 from pgvector.sqlalchemy import Vector
@@ -80,6 +80,7 @@ class RawItemRow(Base):
     url: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
     published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     raw_content: Mapped[str] = mapped_column(Text, nullable=False)
+    content_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
     fetched_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -106,7 +107,31 @@ class InsightRow(Base):
     source_citations: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
     confidence: Mapped[float] = mapped_column(Float, nullable=False)
     model_used: Mapped[str] = mapped_column(String(255), nullable=False)
+    model_run_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("model_runs.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    human_review_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     embedding: Mapped[list[float] | None] = mapped_column(Vector(1536), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class ModelRunRow(Base):
+    """Immutable audit data for a generated, persisted Insight."""
+
+    __tablename__ = "model_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    operation: Mapped[str] = mapped_column(String(100), nullable=False)
+    model_used: Mapped[str] = mapped_column(String(255), nullable=False)
+    evidence_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    output_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    input_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    output_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    settled_usd: Mapped[float] = mapped_column(Float, nullable=False)
+    provider_attempts: Mapped[int] = mapped_column(Integer, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -129,7 +154,7 @@ class RawItem(BaseModel):
     url: str
     published_at: datetime
     raw_content: str
-    fetched_at: datetime = Field(default_factory=datetime.utcnow)
+    fetched_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class Insight(BaseModel):
@@ -149,7 +174,7 @@ class Insight(BaseModel):
     source_citations: list[str]     # URLs — every claim must trace back here
     confidence: float = Field(ge=0.0, le=1.0)  # model's own confidence flag
     model_used: str                 # which tier generated this (audit trail)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class BriefingItem(BaseModel):

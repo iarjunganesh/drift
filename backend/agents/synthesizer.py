@@ -4,6 +4,7 @@ import json
 import math
 from typing import Any
 
+from backend.core.budget import SpendGuard
 from backend.core.config import settings
 from backend.core.model_router import (
     Tier,
@@ -11,6 +12,7 @@ from backend.core.model_router import (
     create_embedding_response,
     create_structured_response,
 )
+from backend.core.resilience import ModelCallResilience
 from backend.models.schema import ChangeSeverity, RawItem
 
 _DEFAULT_CLUSTER_THRESHOLD = 0.82
@@ -38,19 +40,48 @@ def _item_text(item: RawItem) -> str:
     return f"{item.title}\n{item.raw_content}".strip()
 
 
-def embed_items(items: list[RawItem], *, client: Any | None = None) -> list[list[float]]:
-    """Batch-embed raw release text through the router's embedding model."""
-    if not items:
+def embed_texts(
+    inputs: list[str],
+    *,
+    client: Any | None = None,
+    spend_guard: SpendGuard | None = None,
+    resilience: ModelCallResilience | None = None,
+    operation_name: str = "synthesizer.embed",
+) -> list[list[float]]:
+    """Batch-embed bounded text through the router's embedding model."""
+    if not inputs:
         return []
     owned_client = client is None
     active_client = client or create_client(settings.openai_api_key, settings.model_timeout_seconds)
     try:
-        response = create_embedding_response(active_client, [_item_text(item) for item in items])
+        response = create_embedding_response(
+            active_client,
+            inputs,
+            spend_guard=spend_guard,
+            resilience=resilience,
+            operation_name=operation_name,
+        )
         data = sorted(response.data, key=lambda embedding: getattr(embedding, "index", 0))
         return [[float(value) for value in embedding.embedding] for embedding in data]
     finally:
         if owned_client:
             active_client.close()
+
+
+def embed_items(
+    items: list[RawItem],
+    *,
+    client: Any | None = None,
+    spend_guard: SpendGuard | None = None,
+    resilience: ModelCallResilience | None = None,
+) -> list[list[float]]:
+    """Batch-embed raw release text through the router's embedding model."""
+    return embed_texts(
+        [_item_text(item) for item in items],
+        client=client,
+        spend_guard=spend_guard,
+        resilience=resilience,
+    )
 
 
 def _cosine_similarity(left: list[float], right: list[float]) -> float:
@@ -93,7 +124,13 @@ def cluster_items(
     return [[items[index] for index in cluster] for cluster in clusters]
 
 
-def classify_change(cluster: list[RawItem], *, client: Any | None = None) -> ChangeSeverity:
+def classify_change(
+    cluster: list[RawItem],
+    *,
+    client: Any | None = None,
+    spend_guard: SpendGuard | None = None,
+    resilience: ModelCallResilience | None = None,
+) -> ChangeSeverity:
     """Classify one cluster with a small Tier.DEV structured model call."""
     if not cluster:
         raise ValueError("Cannot classify an empty cluster.")
@@ -115,6 +152,9 @@ def classify_change(cluster: list[RawItem], *, client: Any | None = None) -> Cha
             input_text=json.dumps(evidence, ensure_ascii=False),
             schema=_CLASSIFICATION_SCHEMA,
             max_output_tokens=40,
+            spend_guard=spend_guard,
+            resilience=resilience,
+            operation_name="synthesizer.classify",
         )
         raw_output = getattr(response, "output_text", "")
         try:
@@ -132,7 +172,11 @@ def classify_change(cluster: list[RawItem], *, client: Any | None = None) -> Cha
 
 
 def run_synthesizer(
-    items: list[RawItem], *, client: Any | None = None
+    items: list[RawItem],
+    *,
+    client: Any | None = None,
+    spend_guard: SpendGuard | None = None,
+    resilience: ModelCallResilience | None = None,
 ) -> list[tuple[list[RawItem], ChangeSeverity]]:
     """Run the Day 2 batch stages with one optional shared provider client."""
     owned_client = client is None and bool(items)
@@ -140,10 +184,23 @@ def run_synthesizer(
     if owned_client:
         active_client = create_client(settings.openai_api_key, settings.model_timeout_seconds)
     try:
-        embeddings = embed_items(items, client=active_client)
+        embeddings = embed_items(
+            items,
+            client=active_client,
+            spend_guard=spend_guard,
+            resilience=resilience,
+        )
         clusters = cluster_items(items, embeddings)
         return [
-            (cluster, classify_change(cluster, client=active_client))
+            (
+                cluster,
+                classify_change(
+                    cluster,
+                    client=active_client,
+                    spend_guard=spend_guard,
+                    resilience=resilience,
+                ),
+            )
             for cluster in clusters
         ]
     finally:

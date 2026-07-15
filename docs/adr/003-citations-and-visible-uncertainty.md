@@ -29,5 +29,7 @@ useful release intelligence.
 and validates the model-owned fields against a strict schema. Raw-item IDs,
 severity, source URLs, and the exact routed model identifier are derived from
 trusted pipeline inputs rather than accepted from model output. The generator
-is covered with mocked provider tests; durable persistence and end-to-end
-pipeline wiring remain future work.
+is covered with mocked provider tests. The local capture path now persists
+source-content hashes, model-run audit metadata, generated Insights, and
+optional review notes; the frontend exposes confidence, model/audit labels, and
+source links. A reviewed real-model capture remains an operator gate.

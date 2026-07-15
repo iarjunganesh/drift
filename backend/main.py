@@ -28,7 +28,12 @@ from backend.agents.briefing import (
 )
 from backend.core.budget import BudgetExceededError, SpendGuard
 from backend.core.config import settings
-from backend.core.live_store import retrieve_live_insights as retrieve_live_store_insights
+from backend.core.live_store import (
+    latest_live_insights,
+)
+from backend.core.live_store import (
+    retrieve_live_insights as retrieve_live_store_insights,
+)
 from backend.core.model_router import Tier, create_async_client, get_model
 from backend.core.resilience import (
     CircuitBreaker,
@@ -118,6 +123,12 @@ async def _retrieve_live_insights(query: str, *, limit: int = 5) -> list[Insight
         )
 
 
+async def _latest_live_insights(*, limit: int = 5) -> list[Insight]:
+    """Load the captured live-store briefing without a new model call."""
+    async with session_factory() as session:
+        return await latest_live_insights(session, limit=limit)
+
+
 @app.get(
     "/",
     tags=["system"],
@@ -153,6 +164,14 @@ async def health() -> dict:
     description="Rank the most important cited insights for the current briefing.",
 )
 async def briefing(top_n: int = Query(default=5, ge=1, le=10)) -> list[BriefingItem]:
+    if settings.mode == "live":
+        try:
+            return build_daily_briefing(await _latest_live_insights(limit=top_n), top_n)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=503,
+                detail="The live Insight store could not build a briefing.",
+            ) from exc
     return build_daily_briefing(app.state.insight_store.all(), top_n)
 
 

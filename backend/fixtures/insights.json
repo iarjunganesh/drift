@@ -34,7 +34,7 @@
     "summary": "This fixture demonstrates a lower-priority item with an explicit confidence signal.",
     "why_it_matters": "Distributed communication changes can affect multi-node behavior without altering single-node development results.",
     "what_to_check": "If you use multi-node training, run a representative collective-communication test before scheduling an upgrade.",
-    "severity": "security",
+    "severity": "minor",
     "affected_libraries": ["nccl"],
     "source_citations": ["https://github.com/NVIDIA/nccl/releases"],
     "confidence": 0.69,

@@ -100,3 +100,16 @@ async def test_retrieve_live_insights_rejects_empty_embedding_response() -> None
 
     with pytest.raises(RuntimeError, match="no query vector"):
         await live_store.retrieve_live_insights(FakeSession([]), "vllm", client=client)
+
+
+@pytest.mark.asyncio
+async def test_latest_live_insights_orders_by_creation_time_and_validates_limit() -> None:
+    session = FakeSession([make_row(2), make_row(1)])
+
+    result = await live_store.latest_live_insights(session, limit=2)
+
+    assert [insight.id for insight in result] == [2, 1]
+    compiled = str(session.statement.compile(dialect=postgresql.dialect()))
+    assert "ORDER BY insights.created_at DESC" in compiled
+    with pytest.raises(ValueError, match="Briefing limit"):
+        await live_store.latest_live_insights(session, limit=0)

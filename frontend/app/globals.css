@@ -49,11 +49,19 @@ h1 { max-width: 760px; font-size: clamp(3.2rem, 8vw, 6.6rem); line-height: 0.94;
 .card h3 { margin: 0 0 10px; }
 .card p { color: var(--muted); line-height: 1.55; margin: 0; }
 .items { display: grid; gap: 12px; }
-.item { display: flex; justify-content: space-between; gap: 20px; align-items: center; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; }
-.item small { color: var(--muted); }
+.item { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+.item-body { min-width: 0; }
+.item-heading { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.item-body p { color: var(--muted); line-height: 1.55; margin: 10px 0 0; }
+.item-body p strong { color: var(--ink); }
+.audit-label { color: var(--cyan); border: 1px solid rgba(56, 189, 248, .35); border-radius: 999px; padding: 3px 8px; font-size: .72rem; font-weight: 700; }
+.evidence-row { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: .82rem; margin-top: 14px; }
+.citations { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.citations a { color: var(--cyan); font-size: .82rem; font-weight: 700; text-decoration: none; }
+.citations a:hover { text-decoration: underline; }
 .pill { border-radius: 999px; padding: 5px 9px; font-size: .75rem; font-weight: 800; text-transform: uppercase; }
 .pill.security { background: rgba(251, 146, 60, .16); color: var(--amber); }
 .pill.breaking { background: rgba(167, 139, 250, .16); color: var(--violet); }
 .pill.minor { background: rgba(56, 189, 248, .14); color: var(--cyan); }
 .footer { color: var(--muted); font-size: .85rem; padding-top: 30px; }
-@media (max-width: 800px) { .hero { grid-template-columns: 1fr; padding-top: 64px; } .cards { grid-template-columns: 1fr; } h1 { font-size: 4rem; } }
+@media (max-width: 800px) { .hero { grid-template-columns: 1fr; padding-top: 64px; } .cards { grid-template-columns: 1fr; } .item { flex-direction: column; } h1 { font-size: 4rem; } }

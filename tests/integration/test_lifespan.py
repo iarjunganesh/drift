@@ -48,6 +48,25 @@ async def test_live_retrieval_helper_opens_a_session(monkeypatch) -> None:
     assert await main._retrieve_live_insights("vllm", limit=2) == []
 
 
+@pytest.mark.asyncio
+async def test_latest_live_insights_helper_opens_a_session(monkeypatch) -> None:
+    class SessionContext:
+        async def __aenter__(self):
+            return "session"
+
+        async def __aexit__(self, *_args) -> None:
+            pass
+
+    async def fake_latest(session, *, limit):
+        assert (session, limit) == ("session", 2)
+        return []
+
+    monkeypatch.setattr(main, "session_factory", lambda: SessionContext())
+    monkeypatch.setattr(main, "latest_live_insights", fake_latest)
+
+    assert await main._latest_live_insights(limit=2) == []
+
+
 def test_live_chat_returns_the_live_model_audit_label(monkeypatch, tmp_path) -> None:
     class FakeResponses:
         async def create(self, **kwargs):
@@ -161,6 +180,54 @@ def test_live_search_uses_live_store(monkeypatch, tmp_path) -> None:
 
     assert response.status_code == 200
     assert response.json()[0]["id"] == 1
+
+
+def test_live_briefing_uses_persisted_store(monkeypatch) -> None:
+    class FakeClient:
+        async def close(self) -> None:
+            pass
+
+    monkeypatch.setattr(
+        main,
+        "settings",
+        replace(settings, mode="live", openai_api_key="test-key"),
+    )
+    monkeypatch.setattr(main, "create_async_client", lambda *_: FakeClient())
+
+    async def live_briefing(*, limit: int = 5):
+        return InsightStore.from_json(settings.fixture_path).all()[:limit]
+
+    monkeypatch.setattr(main, "_latest_live_insights", live_briefing)
+
+    with TestClient(main.app) as client:
+        response = client.get("/briefing", params={"top_n": 1})
+
+    assert response.status_code == 200
+    assert response.json()[0]["insight"]["id"] == 1
+
+
+def test_live_briefing_returns_service_unavailable_when_store_fails(monkeypatch) -> None:
+    class FakeClient:
+        async def close(self) -> None:
+            pass
+
+    monkeypatch.setattr(
+        main,
+        "settings",
+        replace(settings, mode="live", openai_api_key="test-key"),
+    )
+    monkeypatch.setattr(main, "create_async_client", lambda *_: FakeClient())
+
+    async def failing_briefing(*, limit: int = 5):
+        raise RuntimeError("database unavailable")
+
+    monkeypatch.setattr(main, "_latest_live_insights", failing_briefing)
+
+    with TestClient(main.app) as client:
+        response = client.get("/briefing")
+
+    assert response.status_code == 503
+    assert response.json()["detail"] == "The live Insight store could not build a briefing."
 
 
 def test_live_search_returns_service_unavailable_when_store_fails(monkeypatch) -> None:

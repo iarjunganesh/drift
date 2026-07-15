@@ -3,6 +3,7 @@
 from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
+from hashlib import sha256
 from io import BytesIO
 from pathlib import Path
 from time import monotonic, sleep
@@ -43,7 +44,7 @@ def _download_feed(feed_url: str) -> bytes:
         with httpx.Client(
             follow_redirects=True,
             timeout=settings.scout_timeout_seconds,
-            headers={"User-Agent": "DRIFT/0.4.0 (+release-intelligence)"},
+            headers={"User-Agent": "DRIFT/0.5.0 (+release-intelligence)"},
         ) as client:
             response = client.get(feed_url)
             response.raise_for_status()
@@ -153,11 +154,11 @@ def _fetch_with_retry(source: dict) -> tuple[list[RawItem], int]:
     raise AssertionError("Scout retry loop exited without returning or raising.")
 
 
-def run_scout() -> list[RawItem]:
+def run_scout(sources: Iterable[dict] | None = None) -> list[RawItem]:
     """Fetch all configured sources, continuing after bounded source failures."""
-    sources = load_sources()
+    source_list = list(sources) if sources is not None else load_sources()
     all_items: list[RawItem] = []
-    for source in sources:
+    for source in source_list:
         started = monotonic()
         try:
             items, attempts = _fetch_with_retry(source)
@@ -233,12 +234,42 @@ async def store_raw_items(
                 url=item.url,
                 published_at=item.published_at,
                 raw_content=item.raw_content,
+                content_sha256=sha256(item.raw_content.encode("utf-8")).hexdigest(),
                 fetched_at=item.fetched_at,
             )
         )
     session.add_all(new_rows)
     await session.commit()
     return len(new_rows)
+
+
+async def load_persisted_raw_items(
+    session: AsyncSession,
+    urls: Iterable[str],
+) -> list[RawItem]:
+    """Reload persisted evidence with durable IDs for the Insight contract."""
+    url_list = list(dict.fromkeys(urls))
+    if not url_list:
+        return []
+    rows = (
+        await session.scalars(select(RawItemRow).where(RawItemRow.url.in_(set(url_list))))
+    ).all()
+    by_url = {row.url: row for row in rows}
+    missing_urls = [url for url in url_list if url not in by_url]
+    if missing_urls:
+        raise RuntimeError("Persisted raw-item lookup did not return every requested source URL.")
+    return [
+        RawItem(
+            id=by_url[url].id,
+            source_id=by_url[url].source_id,
+            title=by_url[url].title,
+            url=by_url[url].url,
+            published_at=by_url[url].published_at,
+            raw_content=by_url[url].raw_content,
+            fetched_at=by_url[url].fetched_at,
+        )
+        for url in url_list
+    ]
 
 
 if __name__ == "__main__":  # pragma: no cover - manual CLI convenience path

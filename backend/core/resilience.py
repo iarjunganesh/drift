@@ -126,6 +126,33 @@ class ModelCallResilience:
         except asyncio.CancelledError:
             raise
 
+    def execute_sync(self, operation: Callable[[], T]) -> ResilientResult[T]:
+        """Execute one synchronous provider request with the same retry policy.
+
+        The batch pipeline uses the synchronous OpenAI client so it can share
+        one client across embedding, classification, and Insight calls. Its
+        client timeout is configured at construction time; this method applies
+        the same transient-error, retry, and circuit policy as live chat.
+        """
+        self.circuit_breaker.before_call()
+        attempt_number = 0
+        while True:
+            attempt_number += 1
+            try:
+                result = operation()
+            except Exception as error:
+                retryable = is_transient_provider_error(error) or isinstance(error, TimeoutError)
+                if not retryable:
+                    self.circuit_breaker.abandon_call()
+                    raise
+                if attempt_number == self.retry_policy.max_attempts:
+                    self.circuit_breaker.record_transient_failure()
+                    raise
+                time.sleep(self.retry_policy.delay_for(attempt_number))
+            else:
+                self.circuit_breaker.record_success()
+                return ResilientResult(value=result, attempts=attempt_number)
+
 
 async def acquire_model_capacity(
     limiter: asyncio.Semaphore, queue_timeout_seconds: float

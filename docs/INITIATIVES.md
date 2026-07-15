@@ -1,6 +1,6 @@
 # DRIFT project initiatives
 
-These are the six Codex project initiatives associated with the DRIFT baseline,
+These are the seven Codex project initiatives associated with the DRIFT baseline,
 publication follow-up, `0.2.0` release candidate, and the current build-sequence
 implementation work. They are submission evidence pointers for the build work;
 they are not model-run provenance and do not turn fixture records into live
@@ -188,17 +188,47 @@ Scout → Synthesizer → Insight → Briefing wiring remain incomplete; hosted
 The local live-store path now embeds a query through the model router, orders
 populated `InsightRow.embedding` values by pgvector cosine distance, maps rows
 back to the cited `Insight` contract, and uses that retrieval for live
-`/search` and `/chat`. The full suite passes 95 tests with 100.00% backend
-coverage.
+`/search` and `/chat`. The later capture-path follow-up expanded the suite to
+118 tests at 100.00% backend coverage.
 
-Durable Insight/embedding population, a real PostgreSQL integration run, and
-hosted verification remain incomplete.
+The local capture path now supplies durable Insight/embedding population and
+model-run/source-hash provenance. A real PostgreSQL integration run, reviewed
+real-model captures, deployed capture-job verification, and hosted verification
+remain incomplete.
+
+## Initiative 07 — Bounded capture, provenance, and status cleanup
+
+**Codex Session ID:** `019f66b4-78b8-7943-a41d-91e836d28f00`
+
+**Date:** 2026-07-15
+
+This session closed the local code gap between the individual typed stages and
+an inspectable, persisted capture path:
+
+- added a one-shot `backend.pipeline` CLI that selects a bounded source set,
+  persists and reloads raw evidence, synthesizes and generates Insights,
+  embeds them, and writes the cited live store;
+- added source-content hashes, `model_runs` audit rows, response-token/cost and
+  retry-attempt records, plus optional human review notes and timestamps;
+- extended the bounded retry/circuit and spend-reservation policy to sync
+  embeddings, classification, and Insight generation rather than chat alone;
+- made local live `/briefing` read the captured store and exposed confidence,
+  model/audit labels, and source links in the frontend; and
+- corrected the misleading fixture `security` label and reconciled the project
+  status documents with the new local boundary.
+
+The session did not run a paid model capture, apply migrations to a real
+PostgreSQL service, deploy, record a video, or submit the project. Those remain
+operator-owned verification gates.
 
 ## Submission usage
 
-All six IDs should be retained in the project README and submission notes. If
+Devpost requires one primary `/feedback` session, use Initiative 04:
+All seven IDs should be retained in the project README, changelog, and
+submission notes. If Devpost requires one primary `/feedback` session, use Initiative 04:
 Devpost requires one primary `/feedback` session, use Initiative 04:
 `019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
-2 implementation and synchronization record, and Initiative 06 is the additive
-Day 3/Day 4 Insight implementation record; the earlier sessions remain the
+2 implementation and synchronization record, Initiative 06 is the additive
+Day 3/Day 4 Insight implementation record, and Initiative 07 is the bounded
+capture/provenance and cleanup record; the earlier sessions remain the
 foundation, publication, and hosted-demo follow-up initiatives.
