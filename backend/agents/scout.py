@@ -43,7 +43,7 @@ def _download_feed(feed_url: str) -> bytes:
         with httpx.Client(
             follow_redirects=True,
             timeout=settings.scout_timeout_seconds,
-            headers={"User-Agent": "DRIFT/0.3.0 (+release-intelligence)"},
+            headers={"User-Agent": "DRIFT/0.3.1 (+release-intelligence)"},
         ) as client:
             response = client.get(feed_url)
             response.raise_for_status()

@@ -60,7 +60,7 @@ def test_synthesizer_orchestrates_embeddings_clusters_and_classification(monkeyp
         synthesizer, "classify_change", lambda _, **__: ChangeSeverity.BREAKING
     )
 
-    assert synthesizer.run_synthesizer(items) == [
+    assert synthesizer.run_synthesizer(items, client=object()) == [
         ([items[0]], ChangeSeverity.BREAKING),
         ([items[1]], ChangeSeverity.BREAKING),
     ]

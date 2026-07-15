@@ -12,6 +12,18 @@ the annotated `v0.1.0` tag.
 
 No unreleased changes.
 
+## [0.3.1] - 2026-07-15
+
+This corrective patch makes the v0.3.0 test and release path independent of
+developer-only environment credentials.
+
+### Fixed
+
+- Injected a dummy client into the Synthesizer orchestration unit test and
+  added deterministic sync-client factory coverage, so GitHub Actions does not
+  attempt to construct an OpenAI client without `OPENAI_API_KEY`.
+- Preserved the 100% backend coverage gate with 80 passing tests.
+
 ## [0.3.0] - 2026-07-15
 
 This release adds bounded primary-source feed ingestion, the async
@@ -167,6 +179,7 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.3.1]: #031---2026-07-15
 [0.3.0]: #030---2026-07-15
 [0.2.0]: #020---2026-07-15
 [0.1.0]: #010---2026-07-14

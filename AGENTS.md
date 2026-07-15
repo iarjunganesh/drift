@@ -6,7 +6,7 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.3.0` bounded live-chat and pipeline-foundation release. The deterministic API and
+**Current phase:** `v0.3.1` bounded live-chat and pipeline-foundation release. The deterministic API and
 small Next.js briefing view are usable. `DRIFT_MODE=live` adds bounded,
 retrieve-first model chat over cited fixture evidence only; live-store
 scheduling/integration and retrieval, embedding persistence, model-backed

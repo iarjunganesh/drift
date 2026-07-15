@@ -3,6 +3,7 @@ import pytest
 from backend.core.model_router import (
     Tier,
     create_async_client,
+    create_client,
     create_text_response,
     estimate_response_cost_usd,
     get_model,
@@ -26,6 +27,14 @@ def test_model_router_resolves_every_tier_and_costs_usage() -> None:
 
     with pytest.raises(ValueError, match="Token counts"):
         estimate_response_cost_usd("gpt-5.6-terra", -1, 0)
+
+
+def test_model_router_creates_sync_client_without_environment_credentials() -> None:
+    client = create_client("test-key", timeout_seconds=5)
+    try:
+        assert client.api_key == "test-key"
+    finally:
+        client.close()
 
 
 @pytest.mark.asyncio
