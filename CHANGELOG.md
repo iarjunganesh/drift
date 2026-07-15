@@ -10,7 +10,10 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
-No unreleased changes.
+### Changed
+
+- Synchronized the current quality summary with the credential-free
+  v0.3.1 validation: 80 tests pass at 100.00% backend coverage.
 
 ## [0.3.1] - 2026-07-15
 

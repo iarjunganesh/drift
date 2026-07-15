@@ -126,7 +126,10 @@ Initiative 04, not a replacement for Initiative 04’s primary session ID.
 - Real Scout smoke run: all eight configured GitHub Atom feeds succeeded with
   ten normalized items each, for 80 fetched items; the smoke path made no
   model calls and did not write to the database.
-- Full repository suite: 79 tests passed with 100.00% backend line coverage.
+- Initial Day 1/Day 2 checkpoint: 79 tests passed with 100.00% backend line
+  coverage.
+- Post-release v0.3.1 validation: 80 tests passed with 100.00% backend line
+  coverage after making orchestration tests independent of local credentials.
 - `uv run ruff check --fix backend tests` passed.
 - `uv run mypy backend` passed with no issues.
 - `git diff --check` passed after the implementation and documentation edits.

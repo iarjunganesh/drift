@@ -364,7 +364,7 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **79 tests passed and 100.00% coverage**. The
+The current local result is **80 tests passed and 100.00% coverage**. The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline stubs remain visible and are
 excluded only at their `NotImplementedError` boundary.
