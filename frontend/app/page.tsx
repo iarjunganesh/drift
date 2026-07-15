@@ -54,7 +54,7 @@ export default function Home() {
         </div>
         <aside className="signal">
           <div className="signal-label">Current operating mode</div>
-          <h2>{mode === "fixture" ? "Deterministic fixture briefing" : "Live grounded chat over fixture evidence"}</h2>
+          <h2>{mode === "fixture" ? "Deterministic fixture briefing" : "Live grounded chat over cited evidence"}</h2>
           <p>{error || "Every insight keeps its source, confidence, and bounded follow-up action visible."}</p>
           <div className="rail">
             <div><span>Evidence</span><strong>Primary source</strong></div>

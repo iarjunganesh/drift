@@ -16,16 +16,18 @@ AI-infrastructure release intelligence.
 - [x] Model tier: dev (Luna), routed through `model_router.py`
 
 ## Day 3-4 — Insight agent (the differentiation core)
-- [ ] Codex: `generate_insight()` — structured output parsing
+- [x] Codex: `generate_insight()` — structured output parsing
 - [ ] YOU: hand-iterate the prompt against 3-5 real recent releases
       (e.g. a real vLLM or TensorRT breaking change) until the
       reasoning is genuinely sharp. Don't fully delegate this step.
 
 ## Day 5 — Briefing + search + chat
 - [x] Codex: deterministic `build_daily_briefing()`, fixture search, and
-      `/chat`; local `DRIFT_MODE=live` is retrieve-first chat over cited
-      fixture evidence
-- [ ] Codex: pgvector search and live-store retrieval
+      fixture-mode `/chat`; local `DRIFT_MODE=live` now retrieves cited
+      evidence from the live store before chat
+- [x] Codex: pgvector search and live-store retrieval for local live
+      `/search` and `/chat`; durable population and hosted verification remain
+      pending
 - [x] Model tier: live (Terra) for bounded local grounded chat
 
 ## Day 6-7 — Frontend
@@ -41,6 +43,8 @@ AI-infrastructure release intelligence.
       `019f62b9-10b7-7d82-a463-e6eb1192141c`
 - [x] Record the additive Day 1/Day 2 implementation follow-up session:
       `019f62e8-6715-70e2-a92a-fe28254f7b71`
+- [x] Record the additive Day 3/Day 4 Insight implementation session:
+      `019f6336-3690-7022-a8ef-c8c0947e240f`
 - [x] docs/ARCHITECTURE.md polish, screenshots
 
 ## Day 9 — Record, submit
@@ -73,14 +77,15 @@ to its repository-specific Codecov badge.
    fixture-backed; only the grounded `/chat` path uses the live model tier.
 
 The checked-in `codecov.yml` defines the pytest project, report path, and a
-100% project/patch floor for implemented code. Explicit live-stage stubs keep
-their `NotImplementedError` boundary visible while excluding only that boundary
-until the stage is implemented and tested.
+100% project/patch floor for implemented code. Explicit live-stage boundaries
+remain visible until each stage is implemented and tested; the standalone
+Insight stage now has structured-output coverage.
 
 ## Codex project initiatives
 
-The baseline, hosted-deployment follow-up, current release candidate, and
-Day 1/Day 2 implementation follow-up are supported by five project initiatives:
+The baseline, hosted-deployment follow-up, bounded v0.4.0 release, and
+Day 1/Day 2 and Day 3/Day 4 implementation follow-ups are supported by six
+project initiatives:
 
 - Foundation and inspectable vertical slice —
   `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -92,5 +97,7 @@ Day 1/Day 2 implementation follow-up are supported by five project initiatives:
   `019f62e8-6715-70e2-a92a-fe28254f7b71`
 - Grounded live chat, resilience, and locked delivery (primary candidate
   initiative) — `019f62b9-10b7-7d82-a463-e6eb1192141c`
+- Day 3/Day 4 Insight structured output —
+  `019f6336-3690-7022-a8ef-c8c0947e240f`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.

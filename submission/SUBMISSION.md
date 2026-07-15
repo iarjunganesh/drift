@@ -12,6 +12,7 @@
       - Hosted deployment/README follow-up: `019f6253-ddfc-7272-8077-e34dfb3aee84`
       - Primary core-functionality session: `019f62b9-10b7-7d82-a463-e6eb1192141c`
       - Day 1/Day 2 implementation follow-up: `019f62e8-6715-70e2-a92a-fe28254f7b71`
+      - Day 3/Day 4 Insight structured output: `019f6336-3690-7022-a8ef-c8c0947e240f`
 - [x] Use `019f62b9-10b7-7d82-a463-e6eb1192141c` as the primary `/feedback`
       Session ID if the Devpost form accepts only one.
 - [ ] Add real, saved GPT-5.6 output examples and cite their primary release URLs.

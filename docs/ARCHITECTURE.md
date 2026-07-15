@@ -5,13 +5,14 @@ This document explains the checked-in architecture visual, the boundaries behind
 it, and the evidence required before the live path can be called complete.
 
 The implementation, publication, and current release work are recorded in the
-five [Codex project initiatives](INITIATIVES.md).
+six [Codex project initiatives](INITIATIVES.md).
 
 > **Current truth:** the fixture path is working and reproducible, local live
-> chat is bounded to cited fixture evidence, and the hosted browser API path
-> is connected. Feed scheduling, durable live-store integration/retrieval,
-> embedding persistence, and generated Insight model output remain
-> implementation boundaries.
+> chat is bounded to cited retrieved evidence, and the hosted browser API path
+> is connected. Standalone structured Insight model output and local pgvector
+> live-store retrieval are implemented and tested; feed scheduling, embedding
+> persistence, Insight provenance persistence, hosted verification, and
+> end-to-end wiring remain implementation boundaries.
 
 ## Visual source of truth
 
@@ -50,9 +51,9 @@ what must be demonstrated before each stage moves to complete.
 | --- | --- | --- |
 | Source configuration | `backend/sources.yaml` contains eight curated GitHub Atom feeds | Feed success, timeout, malformed-feed, and retry tests |
 | Scout | Bounded feed fetch, normalized `RawItem`, canonical URL dedupe, structured source logging, and async raw-item persistence helper | Persisted fetch telemetry and controlled end-to-end scheduling |
-| Synthesizer | Routed embeddings, deterministic cosine clustering, and narrow Tier.DEV severity classification with mocked tests | Persisted vectors, live-store retrieval, and controlled end-to-end scheduling |
-| Insight | Contract and prompt boundary prepared | Structured output validation, citations, confidence, and provenance tests |
-| Briefing | Deterministic fixture ranking, retrieval, and bounded grounded live chat work over the fixture store | Live-store and pgvector retrieval-backed ranking |
+| Synthesizer | Routed embeddings, deterministic cosine clustering, and narrow Tier.DEV severity classification with mocked tests | Persisted vectors and controlled end-to-end scheduling |
+| Insight | Routed structured output parsing, strict contract validation, citations, confidence, and model provenance with mocked tests | Persisted Insight records, durable provenance, and a controlled end-to-end run |
+| Briefing | Deterministic fixture ranking plus bounded grounded chat; local live routes retrieve through pgvector | Live-store-backed briefing ranking and controlled end-to-end scheduling |
 | API | Fixture FastAPI surface works | Live repository adapter and reproducible deployment |
 | Frontend | Local Next.js briefing view builds | Hosted view at `https://dr1ftless.vercel.app`; browser API fetch and CORS verified |
 
@@ -86,10 +87,12 @@ GitHub Atom feeds → Scout → RawItem → Synthesizer → Insight → Briefing
 ```
 
 The intended durable store is PostgreSQL with pgvector. The Day 1 feed
-normalization and schema/migration foundation now exist, but generated Insight
-records, saved provenance, live-store retrieval, and a controlled end-to-end
-run remain incomplete. `DRIFT_MODE=live` currently enables only model-backed
-chat over the cited fixture store.
+normalization and schema/migration foundation now exist. Standalone Insight
+generation validates structured model output and the live adapter can retrieve
+populated rows with pgvector, but generated records, saved provenance, and a
+controlled end-to-end run remain incomplete. `DRIFT_MODE=live` uses the live
+store in the current code; the last hosted verification remains the earlier
+fixture-backed deployment.
 
 ## Small request flows
 
@@ -183,7 +186,7 @@ retrieval time, and model/audit record cannot be recovered.
 | --- | --- | --- |
 | `GET /health` | status, mode, version | Working |
 | `GET /briefing?top_n=1..10` | `BriefingItem[]` | Working; severity/confidence/recency ranking |
-| `GET /search?q=2..300 chars` | `Insight[]` | Working; fixture token relevance |
+| `GET /search?q=2..300 chars` | `Insight[]` | Fixture token relevance by default; live mode uses async query embeddings and pgvector |
 | `POST /chat` | `ChatRequest → ChatResponse` | Fixture composition by default; retrieve-first model answer in live mode |
 | `GET /docs` | Swagger UI | FastAPI-generated |
 | `GET /openapi.json` | OpenAPI document | FastAPI-generated; not checked in |
@@ -191,8 +194,10 @@ retrieval time, and model/audit record cannot be recovered.
 The chat path retrieves matching insights first. If no matching evidence exists,
 it returns an evidence-not-found response rather than answering from general
 model knowledge. In `DRIFT_MODE=live`, the `live` tier answers from the
-retrieved, citation-bearing fixture evidence; pgvector retrieval remains future
-work.
+retrieved, citation-bearing evidence. In the current code, live `/search` and
+`/chat` retrieve from populated `insights.embedding` rows with pgvector;
+fixture mode remains the no-key path. The current hosted deployment predates
+this live-store wiring and remains documented separately as fixture-backed.
 
 ## Model, budget, and safety boundaries
 
@@ -302,8 +307,10 @@ Before the live path is called complete:
 - [ ] feed success, timeout, malformed, and duplicate cases are tested;
 - [x] local live-chat provider calls are behind the router and mocked;
 - [x] local live-chat source text is tested as untrusted data;
-- [ ] every emitted insight satisfies the provenance contract;
-- [ ] retrieval constrains chat context;
+- [x] standalone generated Insights satisfy the provenance contract in mocked
+      provider tests;
+- [ ] every persisted/emitted live insight satisfies the provenance contract;
+- [x] local live pgvector retrieval constrains chat context;
 - [x] local live-chat budget, capacity, and provider failures are tested; and
 - [ ] a controlled end-to-end run is saved and repeatable.
 

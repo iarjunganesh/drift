@@ -6,12 +6,13 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.3.1` bounded live-chat and pipeline-foundation release. The deterministic API and
+**Current phase:** `v0.4.0` bounded local Insight/retrieval release. The deterministic API and
 small Next.js briefing view are usable. `DRIFT_MODE=live` adds bounded,
-retrieve-first model chat over cited fixture evidence only; live-store
-scheduling/integration and retrieval, embedding persistence, model-backed
-Insight generation, and live briefing generation are still implementation
-boundaries.
+retrieve-first model chat over cited evidence; standalone structured Insight
+generation and local pgvector live-store retrieval are implemented and tested,
+while scheduled live-store population, embedding persistence, Insight
+provenance persistence, hosted verification, and live briefing generation
+remain implementation boundaries.
 The last verified hosted deployment (2026-07-15) is configured for `DRIFT_MODE=live`
 with the Vercel origin enabled in CORS, but the committed fixture path is not
 live release analysis.
@@ -138,10 +139,11 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The last verified hosted deployment is
-in `DRIFT_MODE=live` with the Vercel origin advertised through CORS. This live
-setting enables only bounded chat over fixture evidence; do not describe it as
-live release analysis until live-store scheduling/integration, retrieval,
-embedding persistence, and Insight generation are implemented and verified.
+in `DRIFT_MODE=live` with the Vercel origin advertised through CORS. That last
+verified hosted setting enables only bounded chat over fixture evidence; do not
+describe it as live release analysis until scheduled live-store population, embedding/Insight
+provenance persistence, hosted verification, and end-to-end Insight wiring are
+implemented and verified.
 
 A notebook is optional future evidence, not part of the current fixture
 baseline. Add one only when it can exercise a verified hosted workflow without

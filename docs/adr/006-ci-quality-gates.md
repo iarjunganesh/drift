@@ -20,13 +20,16 @@ encourage meaningless tests; no threshold would let regressions pass silently.
 - CI reflects the checks contributors can run locally.
 - Coverage is a minimum, not a quality substitute.
 - Provider calls must be mocked in unit tests.
-- The coverage floor should move toward 99–100% once Scout, persistence,
-  retrieval, and Insight behavior are implemented and tested.
+- The coverage floor is 100% for implemented and mocked behavior; durable
+  persistence, database integration, and end-to-end pipeline work must retain
+  that floor as they are added.
 
 ## Amendment — 2026-07-15
 
 The implemented fixture and live-grounded-chat paths now run at 100% line
-coverage. CI and Codecov enforce a 100% floor. Explicit `NotImplementedError`
-boundaries for scheduled Scout persistence, live-store retrieval, and generated
-Insight output remain visible and are excluded only until each stage has real
-behavior and tests.
+coverage. CI and Codecov enforce a 100% floor. Explicit future boundaries for
+scheduled Scout persistence, live-store population, and database integration
+remain visible until each stage has real behavior and tests.
+The standalone structured Insight generator is now implemented with mocked
+provider coverage; durable Insight persistence and end-to-end wiring remain
+outside this amendment.

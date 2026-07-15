@@ -131,3 +131,11 @@ async def create_text_response(
         return TextResponse(response=await operation(), attempts=1)
     result = await resilience.execute(operation)
     return TextResponse(response=result.value, attempts=result.attempts)
+
+
+async def create_async_embedding_response(
+    client: AsyncOpenAI,
+    inputs: list[str],
+) -> Any:
+    """Create one routed async embedding request for live retrieval."""
+    return await client.embeddings.create(model=EMBEDDING_MODEL, input=inputs)

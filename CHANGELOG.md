@@ -10,10 +10,36 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [0.4.0] - 2026-07-15
+
+This bounded minor release adds structured Insight generation and local
+PostgreSQL/pgvector retrieval while keeping live-store population, real
+PostgreSQL integration, hosted redeployment, and live release-analysis claims
+explicitly out of scope.
+
+### Added
+
+- Implemented Day 3/4 `generate_insight()` with bounded untrusted evidence,
+  router-owned structured Responses API calls, strict output validation, and
+  derived citation/severity/model provenance.
+- Implemented local Day 5 async pgvector retrieval for live `/search` and
+  `/chat`, including router-owned query embeddings and cited `InsightRow`
+  conversion.
+
 ### Changed
 
-- Synchronized the current quality summary with the credential-free
-  v0.3.1 validation: 80 tests pass at 100.00% backend coverage.
+- Verified 95 tests at 100.00% backend coverage with Ruff and mypy passing.
+- Recorded the additive Day 3/Day 4 Insight implementation session:
+  `019f6336-3690-7022-a8ef-c8c0947e240f`.
+- Durable live-store population and hosted verification remain pending.
+
+### Remaining boundaries
+
+- Insight generation and local pgvector retrieval are implemented and tested;
+  durable Insight/embedding population, a real PostgreSQL integration run, and
+  controlled Scout → Synthesizer → Insight → Briefing wiring remain incomplete.
 
 ## [0.3.1] - 2026-07-15
 
@@ -182,6 +208,7 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.4.0]: #040---2026-07-15
 [0.3.1]: #031---2026-07-15
 [0.3.0]: #030---2026-07-15
 [0.2.0]: #020---2026-07-15

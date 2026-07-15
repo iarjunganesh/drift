@@ -65,7 +65,7 @@ production changes.
 1. **Scout** reads configured primary release feeds and normalizes source items.
 2. **Synthesizer** will deduplicate, embed, cluster, and classify substantive
    changes.
-3. **Insight** will produce a structured explanation with citations, confidence,
+3. **Insight** produces a structured explanation with citations, confidence,
    severity, and a bounded `what_to_check` action.
 4. **Briefing** ranks the useful changes and grounds search/chat in retrieved
    DRIFT evidence.
@@ -101,9 +101,10 @@ fresh live release analysis.
 
 **In short:** the fixture path is complete and no-key; a bounded local
 model-backed chat path is available over its cited evidence. Scout ingestion,
-Day 2 embedding/clustering/classification, and the database foundation exist;
-feed scheduling, live-store integration, embedding persistence, and generated
-Insight stages remain explicit implementation boundaries.
+Day 2 embedding/clustering/classification, standalone structured Insight
+generation, local pgvector live-store retrieval, and the database foundation
+exist; feed scheduling, embedding/Insight persistence, hosted verification, and
+end-to-end generated briefing wiring remain explicit implementation boundaries.
 
 > **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
@@ -111,9 +112,9 @@ Insight stages remain explicit implementation boundaries.
 
 ### Codex project initiatives
 
-The baseline, publication follow-up, release candidate, and documentation
-follow-up are tied to five project initiatives. The grounded live-chat row is
-the primary implementation session for this release candidate.
+The baseline, publication follow-up, bounded release milestones, and
+documentation follow-up are tied to six project initiatives. The grounded
+live-chat row remains the primary implementation session for the v0.4.0 release.
 
 | Initiative | Session ID | Focus |
 | --- | --- | --- |
@@ -122,6 +123,7 @@ the primary implementation session for this release candidate.
 | Hosted deployment and README follow-up | `019f6253-ddfc-7272-8077-e34dfb3aee84` | Railway/Vercel URLs, release badges, and public demo documentation |
 | Day 1/Day 2 implementation follow-up | `019f62e8-6715-70e2-a92a-fe28254f7b71` | Scout feeds, async PostgreSQL/pgvector foundation, Tier.DEV embeddings/clustering/classification, session instructions, and status cleanup |
 | Grounded live chat, resilience, and locked delivery | `019f62b9-10b7-7d82-a463-e6eb1192141c` | Primary `0.2.0` candidate work: local live chat, async safeguards, locked delivery, and full implemented-code coverage |
+| Day 3/Day 4 Insight structured output | `019f6336-3690-7022-a8ef-c8c0947e240f` | Standalone `generate_insight()` structured parsing, strict validation, citations, confidence, and model provenance |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -132,16 +134,19 @@ tests, deployment files, architecture records, and the bounded async
 model-call path. The primary core-functionality session is
 `019f62b9-10b7-7d82-a463-e6eb1192141c`; the Day 1/Day 2 implementation
 follow-up session is `019f62e8-6715-70e2-a92a-fe28254f7b71`. The earlier
-initiative records preserve the foundation, publication, and hosted-demo work.
+initiative records preserve the foundation, publication, and hosted-demo work;
+the Day 3/Day 4 Insight implementation session is
+`019f6336-3690-7022-a8ef-c8c0947e240f`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
 provides an API key; the hosted Railway service was last verified in that mode
-on 2026-07-15. The `live` tier receives at most three retrieved,
-citation-bearing fixture insights as untrusted data and answers only from that
-evidence. Fixture mode makes no provider call. This is not live release
+on 2026-07-15. In that hosted verification, the `live` tier received at most
+three retrieved, citation-bearing fixture insights as untrusted data and
+answered only from that evidence. Fixture mode makes no provider call. This is not live release
 analysis, and scheduled Scout persistence, embedding persistence, generated
-Insight records, and pgvector retrieval remain explicit implementation
-boundaries.
+Insight records, and the controlled live-release path
+remain explicit implementation boundaries; local live `/search` and `/chat`
+now use pgvector retrieval when the store is populated.
 
 ### Architecture Decision Records
 
@@ -364,10 +369,10 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **80 tests passed and 100.00% coverage**. The
+The current local result is **95 tests passed and 100.00% coverage**. The
 enforceable floor is **100% for implemented code**, including branch-critical
-error paths. Explicit, documented live-pipeline stubs remain visible and are
-excluded only at their `NotImplementedError` boundary.
+error paths. Explicit, documented live-pipeline boundaries remain visible while
+the fixture and standalone Insight stages are covered with tests.
 
 Run the gates locally:
 
@@ -408,17 +413,20 @@ analysis.
 
 ## Future Roadmap
 
-**Working now:** hosted bounded live-chat API over fixture evidence, deployed
-Vercel frontend, typed contracts, model-router boundary, architecture evidence,
-CI gates, Codecov upload configuration, and a local Next.js briefing view.
+**Working now:** standalone structured Insight generation, local pgvector
+retrieval for live `/search` and `/chat`, hosted bounded live-chat API over
+fixture evidence, deployed Vercel frontend, typed contracts, model-router
+boundary, architecture evidence, CI gates, Codecov upload configuration, and a
+local Next.js briefing view.
 
 **Next implementation slices:**
 
 - add scheduled Scout execution with durable raw-item telemetry;
 - exercise the Alembic migration against a clean PostgreSQL instance and add
   async live-store integration coverage;
-- persist Day 2 embeddings and connect clustering to live-store retrieval;
-- implement structured Insight generation with mocked provider tests;
+- persist Day 2 embeddings into the live store and exercise end-to-end retrieval;
+- persist generated Insights and provenance, then wire the controlled
+  Scout → Synthesizer → Insight → Briefing run;
 - maintain 100% implemented-code coverage as each live stage becomes real;
 - run and record one hosted live `/chat` provider smoke test;
 - capture reproducible live-release-analysis evidence before broadening the

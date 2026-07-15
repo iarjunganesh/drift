@@ -1,6 +1,6 @@
 # DRIFT project initiatives
 
-These are the five Codex project initiatives associated with the DRIFT baseline,
+These are the six Codex project initiatives associated with the DRIFT baseline,
 publication follow-up, `0.2.0` release candidate, and the current build-sequence
 implementation work. They are submission evidence pointers for the build work;
 they are not model-run provenance and do not turn fixture records into live
@@ -50,7 +50,7 @@ This initiative records the hosted publication follow-up:
 
 **Codex Session ID:** `019f62b9-10b7-7d82-a463-e6eb1192141c`
 
-This is the primary implementation initiative for the current release
+This was the primary implementation initiative for the v0.2.0 release
 candidate. It delivered:
 
 - retrieve-first, citation-preserving local live chat over the fixture store,
@@ -128,8 +128,9 @@ Initiative 04, not a replacement for Initiative 04’s primary session ID.
   model calls and did not write to the database.
 - Initial Day 1/Day 2 checkpoint: 79 tests passed with 100.00% backend line
   coverage.
-- Post-release v0.3.1 validation: 80 tests passed with 100.00% backend line
-  coverage after making orchestration tests independent of local credentials.
+- Post-release v0.3.1 validation at the close of Initiative 05: 80 tests
+  passed with 100.00% backend line coverage after making orchestration tests
+  independent of local credentials.
 - `uv run ruff check --fix backend tests` passed.
 - `uv run mypy backend` passed with no issues.
 - `git diff --check` passed after the implementation and documentation edits.
@@ -151,7 +152,7 @@ Initiative 04, not a replacement for Initiative 04’s primary session ID.
   session IDs additively, with Initiative 04 remaining the primary
   `/feedback` session.
 
-### Explicit remaining boundaries
+### Explicit remaining boundaries at the close of Initiative 05
 
 The following were intentionally not marked complete because the code and
 hosted behavior do not yet support those claims:
@@ -166,10 +167,38 @@ hosted behavior do not yet support those claims:
   analysis. A hosted provider `/chat` smoke result still needs to be recorded
   separately from the verified health/CORS checks.
 
+## Initiative 06 — Day 3/4 Insight agent
+
+**Codex Session ID:** `019f6336-3690-7022-a8ef-c8c0947e240f`
+
+**Date:** 2026-07-15
+
+The standalone `generate_insight()` stage is now implemented. It sends bounded
+release evidence through the model router, requests strict structured output,
+validates the model-owned explanation fields, and derives source citations,
+severity, raw-item IDs, and model provenance from trusted pipeline inputs. The
+mocked test suite now passes 87 tests with 100.00% backend coverage.
+
+Durable Insight/provenance persistence, embedding population, and controlled
+Scout → Synthesizer → Insight → Briefing wiring remain incomplete; hosted
+`/briefing` remains fixture-backed.
+
+## Current status addendum — Day 5 pgvector retrieval
+
+The local live-store path now embeds a query through the model router, orders
+populated `InsightRow.embedding` values by pgvector cosine distance, maps rows
+back to the cited `Insight` contract, and uses that retrieval for live
+`/search` and `/chat`. The full suite passes 95 tests with 100.00% backend
+coverage.
+
+Durable Insight/embedding population, a real PostgreSQL integration run, and
+hosted verification remain incomplete.
+
 ## Submission usage
 
-All five IDs should be retained in the project README and submission notes. If
+All six IDs should be retained in the project README and submission notes. If
 Devpost requires one primary `/feedback` session, use Initiative 04:
 `019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
-2 implementation and synchronization record; the earlier sessions remain the
+2 implementation and synchronization record, and Initiative 06 is the additive
+Day 3/Day 4 Insight implementation record; the earlier sessions remain the
 foundation, publication, and hosted-demo follow-up initiatives.

@@ -1,6 +1,6 @@
 # ADR-005: Postgres and pgvector for the live store
 
-**Status:** Accepted; schema and migration foundation implemented, retrieval pending
+**Status:** Accepted; schema, migration foundation, and local retrieval implemented; population pending
 **Date:** 2026-07-14
 
 ## Decision
@@ -30,6 +30,7 @@ must use Postgres or be explicitly skipped when no test database is configured.
 ## Implementation status
 
 As of 2026-07-15, DRIFT has typed async SQLAlchemy metadata, an async session
-dependency, a pgvector-backed `insights.embedding` column, and an initial
-Alembic revision that creates `sources`, `raw_items`, and `insights`. A clean
-PostgreSQL upgrade and live-store retrieval integration test remain pending.
+dependency, a pgvector-backed `insights.embedding` column, an initial Alembic
+revision, and local async retrieval that embeds a query and orders rows by
+pgvector cosine distance. Durable Insight/embedding population, a real
+PostgreSQL integration run, and hosted verification remain pending.

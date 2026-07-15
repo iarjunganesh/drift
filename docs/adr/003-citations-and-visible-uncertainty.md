@@ -22,3 +22,12 @@ useful release intelligence.
 - Missing citations or invalid confidence are validation failures.
 - `breaking` and `security` remain review priorities, never automation triggers.
 - Fixture data must be visibly distinguishable from live analysis.
+
+## Implementation addendum — 2026-07-15
+
+`backend/agents/insight.py` now calls the router-owned structured Responses API
+and validates the model-owned fields against a strict schema. Raw-item IDs,
+severity, source URLs, and the exact routed model identifier are derived from
+trusted pipeline inputs rather than accepted from model output. The generator
+is covered with mocked provider tests; durable persistence and end-to-end
+pipeline wiring remain future work.

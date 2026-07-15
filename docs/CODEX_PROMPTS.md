@@ -9,8 +9,9 @@ in drift's own `docs/ARCHITECTURE.md` for pattern reuse (async pipeline, structl
 CI coverage-gate, provenance-manifest). Do NOT reuse its media stack
 (Genblaze, FFmpeg, Backblaze B2, NVIDIA NIM) — drift has no media component.
 
-> Execution status (2026-07-15): the Day 1 Scout/database requirements and Day 2
-> Synthesizer requirements below are implemented and verified in this repository. The
+> Execution status (2026-07-15): the Day 1 Scout/database, Day 2 Synthesizer,
+> Day 3/4 standalone structured Insight, and local Day 5 pgvector retrieval
+> requirements below are implemented and verified in this repository. The
 > prompts remain the original build specification; current completion status
 > is maintained in `docs/BUILD_SEQUENCE.md`.
 
@@ -90,8 +91,8 @@ session from backend/models/schema.py, implement:
      comment "Run on Tier.DEV (Luna) while iterating." Cluster embedded
      items into candidate insight groups.
 
-2. backend/agents/insight.py — implement run_insight_batch() and the
-   function with the raise NotImplementedError. Build the user prompt from
+2. backend/agents/insight.py — implement run_insight_batch() and replace the
+   original `NotImplementedError` function boundary. Build the user prompt from
    cluster contents, call get_model(tier) with INSIGHT_SYSTEM_PROMPT (already
    defined in the file), parse structured output into an Insight object.
    Populate source_citations from the cluster's item URLs and model_used
@@ -219,6 +220,8 @@ changes:
      session for the `0.2.0` release
    - `019f62e8-6715-70e2-a92a-fe28254f7b71` — Day 1/Day 2 implementation
      follow-up
+   - `019f6336-3690-7022-a8ef-c8c0947e240f` — Day 3/Day 4 Insight structured
+     output
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.
@@ -235,11 +238,12 @@ rules/FAQ reference copy, not drift's submission draft.
 
 - Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
 - Confirm which supplied initiative is the primary `/feedback` session for the
-  Devpost form; retain all five IDs in README.md and the submission notes.
+  Devpost form; retain all six IDs in README.md and the submission notes.
 - Verify branch protection and the Codecov upload on the published GitHub
   repository.
 - Run one hosted `/chat` smoke test against `https://drift-api-prod.up.railway.app`
   and record only verified provider output; the hosted API is configured for
   bounded `DRIFT_MODE=live` as of 2026-07-15 and CORS allows the Vercel origin.
   The hosted `/briefing` response remains fixture-backed until the live feed,
-  persistence, embedding, and Insight pipeline is implemented.
+  persistence, embedding, and Insight pipeline is implemented and the updated
+  deployment is verified; local pgvector retrieval does not broaden that claim.

@@ -8,8 +8,8 @@ Endpoints:
   POST /chat             — chat-over-knowledge (Tier.LIVE)
   GET  /health           — liveness check
 
-The fixture-backed HTTP adapters are wired here; live-store agent integration
-remains an explicit boundary. Follow the async FastAPI pattern from the
+Fixture and live-store HTTP adapters are wired here; scheduled live-store
+population remains an explicit boundary. Follow the async FastAPI pattern from the
 bankers-wrapped reference repo (structlog request logging, consistent error
 handling), but do NOT bring in anything related to its media-generation dependencies
 (Genblaze, FFmpeg, B2) — DRIFT has no media component.
@@ -28,6 +28,7 @@ from backend.agents.briefing import (
 )
 from backend.core.budget import BudgetExceededError, SpendGuard
 from backend.core.config import settings
+from backend.core.live_store import retrieve_live_insights as retrieve_live_store_insights
 from backend.core.model_router import Tier, create_async_client, get_model
 from backend.core.resilience import (
     CircuitBreaker,
@@ -37,7 +38,7 @@ from backend.core.resilience import (
     RetryPolicy,
 )
 from backend.core.store import InsightStore
-from backend.models.schema import BriefingItem, ChatRequest, ChatResponse, Insight
+from backend.models.schema import BriefingItem, ChatRequest, ChatResponse, Insight, session_factory
 
 
 @asynccontextmanager
@@ -106,6 +107,17 @@ app.add_middleware(
 )
 
 
+async def _retrieve_live_insights(query: str, *, limit: int = 5) -> list[Insight]:
+    """Open one database session and retrieve cited live-store evidence."""
+    async with session_factory() as session:
+        return await retrieve_live_store_insights(
+            session,
+            query,
+            client=app.state.openai_client,
+            limit=limit,
+        )
+
+
 @app.get(
     "/",
     tags=["system"],
@@ -151,6 +163,14 @@ async def briefing(top_n: int = Query(default=5, ge=1, le=10)) -> list[BriefingI
     description="Find cited insights matching a library, release, or risk query.",
 )
 async def search(q: str = Query(min_length=2, max_length=300)) -> list[Insight]:
+    if settings.mode == "live":
+        try:
+            return await _retrieve_live_insights(q)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=503,
+                detail="The live Insight store could not be searched.",
+            ) from exc
     return app.state.insight_store.search(q)
 
 
@@ -161,7 +181,16 @@ async def search(q: str = Query(min_length=2, max_length=300)) -> list[Insight]:
     description="Answer a question using only matching DRIFT insight evidence.",
 )
 async def chat(request: ChatRequest) -> ChatResponse:
-    insights = app.state.insight_store.search(request.question, limit=3)
+    if settings.mode == "live":
+        try:
+            insights = await _retrieve_live_insights(request.question, limit=3)
+        except Exception as exc:
+            raise HTTPException(
+                status_code=503,
+                detail="The live Insight store could not be searched.",
+            ) from exc
+    else:
+        insights = app.state.insight_store.search(request.question, limit=3)
     if not insights:
         raise HTTPException(status_code=404, detail="No matching DRIFT insights.")
     if settings.mode == "live":
