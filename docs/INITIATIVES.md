@@ -1,9 +1,10 @@
 # DRIFT project initiatives
 
-These are the four Codex project initiatives associated with the DRIFT baseline,
-publication follow-up, and `0.2.0` release candidate. They are submission
-evidence pointers for the build work; they are not model-run provenance and do
-not turn fixture records into live analysis.
+These are the five Codex project initiatives associated with the DRIFT baseline,
+publication follow-up, `0.2.0` release candidate, and the current build-sequence
+implementation work. They are submission evidence pointers for the build work;
+they are not model-run provenance and do not turn fixture records into live
+analysis.
 
 ## Initiative 01 — Foundation and inspectable vertical slice
 
@@ -63,9 +64,109 @@ candidate. It delivered:
 - deterministic tests covering the implemented behavior at a 100% coverage
   floor, with future live-stage raises left explicit.
 
+## Initiative 05 — Day 1 feed/database foundation and Day 2 Synthesizer
+
+**Codex Session ID:** `019f62e8-6715-70e2-a92a-fe28254f7b71`
+
+**Date:** 2026-07-15
+
+This session completed the Day 1 and Day 2 implementation slices in
+`docs/BUILD_SEQUENCE.md`, then reconciled the project’s status-bearing
+instructions and evidence. It is a substantive implementation follow-up to
+Initiative 04, not a replacement for Initiative 04’s primary session ID.
+
+### Day 1 — Scout ingestion
+
+- Implemented real HTTP feed retrieval in `backend/agents/scout.py` using
+  `feedparser` over the eight configured GitHub Atom sources.
+- Added explicit transport timeout handling, HTTP status classification,
+  malformed-feed rejection, title/link validation, publication-date
+  normalization, content extraction, and canonical URL deduplication.
+- Reused the application `RetryPolicy` for bounded retry/backoff behavior,
+  continued after an individual source failure, and emitted structured
+  source/item-count/attempt/duration logs.
+- Added async `store_sources()` and `store_raw_items()` helpers with database
+  URL deduplication, within-batch suppression, and commit behavior.
+- Added bounded Scout settings to `backend/core/config.py` and documented the
+  knobs in `.env.example`.
+
+### Day 1 — PostgreSQL and pgvector foundation
+
+- Wired SQLAlchemy 2.x async metadata, engine, session factory, and a
+  FastAPI/job-friendly `get_session()` dependency in
+  `backend/models/schema.py`.
+- Added typed ORM rows for `sources`, `raw_items`, and `insights`, including
+  foreign keys, unique source URLs, JSONB provenance arrays, confidence range
+  validation, timestamps, and `Vector(1536)` insight embeddings.
+- Added `alembic.ini`, migration environment/template files, and the initial
+  migration that enables pgvector and creates the three durable tables and
+  indexes.
+- Wired the migration into the container and `make migrate`, while preserving
+  the database-free fixture path.
+
+### Day 2 — Synthesizer stages
+
+- Added a synchronous routed provider client and centralized embedding and
+  structured-response helpers in `backend/core/model_router.py`; provider
+  model identifiers remain router-owned.
+- Implemented `embed_items()` as a batched `text-embedding-3-small` call with
+  deterministic response ordering and safe ownership/cleanup of clients.
+- Implemented `cluster_items()` as validated, deterministic greedy cosine
+  clustering with an explicit similarity threshold and dimension/zero-vector
+  handling.
+- Implemented `classify_change()` as a narrow Tier.DEV structured severity
+  call using the `ChangeSeverity` vocabulary, strict output validation, and
+  bounded evidence serialization.
+- Kept release text inside an untrusted data boundary and made
+  `run_synthesizer()` share one client across the batch instead of creating a
+  client per stage.
+
+### Verification evidence
+
+- Real Scout smoke run: all eight configured GitHub Atom feeds succeeded with
+  ten normalized items each, for 80 fetched items; the smoke path made no
+  model calls and did not write to the database.
+- Full repository suite: 79 tests passed with 100.00% backend line coverage.
+- `uv run ruff check --fix backend tests` passed.
+- `uv run mypy backend` passed with no issues.
+- `git diff --check` passed after the implementation and documentation edits.
+- Provider behavior in Day 2 tests is mocked; no paid model call is presented
+  as implementation evidence.
+
+### Documentation and session synchronization
+
+- Added mandatory start/end reconciliation rules to `AGENTS.md`, including
+  status, deployment, URL, checklist, ADR, changelog, and stale-reference
+  checks for every session.
+- Reconciled `README.md`, `BUILD_SEQUENCE.md`, `CODEX_PROMPTS.md`,
+  `ARCHITECTURE.md`, `RUNBOOK.md`, ADR indexes/addenda, `CHANGELOG.md`, and
+  submission notes with the implemented state.
+- Recorded the hosted facts verified on 2026-07-15: Railway is in bounded
+  `DRIFT_MODE=live`, Vercel CORS is enabled, and only grounded `/chat` uses
+  the live model tier; `/briefing` remains fixture-backed.
+- Removed the obsolete project reference requested earlier and retained both
+  session IDs additively, with Initiative 04 remaining the primary
+  `/feedback` session.
+
+### Explicit remaining boundaries
+
+The following were intentionally not marked complete because the code and
+hosted behavior do not yet support those claims:
+
+- applying the migration to a clean PostgreSQL instance and wiring scheduled
+  Scout persistence into the service;
+- persisting Day 2 vectors to `InsightRow` and adding live-store/pgvector
+  retrieval;
+- implementing structured Insight generation, provenance persistence, and a
+  controlled Scout → Synthesizer → Insight → Briefing run; and
+- broadening hosted `/briefing` beyond fixtures or claiming live release
+  analysis. A hosted provider `/chat` smoke result still needs to be recorded
+  separately from the verified health/CORS checks.
+
 ## Submission usage
 
-All four IDs should be retained in the project README and submission notes. If
+All five IDs should be retained in the project README and submission notes. If
 Devpost requires one primary `/feedback` session, use Initiative 04:
-`019f62b9-10b7-7d82-a463-e6eb1192141c`. List the earlier sessions as the
+`019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
+2 implementation and synchronization record; the earlier sessions remain the
 foundation, publication, and hosted-demo follow-up initiatives.

@@ -6,12 +6,15 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.2.0` fixture-first release. The deterministic API and
+**Current phase:** `v0.3.0` bounded live-chat and pipeline-foundation release. The deterministic API and
 small Next.js briefing view are usable. `DRIFT_MODE=live` adds bounded,
-retrieve-first model chat over cited fixture evidence only; feed retrieval,
-PostgreSQL/pgvector persistence, embeddings, and model-backed Insight
-generation are still implementation boundaries. The committed fixture path is
-not live release analysis.
+retrieve-first model chat over cited fixture evidence only; live-store
+scheduling/integration and retrieval, embedding persistence, model-backed
+Insight generation, and live briefing generation are still implementation
+boundaries.
+The last verified hosted deployment (2026-07-15) is configured for `DRIFT_MODE=live`
+with the Vercel origin enabled in CORS, but the committed fixture path is not
+live release analysis.
 
 ## Key commands
 
@@ -65,8 +68,38 @@ records as fresh release analysis.
   dependencies.
 - Update the relevant ADR and `CHANGELOG.md` when an architectural boundary
   changes. Do not rewrite decision history to conceal unfinished work.
+- Keep every status-bearing line synchronized after every session. This
+  includes checkboxes, current-phase statements, deployment mode, endpoint
+  URLs, hosted verification claims, README summaries, ADR indexes, and
+  changelog entries. Record external deployment changes as verified facts with
+  a date; do not infer hosted state from local configuration alone.
 - FastAPI generates the OpenAPI document at `/openapi.json`; do not commit a
   generated copy until the live API contract is stable.
+
+## Session synchronization (mandatory)
+
+At the start of every new or resumed session:
+
+- inspect `git status`, the current branch/commit, the relevant implementation
+  files, and all status-bearing project documents before planning work;
+- treat unchecked items in `docs/BUILD_SEQUENCE.md`, explicit TODOs, and
+  `NotImplementedError` boundaries as the source of truth until verified;
+- compare deployment claims against the hosted `/health` endpoint and a CORS
+  preflight whenever hosted behavior is in scope.
+
+Before handing off every session:
+
+- reconcile `AGENTS.md`, `README.md`, `docs/BUILD_SEQUENCE.md`,
+  `docs/CODEX_PROMPTS.md`, `docs/ARCHITECTURE.md`, `docs/RUNBOOK.md`, the ADR
+  index, and `CHANGELOG.md` with the code, tests, Git state, and any verified
+  external state;
+- check off only work that is actually implemented and verified, and mark
+  partial work or deferred boundaries explicitly;
+- update the relevant ADR and changelog for architectural or operational
+  boundary changes, preserving historical decisions through dated addenda;
+- search for stale URLs, modes, claims, placeholder names, and forbidden
+  references before finishing; unchanged explanatory prose need not be
+  rewritten, but stale status prose must not remain.
 
 ## Testing strategy
 
@@ -104,11 +137,11 @@ The accepted deployment shape is a Vercel project rooted at `frontend/` and a
 Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
-`https://drift-api-prod.up.railway.app`. Keep the hosted deployment in
-`DRIFT_MODE=fixture` and do not describe that fixture path as live release
-analysis. The current hosted API response still needs to advertise the Vercel
-origin through CORS before browser briefing requests can be called fully
-connected.
+`https://drift-api-prod.up.railway.app`. The last verified hosted deployment is
+in `DRIFT_MODE=live` with the Vercel origin advertised through CORS. This live
+setting enables only bounded chat over fixture evidence; do not describe it as
+live release analysis until live-store scheduling/integration, retrieval,
+embedding persistence, and Insight generation are implemented and verified.
 
 A notebook is optional future evidence, not part of the current fixture
 baseline. Add one only when it can exercise a verified hosted workflow without

@@ -17,6 +17,15 @@ truth boundary in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 This path uses committed example data and makes no external calls.
 
+## Day 1 feed and database verification
+
+1. Start the local PostgreSQL/pgvector service from `docker-compose.yml`.
+2. Run `make migrate` to apply the initial `sources`, `raw_items`, and
+   `insights` migration.
+3. Run `uv run python -m backend.agents.scout` to fetch and normalize the
+   configured primary release feeds. Source failures are bounded and logged;
+   no model call is made.
+
 ## Live grounded-chat demo — fixture evidence, real model response
 
 1. Copy `.env.example` to `.env`; keep the file untracked.
@@ -33,8 +42,9 @@ This path uses committed example data and makes no external calls.
    model capacity is busy or the circuit is open; retry later. A `429` means
    the local spend guard blocked the request.
 6. This is model-backed chat over fixture evidence, not live release analysis.
-   Scout, Synthesizer, embeddings, and generated Insight records remain future
-   work.
+   Scheduled Scout persistence, embedding persistence, and generated Insight
+   records remain future work; the Day 2 Synthesizer is implemented but not
+   wired into the hosted briefing pipeline.
 
 ## Recording order
 
@@ -51,11 +61,12 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The four Codex initiatives associated with this baseline, deployment follow-up,
-and current release candidate are listed in
+The five Codex initiatives associated with this baseline, deployment follow-up,
+current release candidate, and Day 1/Day 2 implementation follow-up are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
 
 - Foundation: `019f61e7-1ea1-7742-9acc-99d62f39b888`
 - Publication/readiness: `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`
 - Hosted deployment/README follow-up: `019f6253-ddfc-7272-8077-e34dfb3aee84`
 - Primary live-chat/resilience work: `019f62b9-10b7-7d82-a463-e6eb1192141c`
+- Day 1/Day 2 implementation follow-up: `019f62e8-6715-70e2-a92a-fe28254f7b71`

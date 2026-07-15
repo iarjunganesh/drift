@@ -22,6 +22,9 @@ from backend.core.config import settings
         ("model_circuit_failure_threshold", 0, "DRIFT_MODEL_CIRCUIT_FAILURE_THRESHOLD"),
         ("model_circuit_reset_seconds", 301, "DRIFT_MODEL_CIRCUIT_RESET_SECONDS"),
         ("model_max_concurrency", 21, "DRIFT_MODEL_MAX_CONCURRENCY"),
+        ("scout_timeout_seconds", 0, "DRIFT_SCOUT_TIMEOUT_SECONDS"),
+        ("scout_max_attempts", 6, "DRIFT_SCOUT_MAX_ATTEMPTS"),
+        ("scout_retry_base_seconds", 5, "Scout retry delays"),
     ],
 )
 def test_settings_reject_invalid_budget_configuration(

@@ -1,6 +1,6 @@
 # ADR-005: Postgres and pgvector for the live store
 
-**Status:** Accepted; implementation in progress  
+**Status:** Accepted; schema and migration foundation implemented, retrieval pending
 **Date:** 2026-07-14
 
 ## Decision
@@ -26,3 +26,10 @@ product has earned that complexity.
 The live path requires async SQLAlchemy wiring, migrations, extension setup, and
 integration tests. SQLite is not a substitute for pgvector tests; those tests
 must use Postgres or be explicitly skipped when no test database is configured.
+
+## Implementation status
+
+As of 2026-07-15, DRIFT has typed async SQLAlchemy metadata, an async session
+dependency, a pgvector-backed `insights.embedding` column, and an initial
+Alembic revision that creates `sources`, `raw_items`, and `insights`. A clean
+PostgreSQL upgrade and live-store retrieval integration test remain pending.

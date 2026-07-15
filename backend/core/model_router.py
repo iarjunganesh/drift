@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any
 
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, OpenAI
 
 from backend.core.resilience import ModelCallResilience
 
@@ -76,6 +76,36 @@ def estimate_response_cost_usd(model: str, input_tokens: int, output_tokens: int
 def create_async_client(api_key: str, timeout_seconds: float) -> AsyncOpenAI:
     """Create the sole OpenAI client used by live DRIFT agent calls."""
     return AsyncOpenAI(api_key=api_key, max_retries=0, timeout=timeout_seconds)
+
+
+def create_client(api_key: str, timeout_seconds: float) -> OpenAI:
+    """Create the synchronous client used by the bounded Day 2 batch stages."""
+    return OpenAI(api_key=api_key, max_retries=0, timeout=timeout_seconds)
+
+
+def create_embedding_response(client: OpenAI, inputs: list[str]) -> Any:
+    """Create one routed batch embedding request for the configured input texts."""
+    return client.embeddings.create(model=EMBEDDING_MODEL, input=inputs)
+
+
+def create_structured_response(
+    client: Any,
+    *,
+    tier: Tier,
+    instructions: str,
+    input_text: str,
+    schema: dict[str, Any],
+    max_output_tokens: int,
+) -> Any:
+    """Create a synchronous structured Responses API request through the router."""
+    return client.responses.create(
+        model=get_model(tier),
+        instructions=instructions,
+        input=input_text,
+        max_output_tokens=max_output_tokens,
+        reasoning={"effort": "low"},
+        text={"format": schema},
+    )
 
 
 async def create_text_response(

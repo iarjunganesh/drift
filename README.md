@@ -100,9 +100,10 @@ fresh live release analysis.
 <sub>Click to enlarge: <a href="assets/architecture/architecture-diagram-light.svg">light SVG</a> / <a href="assets/architecture/architecture-diagram-dark.svg">dark SVG</a> · Downloadable <a href="assets/architecture/architecture-diagram-light.png">light PNG</a> / <a href="assets/architecture/architecture-diagram-dark.png">dark PNG</a> · Source: <a href="assets/architecture/architecture-diagram.mmd"><code>architecture-diagram.mmd</code></a></sub>
 
 **In short:** the fixture path is complete and no-key; a bounded local
-model-backed chat path is available over its cited evidence. Feed ingestion,
-Postgres, pgvector, embeddings, and generated Insight stages remain explicit
-implementation boundaries, not hidden claims of production readiness.
+model-backed chat path is available over its cited evidence. Scout ingestion,
+Day 2 embedding/clustering/classification, and the database foundation exist;
+feed scheduling, live-store integration, embedding persistence, and generated
+Insight stages remain explicit implementation boundaries.
 
 > **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
@@ -110,15 +111,16 @@ implementation boundaries, not hidden claims of production readiness.
 
 ### Codex project initiatives
 
-The baseline, publication follow-up, and current release candidate are tied to
-four project initiatives. The final row is the primary implementation session
-for this release candidate.
+The baseline, publication follow-up, release candidate, and documentation
+follow-up are tied to five project initiatives. The grounded live-chat row is
+the primary implementation session for this release candidate.
 
 | Initiative | Session ID | Focus |
 | --- | --- | --- |
 | Foundation and inspectable vertical slice | `019f61e7-1ea1-7742-9acc-99d62f39b888` | Fixture API, typed contracts, agent boundaries, safety invariants, tests |
 | Publication and judge-readiness baseline | `019f61fc-c32e-7d92-9d2e-0bd9083d08e7` | Documentation, architecture assets, CI/Codecov, deployment and submission surfaces |
 | Hosted deployment and README follow-up | `019f6253-ddfc-7272-8077-e34dfb3aee84` | Railway/Vercel URLs, release badges, and public demo documentation |
+| Day 1/Day 2 implementation follow-up | `019f62e8-6715-70e2-a92a-fe28254f7b71` | Scout feeds, async PostgreSQL/pgvector foundation, Tier.DEV embeddings/clustering/classification, session instructions, and status cleanup |
 | Grounded live chat, resilience, and locked delivery | `019f62b9-10b7-7d82-a463-e6eb1192141c` | Primary `0.2.0` candidate work: local live chat, async safeguards, locked delivery, and full implemented-code coverage |
 
 See the full [project initiative record](docs/INITIATIVES.md).
@@ -128,15 +130,18 @@ See the full [project initiative record](docs/INITIATIVES.md).
 Codex was used to build and audit the typed FastAPI stages, fixture contracts,
 tests, deployment files, architecture records, and the bounded async
 model-call path. The primary core-functionality session is
-`019f62b9-10b7-7d82-a463-e6eb1192141c`; the earlier initiative records preserve
-the foundation and publication work.
+`019f62b9-10b7-7d82-a463-e6eb1192141c`; the Day 1/Day 2 implementation
+follow-up session is `019f62e8-6715-70e2-a92a-fe28254f7b71`. The earlier
+initiative records preserve the foundation, publication, and hosted-demo work.
 
-GPT-5.6 is used only when a local operator enables `DRIFT_MODE=live` and
-provides an API key. The `live` tier receives at most three retrieved,
+GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
+provides an API key; the hosted Railway service was last verified in that mode
+on 2026-07-15. The `live` tier receives at most three retrieved,
 citation-bearing fixture insights as untrusted data and answers only from that
 evidence. Fixture mode makes no provider call. This is not live release
-analysis, and Scout, embeddings, generated Insight records, and pgvector
-retrieval remain explicit implementation boundaries.
+analysis, and scheduled Scout persistence, embedding persistence, generated
+Insight records, and pgvector retrieval remain explicit implementation
+boundaries.
 
 ### Architecture Decision Records
 
@@ -164,7 +169,7 @@ Agent code must not hard-code provider model names. The intended tiers are:
 
 | Tier | Intended job | Status |
 | --- | --- | --- |
-| `dev` / Luna | Classification, clustering, and prompt iteration | Routed boundary prepared |
+| `dev` / Luna | Classification, clustering, and prompt iteration | Embeddings, deterministic clustering, and narrow severity classification implemented and mocked |
 | `live` / Terra | Retrieve-first grounded chat | Bounded local live path |
 | `final` / Sol | Three to five reviewed demo insights | Target path |
 
@@ -213,20 +218,21 @@ that frozen lockfile. JavaScript dependencies are locked in
 
 ## Live & Interactive Demo
 
-The Railway fixture API and Vercel frontend are live. The Vercel project deploys
-from `frontend/` using its checked-in build configuration. Keep the Vercel Root
-Directory set to `frontend` and the deployment in fixture mode.
+The Railway API and Vercel frontend are live. The Vercel project deploys from
+`frontend/` using its checked-in build configuration. The hosted API was last
+verified on 2026-07-15 in bounded `DRIFT_MODE=live`; live mode applies only to
+grounded `/chat` over fixture evidence. The briefing remains fixture-backed.
 
 | | |
 | --- | --- |
-| **Mode** | `fixture` — deterministic, no credentials, no network, no database |
+| **Mode** | `live` — bounded grounded chat over cited fixture evidence |
 | **Frontend** | [https://dr1ftless.vercel.app](https://dr1ftless.vercel.app) |
 | **API** | [https://drift-api-prod.up.railway.app](https://drift-api-prod.up.railway.app) |
 | **Swagger** | [`/docs`](https://drift-api-prod.up.railway.app/docs) |
 | **OpenAPI** | [`/openapi.json`](https://drift-api-prod.up.railway.app/openapi.json) |
 | **Briefing** | [`/briefing`](https://drift-api-prod.up.railway.app/briefing) |
 | **Demo Video** | [`https://youtu.be/TBD`](https://youtu.be/TBD) *(≤ 3 min, record before submission)* |
-| **Public demo** | Vercel frontend and Railway fixture API are live; hosted briefing requests still require the Railway CORS origin to be enabled |
+| **Public demo** | Vercel frontend and Railway API are live; Vercel-to-Railway CORS was verified on 2026-07-15 |
 
 The live feed → Postgres → embedding → model path is not yet claimed as
 working. The fixture path is the reproducible demo for reviewers today.
@@ -292,6 +298,10 @@ npm --prefix frontend run dev
 Set `NEXT_PUBLIC_API_URL` in `frontend/.env.local` if the API is not on
 `http://localhost:8000`.
 
+For the durable PostgreSQL path, start the configured database and run
+`make migrate` (or `uv run alembic upgrade head`) before connecting a live
+store. The fixture path does not require a database.
+
 ---
 
 ## Synthetic Fixture Data
@@ -354,7 +364,7 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **48 tests passed and 100.00% coverage**. The
+The current local result is **79 tests passed and 100.00% coverage**. The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline stubs remain visible and are
 excluded only at their `NotImplementedError` boundary.
@@ -383,31 +393,34 @@ production-readiness claim.
 
 ## GitHub + Codecov Operations
 
-GitHub `main`, the Railway fixture API, and the Vercel frontend are published.
+GitHub `main`, the Railway API, and the Vercel frontend are published.
 The remaining hosted verification operations are documented in
 [docs/BUILD_SEQUENCE.md](docs/BUILD_SEQUENCE.md#github-and-codecov-setup):
 
-1. confirm the `pytest` upload in Codecov;
-2. enable branch protection requiring the CI quality gate; and
-3. configure Railway CORS for `https://dr1ftless.vercel.app` and verify that
-   the hosted briefing loads in a browser.
+1. confirm the `pytest` upload in Codecov; and
+2. enable branch protection requiring the CI quality gate.
+
+Hosted CORS and browser connectivity were verified on 2026-07-15. The
+briefing is intentionally still fixture-backed; this is not live release
+analysis.
 
 ---
 
 ## Future Roadmap
 
-**Working now:** hosted fixture API, deployed Vercel frontend, typed contracts,
-model-router boundary, architecture evidence, CI gates, Codecov upload
-configuration, and a local Next.js briefing view.
+**Working now:** hosted bounded live-chat API over fixture evidence, deployed
+Vercel frontend, typed contracts, model-router boundary, architecture evidence,
+CI gates, Codecov upload configuration, and a local Next.js briefing view.
 
 **Next implementation slices:**
 
-- implement Scout feed retrieval with bounded retries and source telemetry;
-- add Alembic migrations and async PostgreSQL/pgvector persistence;
-- implement embeddings, deduplication, clustering, and retrieval;
+- add scheduled Scout execution with durable raw-item telemetry;
+- exercise the Alembic migration against a clean PostgreSQL instance and add
+  async live-store integration coverage;
+- persist Day 2 embeddings and connect clustering to live-store retrieval;
 - implement structured Insight generation with mocked provider tests;
 - maintain 100% implemented-code coverage as each live stage becomes real;
-- confirm the Codecov upload and complete the hosted CORS/browser smoke check;
+- run and record one hosted live `/chat` provider smoke test;
 - capture reproducible live-release-analysis evidence before broadening the
   bounded model-backed chat claim.
 

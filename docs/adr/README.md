@@ -10,9 +10,9 @@ decisions compose.
 | [002](002-typed-agents-no-framework.md) | Typed hand-rolled stages | Accepted |
 | [003](003-citations-and-visible-uncertainty.md) | Citations and visible uncertainty are mandatory | Accepted |
 | [004](004-local-budget-guard.md) | Local hard budget for live iteration | Accepted |
-| [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; implementation in progress |
+| [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; schema/migration foundation implemented, retrieval pending |
 | [006](006-ci-quality-gates.md) | CI quality gates and coverage ratchet | Accepted |
-| [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted fixture endpoints live, browser CORS verification pending |
+| [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted bounded live chat and browser CORS verified, live store pending |
 | [008](008-live-grounded-chat.md) | Live grounded chat over the fixture store | Accepted |
 | [009](009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery | Accepted |
 

@@ -9,6 +9,11 @@ in drift's own `docs/ARCHITECTURE.md` for pattern reuse (async pipeline, structl
 CI coverage-gate, provenance-manifest). Do NOT reuse its media stack
 (Genblaze, FFmpeg, Backblaze B2, NVIDIA NIM) — drift has no media component.
 
+> Execution status (2026-07-15): the Day 1 Scout/database requirements and Day 2
+> Synthesizer requirements below are implemented and verified in this repository. The
+> prompts remain the original build specification; current completion status
+> is maintained in `docs/BUILD_SEQUENCE.md`.
+
 ---
 
 ## Day 1 — get the pipeline actually running
@@ -25,8 +30,7 @@ __call__ wrapper that logs agent.start / agent.complete / agent.error via
 structlog around the call. Add structlog to pyproject.toml if missing, then
 refresh uv.lock.
 
-Then implement backend/agents/scout.py fully (it currently has
-Codex: implement fetch_source()... TODOs). Requirements:
+Then implement backend/agents/scout.py fully. Requirements:
 - fetch_source() uses feedparser against a source's feed_url from
   backend/sources.yaml
 - store_raw_items() persists fetched items via the DB session (models will
@@ -46,9 +50,8 @@ briefing.py in this pass.
 ### Prompt 2 — DB schema wiring
 
 ```
-Working in C:\ws\drift. backend/models/schema.py currently has a
-Codex: flesh out the actual SQLAlchemy Base/engine/session wiring here
-TODO. Implement it fully:
+Working in C:\ws\drift. Verify and extend the SQLAlchemy Base/engine/session
+wiring in backend/models/schema.py as needed. Implement it fully:
 - Async SQLAlchemy 2.0 style (AsyncEngine, async_sessionmaker) reading
   DATABASE_URL from backend/core/config.py
 - Keep the existing model field definitions (including the insights table's
@@ -75,8 +78,10 @@ Working in C:\ws\drift. Using the BaseAgent pattern from
 backend/agents/base.py (built in a previous step) and the now-wired DB
 session from backend/models/schema.py, implement:
 
-1. backend/agents/synthesizer.py — currently has TODO(codex) markers for
-   embed_items() and a GPT-5.6 clustering call. Implement:
+1. backend/agents/synthesizer.py — implement or verify the Day 2
+   `embed_items()`, clustering, and classification stages. The current
+   repository has the routed implementation; preserve its explicit provider
+   boundary and mocked-test shape. The original requirements were:
    - embed_items(): call OpenAI's embeddings API (text-embedding-3-small —
      already set as EMBEDDING_MODEL in backend/core/model_router.py) on raw
      item text, store the vector on the item/insight row.
@@ -109,8 +114,8 @@ stub) — it should take a batch of Insight objects and produce a
 digestible briefing (grouped by source/library, ranked by confidence/
 recency). Use BaseAgent as the other agents do.
 
-Then wire backend/main.py's three endpoints (currently marked
-"Codex: wire these against the agent modules in backend/agents/."):
+Then wire backend/main.py's three endpoints against the agent modules in
+backend/agents/:
 - GET /search?q=... — semantic search over accumulated insights using
   pgvector cosine similarity against the query's embedding
 - POST /chat — chat-over-knowledge using Tier.LIVE (get_model(Tier.LIVE)),
@@ -212,6 +217,8 @@ changes:
      follow-up
    - `019f62b9-10b7-7d82-a463-e6eb1192141c` — primary core-functionality
      session for the `0.2.0` release
+   - `019f62e8-6715-70e2-a92a-fe28254f7b71` — Day 1/Day 2 implementation
+     follow-up
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.
@@ -228,10 +235,11 @@ rules/FAQ reference copy, not drift's submission draft.
 
 - Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
 - Confirm which supplied initiative is the primary `/feedback` session for the
-  Devpost form; retain all three IDs in README.md and the submission notes.
+  Devpost form; retain all five IDs in README.md and the submission notes.
 - Verify branch protection and the Codecov upload on the published GitHub
   repository.
-- Verify the deployed Vercel frontend at `https://dr1ftless.vercel.app` against
-  the Railway fixture API at `https://drift-api-prod.up.railway.app`; enable
-  the Vercel origin in Railway CORS before calling the hosted briefing fully
-  connected.
+- Run one hosted `/chat` smoke test against `https://drift-api-prod.up.railway.app`
+  and record only verified provider output; the hosted API is configured for
+  bounded `DRIFT_MODE=live` as of 2026-07-15 and CORS allows the Vercel origin.
+  The hosted `/briefing` response remains fixture-backed until the live feed,
+  persistence, embedding, and Insight pipeline is implemented.

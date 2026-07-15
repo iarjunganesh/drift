@@ -5,12 +5,13 @@ This document explains the checked-in architecture visual, the boundaries behind
 it, and the evidence required before the live path can be called complete.
 
 The implementation, publication, and current release work are recorded in the
-four [Codex project initiatives](INITIATIVES.md).
+five [Codex project initiatives](INITIATIVES.md).
 
-> **Current truth:** the fixture path is working and reproducible, and local
-> live chat is bounded to cited fixture evidence. Feed ingestion, durable
-> persistence, embeddings, generated Insight model output, and a
-> browser-connected hosted path remain implementation boundaries.
+> **Current truth:** the fixture path is working and reproducible, local live
+> chat is bounded to cited fixture evidence, and the hosted browser API path
+> is connected. Feed scheduling, durable live-store integration/retrieval,
+> embedding persistence, and generated Insight model output remain
+> implementation boundaries.
 
 ## Visual source of truth
 
@@ -48,12 +49,12 @@ what must be demonstrated before each stage moves to complete.
 | Stage | Current implementation | Live completion evidence |
 | --- | --- | --- |
 | Source configuration | `backend/sources.yaml` contains eight curated GitHub Atom feeds | Feed success, timeout, malformed-feed, and retry tests |
-| Scout | Typed boundary and source contract prepared | Normalized `RawItem`, canonical URL dedupe, persisted fetch telemetry |
-| Synthesizer | Typed boundary and severity vocabulary prepared | Embeddings, clustering, dedupe, and mocked provider tests |
+| Scout | Bounded feed fetch, normalized `RawItem`, canonical URL dedupe, structured source logging, and async raw-item persistence helper | Persisted fetch telemetry and controlled end-to-end scheduling |
+| Synthesizer | Routed embeddings, deterministic cosine clustering, and narrow Tier.DEV severity classification with mocked tests | Persisted vectors, live-store retrieval, and controlled end-to-end scheduling |
 | Insight | Contract and prompt boundary prepared | Structured output validation, citations, confidence, and provenance tests |
 | Briefing | Deterministic fixture ranking, retrieval, and bounded grounded live chat work over the fixture store | Live-store and pgvector retrieval-backed ranking |
 | API | Fixture FastAPI surface works | Live repository adapter and reproducible deployment |
-| Frontend | Local Next.js briefing view builds | Hosted view at `https://dr1ftless.vercel.app`; browser API fetch awaits CORS verification |
+| Frontend | Local Next.js briefing view builds | Hosted view at `https://dr1ftless.vercel.app`; browser API fetch and CORS verified |
 
 ## Runtime paths
 
@@ -84,11 +85,11 @@ GitHub Atom feeds → Scout → RawItem → Synthesizer → Insight → Briefing
                                       └─ embeddings  └─ citations + bounded action
 ```
 
-The intended durable store is PostgreSQL with pgvector. Feed ingestion and
-generated Insight records must not be enabled by changing one environment
-variable until migrations, provider mocks, controlled feed data, saved
-provenance, and an end-to-end run exist. `DRIFT_MODE=live` currently enables
-only model-backed chat over the cited fixture store.
+The intended durable store is PostgreSQL with pgvector. The Day 1 feed
+normalization and schema/migration foundation now exist, but generated Insight
+records, saved provenance, live-store retrieval, and a controlled end-to-end
+run remain incomplete. `DRIFT_MODE=live` currently enables only model-backed
+chat over the cited fixture store.
 
 ## Small request flows
 
@@ -264,17 +265,19 @@ flowchart TB
 ```
 
 The prepared deployment uses Vercel for `frontend/` and Railway for the root
-FastAPI Docker service. The public fixture frontend is
+FastAPI Docker service. The public frontend is
 [`https://dr1ftless.vercel.app`](https://dr1ftless.vercel.app), and Railway’s
 $5 plan is a small-demo budget constraint, not a production availability
-guarantee. The verified fixture API is
+guarantee. The verified Railway API is
 [`https://drift-api-prod.up.railway.app`](https://drift-api-prod.up.railway.app),
-with `/health`, `/docs`, and `/openapi.json` exposed publicly. See
+with `/health`, `/docs`, and `/openapi.json` exposed publicly. As of
+2026-07-15, its bounded live mode and Vercel CORS configuration are verified.
+See
 [ADR-007](adr/007-vercel-railway-deployment.md).
 
-The current API returns valid briefing data, but its public response still
-needs `Access-Control-Allow-Origin: https://dr1ftless.vercel.app` before the
-browser can consume that data from the hosted frontend.
+The browser can consume the hosted API from Vercel. The `/briefing` response
+still uses committed fixture data; only grounded `/chat` uses the live model
+tier when the provider configuration is available.
 
 The generated Swagger contract keeps route ownership visible through four
 groups: `system` for metadata and liveness, `briefing` for ranked insights,

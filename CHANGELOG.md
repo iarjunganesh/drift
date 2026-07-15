@@ -10,6 +10,51 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [0.3.0] - 2026-07-15
+
+This release adds bounded primary-source feed ingestion, the async
+PostgreSQL/pgvector schema foundation, and the first routed Synthesizer stages
+while preserving DRIFT’s fixture-first and evidence-grounded live-chat
+boundaries.
+
+### Added
+
+- Day 1 Scout ingestion with feedparser normalization, canonical URL
+  deduplication, bounded transport retries, malformed-feed handling, and
+  structured source fetch logging.
+- Async SQLAlchemy metadata/session wiring and an initial Alembic migration for
+  `sources`, `raw_items`, and `insights`, including the pgvector extension and
+  1536-dimensional insight embeddings.
+- Day 2 Synthesizer stages: routed batch embeddings, deterministic cosine
+  clustering, and narrow Tier.DEV structured severity classification with
+  mocked provider coverage.
+
+### Changed
+
+- Synchronized the agent instructions and status-bearing documentation with
+  the verified hosted state; Railway is now documented as bounded live chat
+  over fixture evidence, with Vercel CORS enabled.
+
+### Verification
+
+- Scout smoke ingestion reached all eight configured GitHub Atom feeds and
+  normalized 80 items without model calls or database writes.
+- The expanded repository suite passes 79 tests at 100.00% backend line
+  coverage; Ruff and mypy also pass.
+
+### Remaining boundaries
+
+- Day 1 now supplies feed normalization, persistence helpers, and the
+  PostgreSQL/pgvector migration foundation; Day 2 now supplies routed
+  embeddings, deterministic clustering, and Tier.DEV severity
+  classification. Scheduled live persistence, vector persistence/retrieval,
+  generated Insight output, and controlled end-to-end wiring remain future
+  implementation slices.
+- Hosted `DRIFT_MODE=live` remains bounded to grounded chat over fixture
+  evidence; `/briefing` is not live release analysis.
+
 ## [0.2.0] - 2026-07-15
 
 This release adds a bounded, evidence-grounded local live-chat path while
@@ -122,5 +167,6 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.3.0]: #030---2026-07-15
 [0.2.0]: #020---2026-07-15
 [0.1.0]: #010---2026-07-14

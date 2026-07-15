@@ -27,6 +27,6 @@ encourage meaningless tests; no threshold would let regressions pass silently.
 
 The implemented fixture and live-grounded-chat paths now run at 100% line
 coverage. CI and Codecov enforce a 100% floor. Explicit `NotImplementedError`
-boundaries for Scout retrieval, Synthesizer embedding/clustering/classification,
-and generated Insight output remain visible and are excluded only until each
-stage has real behavior and tests.
+boundaries for scheduled Scout persistence, live-store retrieval, and generated
+Insight output remain visible and are excluded only until each stage has real
+behavior and tests.

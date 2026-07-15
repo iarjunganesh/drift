@@ -43,11 +43,7 @@ _MAX_EVIDENCE_FIELD_CHARS = 800
 
 
 def build_daily_briefing(insights: list[Insight], top_n: int = 5) -> list[BriefingItem]:
-    """
-    TODO(codex): rank insights by severity (BREAKING/SECURITY first)
-    then recency, take top_n, return as ranked BriefingItems.
-    No LLM call needed for ranking itself — pure logic.
-    """
+    """Rank insights by severity, confidence, and recency without an LLM call."""
     ordered = sorted(
         insights,
         key=lambda insight: (
@@ -61,12 +57,7 @@ def build_daily_briefing(insights: list[Insight], top_n: int = 5) -> list[Briefi
 
 
 def answer_question(question: str, relevant_insights: list[Insight]) -> str:
-    """
-    TODO(codex): semantic-search insights (pgvector) for relevant_insights
-    upstream of this call, then use get_model(Tier.LIVE) to answer the
-    question grounded only in those insights' content. Cite sources in
-    the answer text.
-    """
+    """Compose a deterministic answer from insights retrieved upstream."""
     if not relevant_insights:
         return (
             "I could not find a matching DRIFT insight. Try naming a library or "

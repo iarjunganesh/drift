@@ -27,5 +27,6 @@ embedding retrieval, or durable model-run provenance exists.
   provider failures after retries return 502 without exposing provider details.
 - The retry, timeout, bulkhead, circuit, and conservative settlement mechanics
   are governed by ADR-009; this ADR remains the scope boundary for live chat.
-- Generated Insight records and the Scout/Synthesizer pipeline remain
+- Scheduled Scout persistence, live-store retrieval, embedding persistence,
+  generated Insight records, and end-to-end Scout/Synthesizer wiring remain
   implementation boundaries.

@@ -7,15 +7,38 @@ Three tables:
   insights   — Synthesizer/Insight agent output: clustered, reasoned-over
                changes, each with a source citation and confidence flag
 
-Uses SQLAlchemy models + pgvector for the insights embedding column.
-Codex: flesh out the actual SQLAlchemy Base/engine/session wiring here,
-following the async pattern from the bankers-wrapped reference repo.
+Uses SQLAlchemy models + pgvector for the insights embedding column. The
+async Base/engine/session wiring follows the conceptual pattern from the
+bankers-wrapped reference repo without importing its unrelated dependencies.
 """
 
+from collections.abc import AsyncIterator
 from datetime import datetime
 from enum import StrEnum
 
+from pgvector.sqlalchemy import Vector
 from pydantic import BaseModel, Field
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    func,
+)
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+from backend.core.config import settings
 
 
 class ChangeSeverity(StrEnum):
@@ -23,6 +46,80 @@ class ChangeSeverity(StrEnum):
     MINOR = "minor"             # small behavior change, worth noting
     BREAKING = "breaking"       # breaking change — needs dev attention
     SECURITY = "security"       # security-relevant — highest priority
+
+
+class Base(DeclarativeBase):
+    """SQLAlchemy metadata for the durable PostgreSQL/pgvector store."""
+
+
+class SourceRow(Base):
+    """Configured primary release source persisted for provenance."""
+
+    __tablename__ = "sources"
+
+    id: Mapped[str] = mapped_column(String(100), primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    repo: Mapped[str] = mapped_column(String(255), nullable=False)
+    feed_url: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
+    category: Mapped[str] = mapped_column(String(100), nullable=False)
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, server_default="true")
+
+    raw_items: Mapped[list[RawItemRow]] = relationship(back_populates="source")
+
+
+class RawItemRow(Base):
+    """Unprocessed release evidence fetched by Scout."""
+
+    __tablename__ = "raw_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    source_id: Mapped[str] = mapped_column(
+        String(100), ForeignKey("sources.id", ondelete="RESTRICT"), nullable=False, index=True
+    )
+    title: Mapped[str] = mapped_column(String(500), nullable=False)
+    url: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    raw_content: Mapped[str] = mapped_column(Text, nullable=False)
+    fetched_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    source: Mapped[SourceRow] = relationship(back_populates="raw_items")
+
+
+class InsightRow(Base):
+    """Structured reasoning output with citation and embedding provenance."""
+
+    __tablename__ = "insights"
+    __table_args__ = (
+        CheckConstraint("confidence >= 0 AND confidence <= 1", name="ck_insights_confidence_range"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    raw_item_ids: Mapped[list[int]] = mapped_column(JSONB, nullable=False)
+    title: Mapped[str] = mapped_column(String(500), nullable=False)
+    summary: Mapped[str] = mapped_column(Text, nullable=False)
+    why_it_matters: Mapped[str] = mapped_column(Text, nullable=False)
+    what_to_check: Mapped[str] = mapped_column(Text, nullable=False)
+    severity: Mapped[str] = mapped_column(String(20), nullable=False)
+    affected_libraries: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
+    source_citations: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False)
+    model_used: Mapped[str] = mapped_column(String(255), nullable=False)
+    embedding: Mapped[list[float] | None] = mapped_column(Vector(1536), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+engine: AsyncEngine = create_async_engine(settings.database_url, pool_pre_ping=True)
+session_factory = async_sessionmaker(engine, expire_on_commit=False)
+
+
+async def get_session() -> AsyncIterator[AsyncSession]:
+    """Yield one async database session for a FastAPI dependency or job."""
+    async with session_factory() as session:
+        yield session
 
 
 class RawItem(BaseModel):

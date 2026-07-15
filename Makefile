@@ -1,10 +1,13 @@
-.PHONY: install dev test lint type-check ci demo clean frontend-install frontend-build
+.PHONY: install dev migrate test lint type-check ci demo clean frontend-install frontend-build
 
 install:
 	uv sync --locked --group dev
 
 dev:
 	uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+
+migrate:
+	uv run alembic upgrade head
 
 test:
 	uv run pytest tests --cov=backend --cov-report=term-missing --cov-fail-under=100

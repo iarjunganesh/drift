@@ -8,10 +8,10 @@ Endpoints:
   POST /chat             — chat-over-knowledge (Tier.LIVE)
   GET  /health           — liveness check
 
-Codex: wire these against the agent modules in backend/agents/.
-Follow the async FastAPI pattern from the bankers-wrapped reference
-repo (structlog request logging, consistent error handling), but do
-NOT bring in anything related to its media-generation dependencies
+The fixture-backed HTTP adapters are wired here; live-store agent integration
+remains an explicit boundary. Follow the async FastAPI pattern from the
+bankers-wrapped reference repo (structlog request logging, consistent error
+handling), but do NOT bring in anything related to its media-generation dependencies
 (Genblaze, FFmpeg, B2) — DRIFT has no media component.
 """
 

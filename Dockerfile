@@ -16,6 +16,8 @@ ENV PATH="/app/.venv/bin:${PATH}"
 COPY pyproject.toml uv.lock ./
 COPY README.md ./
 COPY backend/ ./backend/
+COPY alembic.ini ./
+COPY migrations/ ./migrations/
 
 RUN uv sync --frozen --no-dev --no-editable
 RUN chown -R 10001:10001 /app

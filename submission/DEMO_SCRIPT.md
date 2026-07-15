@@ -19,7 +19,7 @@ model behavior.
 | 1:00–1:20 | `/search?q=vllm` | Search for an affected library and point out the source-backed result. |
 | 1:20–1:45 | `POST /chat` or Swagger UI | Ask “What should I check for vLLM?” Show that the answer is grounded in matching insights and returns citations. |
 | 1:45–2:00 | Frontend at `https://dr1ftless.vercel.app` | Show the operator-facing briefing view, then the API docs link. |
-| 2:00–2:20 | Architecture diagram | Follow feeds → Scout → Synthesizer → Insight → Briefing. Explain that live feed ingestion, Postgres, pgvector retrieval, and generated Insight model stages are the next implementation boundary. |
+| 2:00–2:20 | Architecture diagram | Follow feeds → Scout → Synthesizer → Insight → Briefing. Explain that scheduled feed persistence, pgvector retrieval, generated Insight model output, and end-to-end wiring are the next implementation boundary; the Day 1 feed/schema and Day 2 Synthesizer foundations are already implemented. |
 | 2:20–2:38 | ADR index and CI workflow | Show typed stages, provenance requirements, Ruff, mypy, pytest, coverage, Codecov upload, and the enforced 100% floor for implemented code. |
 | 2:38–2:52 | Code or final briefing | Explain Codex’s role in shaping the typed pipeline, bounded live-chat safeguards, tests, docs, and gates. Explain GPT-5.6’s role only using saved, verified live output; live release ingestion and generated insights are not complete. |
 

@@ -46,9 +46,19 @@ def test_scout_loads_configured_sources_and_aggregates_items(monkeypatch, tmp_pa
 
 def test_synthesizer_orchestrates_embeddings_clusters_and_classification(monkeypatch) -> None:
     items = [make_raw_item(1), make_raw_item(2)]
-    monkeypatch.setattr(synthesizer, "embed_items", lambda received: [[float(item.id)] for item in received])
-    monkeypatch.setattr(synthesizer, "cluster_items", lambda received, _: [[received[0]], [received[1]]])
-    monkeypatch.setattr(synthesizer, "classify_change", lambda _: ChangeSeverity.BREAKING)
+    monkeypatch.setattr(
+        synthesizer,
+        "embed_items",
+        lambda received, **_: [[float(item.id)] for item in received],
+    )
+    monkeypatch.setattr(
+        synthesizer,
+        "cluster_items",
+        lambda received, _: [[received[0]], [received[1]]],
+    )
+    monkeypatch.setattr(
+        synthesizer, "classify_change", lambda _, **__: ChangeSeverity.BREAKING
+    )
 
     assert synthesizer.run_synthesizer(items) == [
         ([items[0]], ChangeSeverity.BREAKING),
