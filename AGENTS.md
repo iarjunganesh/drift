@@ -6,7 +6,7 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.5.0` bounded local capture-path release. The
+**Current phase:** `v0.5.1` Railway database-URL compatibility release. The
 deterministic API and Next.js briefing view are usable. `DRIFT_MODE=live` can
 run the one-shot `backend.pipeline` capture job: persist/reload source evidence,
 generate structured Insights, embed them, preserve source/model-run/review

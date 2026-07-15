@@ -40,7 +40,10 @@ This path uses committed example data and makes no external calls.
 
 ## Live grounded-chat demo — local live store, real model response
 
-1. Copy `.env.example` to `.env`; keep the file untracked.
+1. Copy `.env.example` to `.env`; keep the file untracked. On Railway, bind
+   the API service directly to the database service's complete native
+   `DATABASE_URL`; the application normalizes its `postgres://` or
+   `postgresql://` prefix for asyncpg.
 2. Add `OPENAI_API_KEY` locally. Do not send it through chat, issues, or commits.
 3. Set `DRIFT_MODE=live`, then confirm `DRIFT_MAX_SPEND_USD=10`, alert `$5`,
    and per-attempt reservation `$1`. Keep

@@ -12,6 +12,25 @@ the annotated `v0.1.0` tag.
 
 No unreleased changes.
 
+## [0.5.1] - 2026-07-15
+
+Railway PostgreSQL connection-string compatibility patch.
+
+### Fixed
+
+- Normalize provider-native `postgres://` and `postgresql://` connection URLs
+  to SQLAlchemy's required async `postgresql+asyncpg://` dialect before the
+  application engine or Alembic migration environment is initialized.
+- Added full branch coverage for native, legacy, and already-normalized
+  PostgreSQL connection URLs, so the Railway database reference can be used
+  directly without composing credential variables.
+
+### Deployment note
+
+- The API service must reference the database service's complete native
+  `DATABASE_URL`; `v0.5.1` supplies the driver normalization. Applying
+  migrations and creating the first reviewed capture remain operator actions.
+
 ## [0.5.0] - 2026-07-15
 
 Bounded local capture-path release with persisted source and model provenance.
@@ -259,6 +278,7 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.5.1]: #051---2026-07-15
 [0.5.0]: #050---2026-07-15
 [0.4.0]: #040---2026-07-15
 [0.3.1]: #031---2026-07-15

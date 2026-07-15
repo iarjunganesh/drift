@@ -2,7 +2,30 @@ from dataclasses import replace
 
 import pytest
 
-from backend.core.config import settings
+from backend.core.config import _normalize_database_url, settings
+
+
+@pytest.mark.parametrize(
+    ("provided", "expected"),
+    [
+        (
+            "postgres://user:password@db.internal:5432/drift",
+            "postgresql+asyncpg://user:password@db.internal:5432/drift",
+        ),
+        (
+            "postgresql://user:password@db.internal:5432/drift",
+            "postgresql+asyncpg://user:password@db.internal:5432/drift",
+        ),
+        (
+            "postgresql+asyncpg://user:password@db.internal:5432/drift",
+            "postgresql+asyncpg://user:password@db.internal:5432/drift",
+        ),
+    ],
+)
+def test_normalize_database_url_adds_asyncpg_driver_when_needed(
+    provided: str, expected: str
+) -> None:
+    assert _normalize_database_url(provided) == expected
 
 
 @pytest.mark.parametrize(

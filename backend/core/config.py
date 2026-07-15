@@ -18,11 +18,24 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(REPOSITORY_ROOT / ".env", override=False)
 
 
+def _normalize_database_url(url: str) -> str:
+    # Managed Postgres providers (Railway, Heroku, etc.) hand out plain
+    # postgres:// / postgresql:// URLs with no driver hint; SQLAlchemy's
+    # async engine needs the +asyncpg dialect explicitly.
+    if url.startswith("postgres://"):
+        return "postgresql+asyncpg://" + url[len("postgres://") :]
+    if url.startswith("postgresql://"):
+        return "postgresql+asyncpg://" + url[len("postgresql://") :]
+    return url
+
+
 @dataclass(frozen=True)
 class Settings:
     openai_api_key: str = os.environ.get("OPENAI_API_KEY", "")
-    database_url: str = os.environ.get(
-        "DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/drift"
+    database_url: str = _normalize_database_url(
+        os.environ.get(
+            "DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/drift"
+        )
     )
     sources_config_path: str = os.environ.get(
         "SOURCES_CONFIG_PATH", str(REPOSITORY_ROOT / "backend" / "sources.yaml")
@@ -65,7 +78,7 @@ class Settings:
         "DRIFT_SPEND_LEDGER_PATH", str(REPOSITORY_ROOT / ".drift" / "spend-ledger.json")
     )
     app_name: str = "DRIFT"
-    app_version: str = "0.5.0"
+    app_version: str = "0.5.1"
 
     def validate(self) -> None:
         if self.mode not in {"fixture", "live"}:

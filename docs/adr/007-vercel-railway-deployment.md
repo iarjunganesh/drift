@@ -46,6 +46,10 @@ capacity commitment.
   considered verified.
 - Railway's private `DATABASE_URL` stays server-side and is never exposed to
   the frontend.
+- **2026-07-15 addendum:** accept Railway's native `postgres://` or
+  `postgresql://` service reference and normalize it internally to
+  `postgresql+asyncpg://`; operators must not construct a connection string
+  from individual credential variables.
 - Fixture mode can be deployed without OpenAI credentials or a database.
 - The verified Railway API endpoint is
   `https://drift-api-prod.up.railway.app`; its public health check is
