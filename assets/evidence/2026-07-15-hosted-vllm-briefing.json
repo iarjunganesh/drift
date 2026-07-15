@@ -1,0 +1,55 @@
+{
+  "record_type": "hosted_briefing_smoke_test",
+  "recorded_at": "2026-07-15T19:28:59Z",
+  "status": "verified",
+  "deployment": {
+    "api_url": "https://drift-api-prod.up.railway.app",
+    "frontend_url": "https://dr1ftless.vercel.app",
+    "version": "0.5.1",
+    "mode": "live"
+  },
+  "database": {
+    "provider": "Railway PostgreSQL",
+    "migration_head": "0002_capture_provenance",
+    "pgvector_migration_completed": true
+  },
+  "capture": {
+    "command": "python -m backend.pipeline --source vllm --per-source-limit 1 --max-items 1 --tier dev",
+    "fetched_count": 10,
+    "selected_count": 1,
+    "persisted_raw_count": 1,
+    "insight_ids": [1],
+    "settled_usd": 1.003572,
+    "budget_limit_usd": 5.0
+  },
+  "briefing_response": [
+    {
+      "rank": 1,
+      "insight": {
+        "id": 1,
+        "raw_item_ids": [1],
+        "title": "vLLM 0.25.1 prevents startup failures and mixed-dtype quantization corruption",
+        "summary": "This patch defers TorchCodec’s missing-FFmpeg error until TorchCodec is used and disables unsafe FlashInfer allreduce/RMSNorm/static-quantization fusion when activation and RMSNorm weight dtypes differ.",
+        "why_it_matters": "Without this fix, vLLM model serving could fail during startup even when TorchCodec was unused, while affected NVFP4 models with BF16 activations and FP32 RMSNorm weights could silently produce corrupted hidden states and garbage output such as repeated `!!!!!` tokens. The mixed-dtype guard may route those models through a safe, potentially less optimized path; same-dtype models retain the fusion.",
+        "what_to_check": "Upgrade to vLLM 0.25.1 and test startup on hosts without system FFmpeg, especially for vision-language models, plus validate output quality for NVFP4 Gemma/Qwen-style models using mixed BF16/FP32 RMSNorm dtypes. Confirm logs or profiling show the safe path for incompatible dtypes and correct output tokens.",
+        "severity": "minor",
+        "affected_libraries": ["vLLM", "TorchCodec", "FlashInfer"],
+        "source_citations": ["https://github.com/vllm-project/vllm/releases/tag/v0.25.1"],
+        "confidence": 0.99,
+        "model_used": "gpt-5.6-luna",
+        "created_at": "2026-07-15T19:27:59.484838Z"
+      }
+    }
+  ],
+  "verification": {
+    "briefing_endpoint": "GET /briefing returned the cited persisted Insight",
+    "cors_origin": "https://dr1ftless.vercel.app",
+    "cors_preflight": "passed",
+    "frontend_http_status": 200
+  },
+  "limitations": [
+    "The capture is unreviewed and is not a broad live-release-analysis claim.",
+    "Scheduled feed population is not implemented.",
+    "Hosted /search and /chat have not yet been smoke-tested against this store."
+  ]
+}

@@ -10,9 +10,10 @@ seven [Codex project initiatives](INITIATIVES.md).
 > **Current truth:** the fixture path is working and reproducible. The local
 > one-shot capture job now persists/reloads primary source evidence, generates
 > and embeds cited Insights, preserves source/model-run/review provenance, and
-> exposes them through live briefing/search/chat. Scheduled population, a real
-> PostgreSQL integration run, reviewed real-model captures, redeployment, and
-> hosted verification remain operator gates.
+> exposes them through live briefing/search/chat. On 2026-07-15, Railway
+> PostgreSQL migrations and one unreviewed vLLM capture served through hosted
+> `/briefing` were verified. Scheduled population, further reviewed captures,
+> and hosted `/search`/`/chat` smoke tests remain operator gates.
 
 ## Visual source of truth
 
@@ -89,9 +90,10 @@ GitHub Atom feeds → Scout → RawItem → Synthesizer → Insight → Briefing
 The intended durable store is PostgreSQL with pgvector. The local capture job
 provides the controlled Scout → Synthesizer → Insight persistence path, writes
 insight embeddings and model-run provenance, and the live adapter retrieves
-those rows. It has not yet been run against a real database or real model and
-is not deployed. `DRIFT_MODE=live` uses the live store in the current code;
-the last hosted verification predates this capture path.
+those rows. On 2026-07-15, this path migrated Railway PostgreSQL, captured one
+unreviewed vLLM release Insight, and served it through hosted `/briefing`.
+`DRIFT_MODE=live` uses the live store in the current code; that single capture
+does not establish broad, reviewed live release analysis.
 
 ## Small request flows
 
@@ -283,10 +285,10 @@ with `/health`, `/docs`, and `/openapi.json` exposed publicly. As of
 See
 [ADR-007](adr/007-vercel-railway-deployment.md).
 
-The browser can consume the hosted API from Vercel. The last verification
-predates the capture implementation; after redeployment, live `/briefing` must
-read captured rows and live `/search`/`chat` must be smoke-tested against that
-same cited store before any broader claim.
+The browser can consume the hosted API from Vercel. On 2026-07-15, Vercel CORS
+and a populated hosted `/briefing` response were verified against the migrated
+Railway store. Live `/search`/`chat` must still be smoke-tested against cited
+stored evidence before any broader claim.
 
 The generated Swagger contract keeps route ownership visible through four
 groups: `system` for metadata and liveness, `briefing` for ranked insights,

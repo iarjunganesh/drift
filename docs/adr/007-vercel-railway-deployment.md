@@ -24,7 +24,10 @@ live-chat provider-boundary tests and CORS verification were in place. This
 does not establish the current capture-path behavior. The local code now has
 migrations, provenance persistence, embeddings, and a one-shot capture job, but
 the hosted service must be redeployed and verified before `/briefing` can be
-described as live-store-backed.
+described as live-store-backed. **2026-07-15 addendum:** `v0.5.1` was migrated
+against Railway PostgreSQL and served one bounded, unreviewed vLLM Insight
+through `/briefing`; Vercel CORS was reverified. This is not yet broad live
+release analysis or hosted `/search`/`/chat` verification.
 
 ## Context
 

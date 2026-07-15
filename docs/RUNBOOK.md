@@ -59,10 +59,10 @@ This path uses committed example data and makes no external calls.
    model capacity is busy or the circuit is open; retry later. A `429` means
    the local spend guard blocked the request.
 6. Local live `/briefing`, `/search`, and `/chat` now read the captured store.
-   This still is not live release analysis until the capture is human-reviewed,
-   saved as evidence, deployed, and verified. Scheduled population remains
-   future work. The hosted deployment predates this local path until redeployed
-   and checked.
+   On 2026-07-15, Railway PostgreSQL migrations and one unreviewed vLLM capture
+   were verified through hosted `/briefing` and the Vercel CORS preflight.
+   Scheduled population, further reviewed evidence, and hosted `/search`/`/chat`
+   smoke tests remain future work.
 
 ## Recording order
 

@@ -84,9 +84,9 @@ to its repository-specific Codecov badge.
    Vercel frontend is live at `https://dr1ftless.vercel.app`. Keep the Vercel
    Root Directory set to `frontend/`; its checked-in configuration supplies
    `NEXT_PUBLIC_API_URL`. As of 2026-07-15, Railway is verified in bounded
-   `DRIFT_MODE=live` with CORS allowing the Vercel origin. That deployment
-   predates the local capture path; its current briefing and chat behavior must
-   be re-verified after the updated service is deployed.
+   `DRIFT_MODE=live` with CORS allowing the Vercel origin. On 2026-07-15,
+   Railway PostgreSQL migrations and one unreviewed vLLM capture were verified
+   through hosted `/briefing`; hosted `/search`/`/chat` remain to be smoke-tested.
 
 The checked-in `codecov.yml` defines the pytest project, report path, and a
 100% project/patch floor for implemented code. Explicit live-stage boundaries

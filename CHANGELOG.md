@@ -10,7 +10,17 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
-No unreleased changes.
+### Hosted verification
+
+- On 2026-07-15, deployed `v0.5.1` against Railway PostgreSQL, applied
+  migrations through `0002_capture_provenance`, and captured one unreviewed
+  vLLM Insight that the public `/briefing` endpoint served with its primary
+  citation. Vercel CORS preflight also passed. Scheduled population, further
+  human-reviewed captures, and hosted `/search`/`/chat` smoke tests remain
+  pending.
+- Added a scrubbed, committed hosted-evidence record under `assets/evidence/`;
+  it preserves the verified response and boundaries without credentials or
+  local spend-ledger data.
 
 ## [0.5.1] - 2026-07-15
 

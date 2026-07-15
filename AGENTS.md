@@ -11,12 +11,12 @@ deterministic API and Next.js briefing view are usable. `DRIFT_MODE=live` can
 run the one-shot `backend.pipeline` capture job: persist/reload source evidence,
 generate structured Insights, embed them, preserve source/model-run/review
 provenance, and serve the captured store through briefing/search/chat. All
-provider calls in that job are budgeted and retry-bounded. Scheduled population,
-a real PostgreSQL run, reviewed real model captures, hosted redeployment, and
-hosted verification remain explicit operator gates.
-The last verified hosted deployment (2026-07-15) reports `DRIFT_MODE=live` and
-allows the Vercel origin through CORS. It predates the un-deployed capture-path
-changes; do not describe it as live release analysis.
+provider calls in that job are budgeted and retry-bounded. On 2026-07-15, a
+Railway PostgreSQL instance was migrated and one bounded, unreviewed vLLM
+capture was served by hosted `/briefing` with Vercel CORS verified. Scheduled
+population, further human-reviewed captures, and hosted `/search`/`/chat`
+smoke tests remain operator gates; do not describe this single capture as broad
+live release analysis.
 
 ## Key commands
 
@@ -147,11 +147,11 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The last verified hosted deployment is
-in `DRIFT_MODE=live` with the Vercel origin advertised through CORS. That last
-verified hosted setting predates the local capture path; do not describe it as
-live release analysis until the capture job has produced reviewed evidence,
-the database has been exercised, and the updated service has been deployed and
-verified.
+`v0.5.1` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS.
+On 2026-07-15 it was migrated against Railway PostgreSQL and served one
+bounded, unreviewed vLLM Insight through `/briefing`. Further reviewed evidence
+and hosted `/search`/`/chat` smoke tests are still required before any broad
+live-analysis claim.
 
 A notebook is optional future evidence, not part of the current fixture
 baseline. Add one only when it can exercise a verified hosted workflow without
