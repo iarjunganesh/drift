@@ -7,14 +7,16 @@ development baseline while the live pipeline is being implemented.
 
 | Version | Supported |
 | --- | --- |
-| `0.6.0` | ✅ Current source and hosted application; hosted live evidence serves four human-reviewed Insights as of 2026-07-16 |
+| `0.7.0` | ✅ Current source release; deployment verification required before it replaces the hosted revision |
+| `0.6.1` | Previously verified hosted application; it served four human-reviewed Insights as of 2026-07-16 |
 | `0.5.1` | Historical hosted baseline |
 
 Fixture data is synthetic. Local live ingestion and provider-backed generation
 are explicitly operator-enabled and review-gated; the hosted gate returned no
 live evidence until the first human-reviewed capture. As of 2026-07-16 it serves
 four human-reviewed Insights from an eight-source capture (six verifier-passed
-drafts).
+drafts). Version `0.7.0` keeps human review notes database-only; confirm the
+deployed API omits them before treating that redaction as a hosted fact.
 
 ## Reporting a vulnerability
 

@@ -32,7 +32,8 @@
       archived to `assets/evidence/2026-07-16-all-sources-reviewed.json`.
 - [x] Provide a judge path: hosted app is available at
       `https://dr1ftless.vercel.app` with a verified `v0.6.1` Railway API;
-      reviewed live evidence remains an explicit operator gate.
+      reviewed live evidence remains an explicit operator gate. Verify the
+      `v0.7.0` release deployment/redaction before updating this hosted version.
 - [ ] Upload a public YouTube video under three minutes with English narration.
 - [ ] Replace the placeholder with the final video URL:
       `https://youtu.be/TBD` (see [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md)).

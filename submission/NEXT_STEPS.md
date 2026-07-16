@@ -1,15 +1,16 @@
 # DRIFT — Focused next steps (audit follow-up, 2026-07-16)
 
 **Deadline:** Devpost submission closes **Tue Jul 21, 5:00 PM PT**. Today is Wed Jul 16 — 5 working days.
-**Codex budget:** 750 of 2,500 credits remaining (~30%, ≈ $30 equivalent). Spend it on P0/P1 build work only; do P2 polish by hand where possible.
+**Codex budget:** about 500 of 2,500 credits remain (~20%). Spend it on P0/P1
+release and submission work only; do P2 polish by hand where possible.
 **OpenAI API budget (separate from Codex credits):** capture runs and hosted smoke tests draw on the `drift` project key, bounded by `DRIFT_MAX_SPEND_USD=10`. That is enough for several capture runs; do not raise the cap.
 
-Audit verdict: hosted `v0.6.1` is verified (142 tests and 100% backend coverage
-at release), with its Railway health, empty fail-closed briefing, docs, CORS,
-and Vercel canonical-banner source checked on 2026-07-16. On 2026-07-16, four human-reviewed Insights were published and hosted
-`/briefing`, `/search`, and `/chat` were verified provider-backed, clearing the
-human-reviewed-output blocker; the one remaining hard blocker is the demo video.
-The `v0.6.1` API-docs banner frame follows the selected system theme.
+Audit verdict: `v0.7.0` source is locally verified (149 tests and 100% backend
+coverage), including evidence-byte integrity, public review-note redaction, and
+the ten-item frontend request. The currently verified hosted revision remains
+`v0.6.1`; deploy and verify `v0.7.0` before making hosted claims for those
+changes. The reviewed-output blocker is otherwise cleared by the four published
+Insights; the demo video remains the final submission blocker.
 
 ---
 
@@ -35,12 +36,13 @@ The `v0.6.1` API-docs banner frame follows the selected system theme.
 - [x] Recorded reviewed-evidence hosted smoke-test results in CHANGELOG (Unreleased).
       Empty-store responses are not evidence of provider-backed retrieval or grounded chat.
 
-### 2. Fix the frontend empty state  *(judges currently see "Loading briefing…" forever)*
+### 2. Deploy the reviewed-evidence frontend and redaction fix
 - [x] `frontend/app/page.tsx`: separate **loading**, **empty**, and **error**
       states; local `v0.6.1` also renders canonical light/dark API-served
       banners without frontend SVG copies.
-- [ ] Deploy `v0.6.1` to Vercel and confirm the empty state plus both banner
-      themes against the live API.
+- [ ] Deploy `v0.7.0` to Railway and Vercel, then verify `/health` reports
+      `0.7.0`, `/briefing` and `/openapi.json` omit `human_review_notes`, CORS
+      still allows Vercel, and the deployed frontend requests `top_n=10`.
 
 ### 3. Record and publish the demo video  *(≤ 3 min, public YouTube, English voiceover)*
 - [ ] Follow `submission/DEMO_SCRIPT.md`, updated for the now-populated hosted app:
@@ -79,7 +81,7 @@ The `v0.6.1` API-docs banner frame follows the selected system theme.
 
 ## P2 — Polish (Jul 20). Hand-edit; do not spend Codex credits here.
 
-- [x] README quality result — updated to 142 tests after a verified pytest run.
+- [x] README quality result — updated to 149 tests after a verified pytest run.
 - [x] README clone URL — replaced `git clone <DRIFT-GITHUB-URL>` with:
       `https://github.com/iarjunganesh/drift.git`.
 - [x] Scrubbed `bankers-wrapped` references from public surfaces:

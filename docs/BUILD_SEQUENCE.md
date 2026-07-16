@@ -24,10 +24,10 @@ AI-infrastructure release intelligence.
 - [x] Codex: claim evidence spans/offsets/hashes, `direct_fact`/`inference`/
       `recommended_check` labels, upstream PR/commit references, review-first
       live-store filtering, calibration fixtures, and manual capture notebook
-- [ ] YOU: run and review 3-5 primary-source drafts through the manual notebook;
-      use Luna for prompt iteration and Sol only for selected final examples.
-      Promote only IDs whose release text, claim labels, and action were checked
-      by a human with recorded notes.
+- [x] Operator: ran the manual notebook against eight primary-release sources;
+      six drafts passed verification and four were human-reviewed/published
+      (Transformers, vLLM, NCCL, TensorRT) with recorded notes. The `dev`/Luna
+      tier was used to bound cost; Sol remains reserved for a future final pass.
 
 ## Day 5 — Briefing + search + chat
 - [x] Codex: deterministic `build_daily_briefing()`, fixture search, and
@@ -40,8 +40,8 @@ AI-infrastructure release intelligence.
       `0003_claim_evidence_review_gate` via its public TCP proxy (2026-07-16)
 - [x] Operator: hosted `v0.6.1` `/health`, empty fail-closed `/briefing`,
       `/docs`, Vercel canonical-banner source, and CORS verified (2026-07-16)
-- [ ] YOU: execute one reviewed capture, then smoke-test provider-backed hosted
-      `/search` and `/chat` against the resulting live store
+- [x] Operator: smoke-tested hosted provider-backed `/briefing`, `/search`, and
+      `/chat` against the four reviewed Insights on 2026-07-16
 - [x] Model tier: live (Terra) for bounded local grounded chat
 
 ## Day 6-7 — Frontend
@@ -55,8 +55,9 @@ AI-infrastructure release intelligence.
 - [x] No new model calls — the current UI remains presentation-only
 
 ## Day 8 — Final content + docs
-- [ ] Re-run the best 3-5 reviewed primary-source examples on Tier.FINAL (Sol),
-      save their persisted output and human review notes
+- [ ] Optional: rerun selected reviewed examples on Tier.FINAL (Sol) only if
+      additional budget is available; the `dev`/Luna reviewed set is the saved
+      submission evidence.
 - [x] Fill in README's "How Codex and GPT-5.6 were used" section —
       required for submission, judged under Technological Implementation
 - [x] Record the primary `/feedback` Codex Session ID:

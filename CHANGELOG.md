@@ -10,6 +10,8 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-16
+
 ### Reviewed-evidence capture and hosted verification — 2026-07-16
 
 - Published four human-reviewed Insights through `publish_verified_insights`
@@ -34,8 +36,7 @@ the annotated `v0.1.0` tag.
   (1200 → 4000), and the claim verifier (400 → 800).
 - Raised the frontend briefing request from `top_n=3` to `top_n=10` so the home
   page surfaces every reviewed Insight across sources, not just the top three
-  (the `/briefing` endpoint already accepts `top_n` up to 10). Requires a Vercel
-  redeploy to take effect on the hosted frontend.
+  (the `/briefing` endpoint already accepts `top_n` up to 10).
 
 ### Changed
 
@@ -78,10 +79,11 @@ the annotated `v0.1.0` tag.
   and `/chat` can never return internal review text. Added model- and
   endpoint-level regression tests.
 - Sanitized `notebooks/drift_manual_run.ipynb` to a clean, output-free template
-  (reset capture trigger, publish/archive IDs, and review notes) and added a
-  redacted, read-only `notebooks/drift_manual_run.results.ipynb` snapshot; the
-  operator database host, provider/budget logs, and review notes are removed.
-- Full suite: 148 tests at 100% backend coverage.
+  (reset capture trigger, publish/archive IDs, and review notes), and made
+  `notebooks/drift_manual_run.results.ipynb` a Markdown-only display record;
+  it contains no runnable cells, operator configuration, provider/budget logs,
+  or review notes. A regression test protects that boundary.
+- Full suite: 149 tests at 100% backend coverage.
 
 ## [0.6.1] - 2026-07-16
 
@@ -473,6 +475,7 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.7.0]: #070---2026-07-16
 [0.6.1]: #061---2026-07-16
 [0.6.0]: #060---2026-07-16
 [0.5.1]: #051---2026-07-15

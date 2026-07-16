@@ -36,8 +36,7 @@ to overwrite an existing record.
 ## Rendered snapshot
 
 [`drift_manual_run.results.ipynb`](drift_manual_run.results.ipynb) is a frozen,
-read-only record of a completed run — proof that the reviewed evidence went
-live. It is **not** runnable: the operator database host, provider/budget logs,
-and internal review notes are removed, and the capture trigger is reset. The
-executable notebook above is the clean template; keep it output-free when
-committing, and regenerate the snapshot only from a completed, reviewed run.
+Markdown-only record of a completed run. It has no executable cells, operator
+database host, provider/budget logs, or internal review notes. The executable
+notebook above is the clean template; keep it output-free when committing, and
+create a new results record only from a completed, reviewed run.

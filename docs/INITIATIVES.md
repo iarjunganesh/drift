@@ -250,7 +250,7 @@ capture; this initiative does not turn it into a broad live-analysis claim.
 
 ### Implementation addendum — 2026-07-15
 
-The planned guardrails are now implemented locally and covered by 142 tests at
+The planned guardrails are now implemented locally and covered by 149 tests at
 100.00% backend coverage:
 
 - each live claim has a type, frozen exact primary-source excerpt, character
@@ -309,3 +309,13 @@ capture/provenance and cleanup record. Initiative 08 is the additive grounding
 guardrail and capture-readiness record, and Initiative 09 is the additive
 submission-audit/frontend-presentation record; the earlier sessions remain the
 foundation, publication, and hosted-demo follow-up initiatives.
+
+### Release-hardening addendum — 2026-07-16
+
+The `v0.7.0` source release fixes the Windows evidence-manifest newline mismatch,
+makes review notes database-only in the public API contract, requests up to ten
+reviewed briefing records in the frontend, and replaces the recorded notebook
+with a Markdown-only results artifact. It is covered by 149 tests at 100%
+backend coverage. Deployment verification is intentionally recorded separately:
+do not claim these source changes are hosted until `/health`, `/briefing`,
+`/openapi.json`, CORS, and the Vercel bundle have been checked.

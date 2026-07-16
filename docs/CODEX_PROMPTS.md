@@ -20,6 +20,9 @@ later prompts as DRIFT dependencies.
 > `/briefing`; its `0003` schema and hosted `v0.6.1` empty briefing were
 > verified on 2026-07-16; four human-reviewed Insights were then published and
 > hosted `/briefing`, `/search`, and `/chat` verified provider-backed.
+> The later `v0.7.0` source release hardens evidence-byte integrity, review-note
+> redaction, and the results-notebook boundary; deployment verification remains
+> a separate required fact.
 
 ---
 

@@ -38,6 +38,8 @@ def test_reviewed_notes_are_never_exposed_publicly(api_client) -> None:
 def test_health_and_briefing(api_client) -> None:
     root = api_client.get("/")
     health = api_client.get("/health")
+
+    assert health.json()["version"] == "0.7.0"
     briefing = api_client.get("/briefing")
 
     assert root.status_code == 200
@@ -52,6 +54,7 @@ def test_health_and_briefing(api_client) -> None:
 def test_openapi_routes_have_clear_groups(api_client) -> None:
     schema = api_client.get("/openapi.json").json()
 
+    assert "human_review_notes" not in str(schema)
     assert [tag["name"] for tag in schema["tags"]] == [
         "system",
         "briefing",
