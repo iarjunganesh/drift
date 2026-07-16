@@ -5,7 +5,13 @@ import pytest
 from sqlalchemy.dialects import postgresql
 
 from backend.core import live_store
-from backend.models.schema import ChangeSeverity, InsightRow
+from backend.models.schema import (
+    ChangeSeverity,
+    InsightRow,
+    PublicationStatus,
+    UpstreamReleaseType,
+    VerificationStatus,
+)
 
 
 def make_row(identifier: int) -> InsightRow:
@@ -21,6 +27,12 @@ def make_row(identifier: int) -> InsightRow:
         source_citations=[f"https://example.com/{identifier}"],
         confidence=0.9,
         model_used="gpt-5.6-luna",
+        claims=[],
+        upstream_release_type=UpstreamReleaseType.UNKNOWN.value,
+        operator_risks=[],
+        applicability_conditions=[],
+        publication_status=PublicationStatus.REVIEWED.value,
+        verification_status=VerificationStatus.PASSED.value,
         embedding=[0.1] * 1536,
         created_at=datetime(2026, 7, 15, tzinfo=UTC),
     )
@@ -59,6 +71,8 @@ async def test_search_live_insights_uses_pgvector_cosine_distance() -> None:
     assert [insight.id for insight in result] == [1, 2]
     compiled = str(session.statement.compile(dialect=postgresql.dialect()))
     assert "<=>" in compiled
+    assert "publication_status" in compiled
+    assert "verification_status" in compiled
     assert "LIMIT" in compiled
 
 
@@ -111,5 +125,6 @@ async def test_latest_live_insights_orders_by_creation_time_and_validates_limit(
     assert [insight.id for insight in result] == [2, 1]
     compiled = str(session.statement.compile(dialect=postgresql.dialect()))
     assert "ORDER BY insights.created_at DESC" in compiled
+    assert "publication_status" in compiled
     with pytest.raises(ValueError, match="Briefing limit"):
         await live_store.latest_live_insights(session, limit=0)

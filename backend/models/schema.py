@@ -15,6 +15,7 @@ bankers-wrapped reference repo without importing its unrelated dependencies.
 from collections.abc import AsyncIterator
 from datetime import UTC, datetime
 from enum import StrEnum
+from typing import Literal
 
 from pgvector.sqlalchemy import Vector
 from pydantic import BaseModel, Field
@@ -46,6 +47,49 @@ class ChangeSeverity(StrEnum):
     MINOR = "minor"             # small behavior change, worth noting
     BREAKING = "breaking"       # breaking change — needs dev attention
     SECURITY = "security"       # security-relevant — highest priority
+
+
+class ClaimKind(StrEnum):
+    """How DRIFT presents a statement to engineers."""
+
+    DIRECT_FACT = "direct_fact"
+    INFERENCE = "inference"
+    RECOMMENDED_CHECK = "recommended_check"
+
+
+class PublicationStatus(StrEnum):
+    """Whether an Insight may be returned from public live endpoints."""
+
+    DRAFT = "draft"
+    REVIEWED = "reviewed"
+
+
+class VerificationStatus(StrEnum):
+    """Result of the model-aided claim verifier; it is not human approval."""
+
+    PASSED = "passed"
+    LEGACY_UNVERIFIED = "legacy_unverified"
+
+
+class UpstreamReleaseType(StrEnum):
+    """The upstream's declared release shape, separate from operator risk."""
+
+    MAJOR = "major"
+    MINOR = "minor"
+    PATCH = "patch"
+    PRE_RELEASE = "pre_release"
+    UNKNOWN = "unknown"
+
+
+class OperatorRisk(StrEnum):
+    """Potential operator-impact area, always presented as an interpretation."""
+
+    COMPATIBILITY = "compatibility"
+    CORRECTNESS = "correctness"
+    PERFORMANCE = "performance"
+    RELIABILITY = "reliability"
+    SECURITY = "security"
+    STARTUP = "startup"
 
 
 class Base(DeclarativeBase):
@@ -110,6 +154,25 @@ class InsightRow(Base):
     model_run_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("model_runs.id", ondelete="SET NULL"), nullable=True, index=True
     )
+    verification_model_run_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("model_runs.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    claims: Mapped[list[dict]] = mapped_column(JSONB, nullable=False, default=list)
+    upstream_release_type: Mapped[str] = mapped_column(
+        String(20), nullable=False, default=UpstreamReleaseType.UNKNOWN.value, server_default="unknown"
+    )
+    operator_risks: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    applicability_conditions: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
+    publication_status: Mapped[str] = mapped_column(
+        String(20), nullable=False, default=PublicationStatus.DRAFT.value, server_default="draft", index=True
+    )
+    verification_status: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False,
+        default=VerificationStatus.LEGACY_UNVERIFIED.value,
+        server_default="legacy_unverified",
+    )
+    verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     human_review_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     embedding: Mapped[list[float] | None] = mapped_column(Vector(1536), nullable=True)
@@ -157,23 +220,61 @@ class RawItem(BaseModel):
     fetched_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
+class SourceReference(BaseModel):
+    """A first-party release, pull-request, or commit reference retained verbatim."""
+
+    kind: Literal["release", "pull_request", "commit"]
+    identifier: str = Field(min_length=1, max_length=200)
+    url: str = Field(min_length=1)
+    commit_sha: str | None = Field(default=None, min_length=7, max_length=64)
+
+
+class EvidenceReference(BaseModel):
+    """A frozen source span that grounds one claim."""
+
+    raw_item_id: int
+    source_url: str = Field(min_length=1)
+    source_sha256: str = Field(min_length=64, max_length=64)
+    excerpt: str = Field(min_length=1)
+    start_char: int = Field(ge=0)
+    end_char: int = Field(gt=0)
+    cross_references: list[SourceReference] = Field(default_factory=list)
+
+
+class GroundedClaim(BaseModel):
+    """An engineer-visible statement with its classification and exact evidence."""
+
+    text: str = Field(min_length=1)
+    kind: ClaimKind
+    evidence: list[EvidenceReference] = Field(min_length=1)
+
+
 class Insight(BaseModel):
     """
-    The core output unit. Every field here exists because the judging
-    criteria and the safety requirement demand it — don't strip fields
-    to simplify the UI later without re-checking against those.
+    The core output unit. Display fields are derived from typed claims; live
+    results must retain their source spans and pass verification/review before
+    public retrieval.
     """
     id: int | None = None
     raw_item_ids: list[int]        # which raw items this insight synthesizes
     title: str
     summary: str                    # the "what changed"
-    why_it_matters: str             # the GPT-5.6 reasoning output — the core value
+    why_it_matters: str             # labelled operational interpretation
     what_to_check: str              # concrete, bounded follow-up for the engineer
     severity: ChangeSeverity
     affected_libraries: list[str]   # e.g. ["pytorch", "triton"]
     source_citations: list[str]     # URLs — every claim must trace back here
     confidence: float = Field(ge=0.0, le=1.0)  # model's own confidence flag
     model_used: str                 # which tier generated this (audit trail)
+    claims: list[GroundedClaim] = Field(default_factory=list)
+    upstream_release_type: UpstreamReleaseType = UpstreamReleaseType.UNKNOWN
+    operator_risks: list[OperatorRisk] = Field(default_factory=list)
+    applicability_conditions: list[str] = Field(default_factory=list)
+    publication_status: PublicationStatus = PublicationStatus.REVIEWED
+    verification_status: VerificationStatus = VerificationStatus.PASSED
+    human_review_notes: str | None = None
+    reviewed_at: datetime | None = None
+    verified_at: datetime | None = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 

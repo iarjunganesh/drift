@@ -76,10 +76,22 @@ def _chat_evidence(insights: list[Insight]) -> str:
         {
             "id": insight.id,
             "title": insight.title[:_MAX_EVIDENCE_FIELD_CHARS],
-            "summary": insight.summary[:_MAX_EVIDENCE_FIELD_CHARS],
-            "why_it_matters": insight.why_it_matters[:_MAX_EVIDENCE_FIELD_CHARS],
-            "what_to_check": insight.what_to_check[:_MAX_EVIDENCE_FIELD_CHARS],
+            "claims": [
+                {
+                    "text": claim.text[:_MAX_EVIDENCE_FIELD_CHARS],
+                    "kind": claim.kind.value,
+                    "evidence": [
+                        {
+                            "source_url": evidence.source_url,
+                            "excerpt": evidence.excerpt[:_MAX_EVIDENCE_FIELD_CHARS],
+                        }
+                        for evidence in claim.evidence
+                    ],
+                }
+                for claim in insight.claims
+            ],
             "severity": insight.severity.value,
+            "operator_risks": [risk.value for risk in insight.operator_risks],
             "confidence": insight.confidence,
             "source_citations": insight.source_citations,
         }

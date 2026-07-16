@@ -5,10 +5,16 @@ from types import SimpleNamespace
 import pytest
 
 from backend import pipeline
-from backend.agents.insight import GeneratedInsight, InsightCallAudit
+from backend.agents.insight import GeneratedInsight, InsightCallAudit, VerificationCallAudit
 from backend.core.config import settings
 from backend.core.model_router import Tier
-from backend.models.schema import ChangeSeverity, Insight, RawItem
+from backend.models.schema import (
+    ChangeSeverity,
+    Insight,
+    PublicationStatus,
+    RawItem,
+    VerificationStatus,
+)
 
 
 def make_item(identifier: int, source_id: str = "vllm") -> RawItem:
@@ -47,6 +53,15 @@ def make_generated(identifier: int = 1) -> GeneratedInsight:
             settled_usd=0.01,
             attempts=1,
         ),
+        verification_audit=VerificationCallAudit(
+            model_used="gpt-5.6-sol",
+            evidence_sha256="c" * 64,
+            output_sha256="d" * 64,
+            input_tokens=75,
+            output_tokens=25,
+            settled_usd=0.005,
+            attempts=1,
+        ),
     )
 
 
@@ -63,7 +78,7 @@ def test_select_recent_items_limits_each_source_and_total() -> None:
 
 
 @pytest.mark.asyncio
-async def test_persist_generated_insights_writes_audit_embedding_and_review_metadata() -> None:
+async def test_persist_generated_insights_writes_audits_embedding_and_draft_metadata() -> None:
     class FakeSession:
         def __init__(self) -> None:
             self.added: list[object] = []
@@ -85,15 +100,19 @@ async def test_persist_generated_insights_writes_audit_embedding_and_review_meta
         session,
         [make_generated()],
         [[0.1] * 1536],
-        review_notes="Reviewed against the source release.",
     )
 
-    model_run, insight_row = session.added
-    assert result == [2]
+    model_run, verification_run, insight_row = session.added
+    assert result == [3]
     assert model_run.evidence_sha256 == "a" * 64
     assert insight_row.model_run_id == 1
-    assert insight_row.human_review_notes.startswith("Reviewed")
-    assert insight_row.reviewed_at is not None
+    assert verification_run.evidence_sha256 == "c" * 64
+    assert insight_row.verification_model_run_id == 2
+    assert insight_row.publication_status == PublicationStatus.DRAFT.value
+    assert insight_row.verification_status == VerificationStatus.PASSED.value
+    assert insight_row.human_review_notes is None
+    assert insight_row.reviewed_at is None
+    assert insight_row.verified_at is not None
     assert session.committed is True
 
 
@@ -101,7 +120,7 @@ async def test_persist_generated_insights_writes_audit_embedding_and_review_meta
 async def test_persist_generated_insights_rejects_embedding_mismatch() -> None:
     with pytest.raises(ValueError, match="one embedding"):
         await pipeline._persist_generated_insights(
-            object(), [make_generated()], [], review_notes=None
+            object(), [make_generated()], []
         )
 
 
@@ -147,10 +166,9 @@ async def test_run_capture_connects_the_bounded_stages(monkeypatch, tmp_path) ->
         assert urls == [raw_item.url]
         return [raw_item]
 
-    async def persist(_session, generated_items, embeddings, *, review_notes):
+    async def persist(_session, generated_items, embeddings):
         assert generated_items == [generated]
         assert embeddings == [[0.1] * 1536]
-        assert review_notes == "Reviewed"
         return [42]
 
     monkeypatch.setattr(pipeline, "store_raw_items", store)
@@ -169,7 +187,6 @@ async def test_run_capture_connects_the_bounded_stages(monkeypatch, tmp_path) ->
     result = await pipeline.run_capture(
         source_ids={"vllm"},
         tier=Tier.FINAL,
-        review_notes="Reviewed",
     )
 
     assert calls == ["scout"]
@@ -199,7 +216,7 @@ async def test_run_capture_rejects_empty_source_response(monkeypatch) -> None:
         await pipeline.run_capture(client=object())
 
 
-def test_capture_cli_parser_reads_source_limits_and_review_notes(monkeypatch) -> None:
+def test_capture_cli_parser_reads_source_limits(monkeypatch) -> None:
     monkeypatch.setattr(
         "sys.argv",
         [
@@ -212,15 +229,13 @@ def test_capture_cli_parser_reads_source_limits_and_review_notes(monkeypatch) ->
             "4",
             "--tier",
             "final",
-            "--review-notes",
-            "Reviewed",
         ],
     )
 
     args = pipeline._parse_args()
 
     assert args.source_ids == ["vllm"]
-    assert (args.per_source_limit, args.max_items, args.tier, args.review_notes) == (2, 4, "final", "Reviewed")
+    assert (args.per_source_limit, args.max_items, args.tier) == (2, 4, "final")
 
 
 def test_capture_cli_arguments_and_main_output(monkeypatch, capsys) -> None:
@@ -232,7 +247,6 @@ def test_capture_cli_arguments_and_main_output(monkeypatch, capsys) -> None:
             per_source_limit=1,
             max_items=3,
             tier="final",
-            review_notes="Reviewed",
         ),
     )
 
@@ -243,4 +257,4 @@ def test_capture_cli_arguments_and_main_output(monkeypatch, capsys) -> None:
     monkeypatch.setattr(pipeline, "run_capture", capture)
     pipeline.main()
 
-    assert "insight_ids=[8]" in capsys.readouterr().out
+    assert "draft_insight_ids=[8]" in capsys.readouterr().out

@@ -6,8 +6,10 @@ OpenAI API key and are enabled explicitly with ``DRIFT_MODE=live``.
 """
 
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 from dotenv import load_dotenv
 
@@ -29,14 +31,50 @@ def _normalize_database_url(url: str) -> str:
     return url
 
 
+_DATABASE_HOST = re.compile(r"^[A-Za-z0-9.-]+$")
+
+
+def _replace_database_endpoint(url: str, host: str, port: str) -> str:
+    """Retain private credentials/database while opting into a public TCP proxy."""
+    if not host and not port:
+        return url
+    if not host or not port:
+        raise RuntimeError("Set both DRIFT_DATABASE_PUBLIC_HOST and DRIFT_DATABASE_PUBLIC_PORT.")
+    if not _DATABASE_HOST.fullmatch(host):
+        raise RuntimeError("DRIFT_DATABASE_PUBLIC_HOST must be a hostname, not a URL.")
+    try:
+        numeric_port = int(port)
+    except ValueError as exc:
+        raise RuntimeError("DRIFT_DATABASE_PUBLIC_PORT must be a number.") from exc
+    if not 1 <= numeric_port <= 65_535:
+        raise RuntimeError("DRIFT_DATABASE_PUBLIC_PORT must be between 1 and 65535.")
+
+    parsed = urlsplit(url)
+    if not parsed.scheme or not parsed.netloc:
+        raise RuntimeError("DATABASE_URL must be a complete database URL.")
+    userinfo, separator, _ = parsed.netloc.rpartition("@")
+    public_netloc = f"{userinfo}@{host}:{numeric_port}" if separator else f"{host}:{numeric_port}"
+    return urlunsplit((parsed.scheme, public_netloc, parsed.path, parsed.query, parsed.fragment))
+
+
+def _database_url_from_environment() -> str:
+    """Resolve a private Railway URL or an explicitly configured public proxy URL."""
+    url = os.environ.get(
+        "DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/drift"
+    )
+    return _normalize_database_url(
+        _replace_database_endpoint(
+            url,
+            os.environ.get("DRIFT_DATABASE_PUBLIC_HOST", ""),
+            os.environ.get("DRIFT_DATABASE_PUBLIC_PORT", ""),
+        )
+    )
+
+
 @dataclass(frozen=True)
 class Settings:
     openai_api_key: str = os.environ.get("OPENAI_API_KEY", "")
-    database_url: str = _normalize_database_url(
-        os.environ.get(
-            "DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/drift"
-        )
-    )
+    database_url: str = _database_url_from_environment()
     sources_config_path: str = os.environ.get(
         "SOURCES_CONFIG_PATH", str(REPOSITORY_ROOT / "backend" / "sources.yaml")
     )
@@ -78,7 +116,7 @@ class Settings:
         "DRIFT_SPEND_LEDGER_PATH", str(REPOSITORY_ROOT / ".drift" / "spend-ledger.json")
     )
     app_name: str = "DRIFT"
-    app_version: str = "0.5.1"
+    app_version: str = "0.6.0"
 
     def validate(self) -> None:
         if self.mode not in {"fixture", "live"}:

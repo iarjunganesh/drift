@@ -65,6 +65,17 @@ def test_embed_items_batches_text_through_embedding_model() -> None:
     ]
 
 
+def test_embed_items_bounds_only_the_derived_embedding_text() -> None:
+    client = FakeClient()
+    long_content = "x" * (synthesizer._MAX_EMBEDDING_INPUT_CHARS + 100)
+
+    synthesizer.embed_items([make_item(1, long_content)], client=client)
+
+    assert client.embedding_calls[0]["input"] == [
+        ("Release 1\n" + long_content)[: synthesizer._MAX_EMBEDDING_INPUT_CHARS]
+    ]
+
+
 def test_embed_items_empty_input_does_not_call_provider() -> None:
     assert synthesizer.embed_items([]) == []
 

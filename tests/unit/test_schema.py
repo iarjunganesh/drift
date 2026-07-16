@@ -9,6 +9,9 @@ def test_durable_metadata_contains_day_one_tables() -> None:
     assert Base.metadata.tables["raw_items"].c.content_sha256.type.length == 64
     assert Base.metadata.tables["insights"].c.embedding.type.dim == 1536
     assert Base.metadata.tables["insights"].c.model_run_id.foreign_keys
+    assert Base.metadata.tables["insights"].c.verification_model_run_id.foreign_keys
+    assert Base.metadata.tables["insights"].c.claims.nullable is False
+    assert Base.metadata.tables["insights"].c.publication_status.index is True
 
 
 def test_model_run_row_captures_immutable_generation_metadata() -> None:

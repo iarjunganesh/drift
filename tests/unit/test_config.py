@@ -2,7 +2,7 @@ from dataclasses import replace
 
 import pytest
 
-from backend.core.config import _normalize_database_url, settings
+from backend.core.config import _normalize_database_url, _replace_database_endpoint, settings
 
 
 @pytest.mark.parametrize(
@@ -26,6 +26,36 @@ def test_normalize_database_url_adds_asyncpg_driver_when_needed(
     provided: str, expected: str
 ) -> None:
     assert _normalize_database_url(provided) == expected
+
+
+def test_public_database_proxy_replaces_only_the_private_endpoint() -> None:
+    url = "postgres://user:password@postgres.railway.internal:5432/railway?ssl=require"
+
+    result = _replace_database_endpoint(url, "tokaido.proxy.rlwy.net", "43102")
+
+    assert result == "postgres://user:password@tokaido.proxy.rlwy.net:43102/railway?ssl=require"
+    assert _replace_database_endpoint(url, "", "") == url
+
+
+@pytest.mark.parametrize(
+    ("host", "port", "message"),
+    [
+        ("", "43102", "Set both"),
+        ("https://proxy", "43102", "must be a hostname"),
+        ("proxy.example", "not-a-port", "must be a number"),
+        ("proxy.example", "70000", "between 1 and 65535"),
+    ],
+)
+def test_public_database_proxy_rejects_incomplete_or_invalid_endpoints(
+    host: str, port: str, message: str
+) -> None:
+    with pytest.raises(RuntimeError, match=message):
+        _replace_database_endpoint("postgresql://user:password@db.internal/drift", host, port)
+
+
+def test_public_database_proxy_requires_a_complete_database_url() -> None:
+    with pytest.raises(RuntimeError, match="complete database URL"):
+        _replace_database_endpoint("not-a-url", "proxy.example", "5432")
 
 
 @pytest.mark.parametrize(

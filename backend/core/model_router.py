@@ -39,13 +39,14 @@ MODEL_MAP = {
     Tier.FINAL: "gpt-5.6-sol",
 }
 
+EMBEDDING_MODEL = "text-embedding-3-small"
+
 _PRICE_PER_MILLION_TOKENS = {
     "gpt-5.6-luna": (1.0, 6.0),
     "gpt-5.6-terra": (2.5, 15.0),
     "gpt-5.6-sol": (5.0, 30.0),
+    EMBEDDING_MODEL: (0.02, 0.0),
 }
-
-EMBEDDING_MODEL = "text-embedding-3-small"
 
 
 @dataclass(frozen=True)
@@ -112,10 +113,12 @@ def create_sync_resilience() -> ModelCallResilience:
 
 
 def _response_cost_usd(response: Any, model: str, fallback_usd: float) -> float:
-    """Estimate a Responses API call from reported usage or settle conservatively."""
+    """Estimate a routed call from reported usage or settle conservatively."""
     usage = getattr(response, "usage", None)
     input_tokens = getattr(usage, "input_tokens", None)
-    output_tokens = getattr(usage, "output_tokens", None)
+    if not isinstance(input_tokens, int):
+        input_tokens = getattr(usage, "prompt_tokens", None)
+    output_tokens = getattr(usage, "output_tokens", 0)
     if not isinstance(input_tokens, int) or not isinstance(output_tokens, int):
         return fallback_usd
     return min(fallback_usd, estimate_response_cost_usd(model, input_tokens, output_tokens))
@@ -140,9 +143,9 @@ def execute_bounded_sync_call(
 ) -> SyncCallResult:
     """Reserve a retry envelope and execute a synchronous provider request.
 
-    Responses with token usage settle at the router's known model price. Embedding
-    calls do not use a price table here, so they settle at their configured call
-    cap rather than understating spend.
+    Calls with reported token usage settle at the router's known model price.
+    Unknown usage settles at the configured call cap rather than understating
+    spend.
     """
     active_guard = spend_guard or _default_spend_guard()
     active_resilience = resilience or create_sync_resilience()
@@ -186,6 +189,7 @@ def create_embedding_response(
         spend_guard=spend_guard,
         max_call_usd=max_call_usd,
         resilience=resilience,
+        model=EMBEDDING_MODEL,
     ).response
 
 

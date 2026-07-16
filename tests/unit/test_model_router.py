@@ -2,6 +2,7 @@ import pytest
 
 from backend.core.budget import SpendGuard
 from backend.core.model_router import (
+    EMBEDDING_MODEL,
     Tier,
     create_async_client,
     create_client,
@@ -27,6 +28,7 @@ def test_model_router_resolves_every_tier_and_costs_usage() -> None:
     assert get_model("live") == "gpt-5.6-terra"
     assert get_model(Tier.FINAL) == "gpt-5.6-sol"
     assert estimate_response_cost_usd("gpt-5.6-sol", 1_000_000, 1_000_000) == 35
+    assert estimate_response_cost_usd(EMBEDDING_MODEL, 1_000_000, 0) == 0.02
 
     with pytest.raises(ValueError, match="Token counts"):
         estimate_response_cost_usd("gpt-5.6-terra", -1, 0)
@@ -114,4 +116,48 @@ def test_sync_model_call_settles_reserved_envelope_on_failure(tmp_path) -> None:
             resilience=resilience,
         )
 
+    assert guard._read().settled_usd == pytest.approx(0.2)
+
+
+def test_sync_embedding_call_settles_reported_prompt_token_usage(tmp_path) -> None:
+    guard = SpendGuard(tmp_path / "ledger.json", limit_usd=1, alert_usd=0.5)
+    resilience = ModelCallResilience(
+        RetryPolicy(timeout_seconds=1, max_attempts=1, base_delay_seconds=0, max_delay_seconds=0),
+        CircuitBreaker(failure_threshold=1, reset_seconds=1),
+    )
+    response = type(
+        "Response",
+        (),
+        {"usage": type("Usage", (), {"prompt_tokens": 1_000, "total_tokens": 1_000})()},
+    )()
+
+    result = execute_bounded_sync_call(
+        lambda: response,
+        operation_name="test.embedding",
+        spend_guard=guard,
+        max_call_usd=0.2,
+        resilience=resilience,
+        model=EMBEDDING_MODEL,
+    )
+
+    assert result.settled_usd == pytest.approx(0.00002)
+    assert guard._read().settled_usd == pytest.approx(0.00002)
+
+
+def test_sync_call_without_a_priced_model_settles_its_reserved_cap(tmp_path) -> None:
+    guard = SpendGuard(tmp_path / "ledger.json", limit_usd=1, alert_usd=0.5)
+    resilience = ModelCallResilience(
+        RetryPolicy(timeout_seconds=1, max_attempts=1, base_delay_seconds=0, max_delay_seconds=0),
+        CircuitBreaker(failure_threshold=1, reset_seconds=1),
+    )
+
+    result = execute_bounded_sync_call(
+        lambda: object(),
+        operation_name="test.unpriced",
+        spend_guard=guard,
+        max_call_usd=0.2,
+        resilience=resilience,
+    )
+
+    assert result.settled_usd == pytest.approx(0.2)
     assert guard._read().settled_usd == pytest.approx(0.2)

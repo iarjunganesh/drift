@@ -1,4 +1,4 @@
-"""One-shot, bounded capture pipeline for reviewed DRIFT demonstration Insights.
+"""One-shot, bounded capture pipeline for draft DRIFT Insights.
 
 This is deliberately a CLI/job boundary, not a scheduler. It makes one
 inspectable Scout → Synthesizer → Insight → persisted-live-store run possible
@@ -19,12 +19,19 @@ from backend.agents.synthesizer import embed_texts, run_synthesizer
 from backend.core.budget import SpendGuard
 from backend.core.config import settings
 from backend.core.model_router import Tier, create_client, create_sync_resilience
-from backend.models.schema import InsightRow, ModelRunRow, RawItem, session_factory
+from backend.models.schema import (
+    InsightRow,
+    ModelRunRow,
+    PublicationStatus,
+    RawItem,
+    VerificationStatus,
+    session_factory,
+)
 
 
 @dataclass(frozen=True)
 class CaptureResult:
-    """Counts and durable Insight IDs produced by one capture run."""
+    """Counts and durable draft Insight IDs produced by one capture run."""
 
     fetched_count: int
     selected_count: int
@@ -55,13 +62,11 @@ async def _persist_generated_insights(
     session: AsyncSession,
     generated: list[GeneratedInsight],
     embeddings: list[list[float]],
-    *,
-    review_notes: str | None,
 ) -> list[int]:
-    """Write Insight output, source-linked audit data, and optional review notes."""
+    """Write verifier-passed draft output plus both source-linked model audits."""
     if len(generated) != len(embeddings):
         raise ValueError("Every generated Insight must have one embedding.")
-    reviewed_at = datetime.now(UTC) if review_notes else None
+    verified_at = datetime.now(UTC)
     rows: list[InsightRow] = []
     for generated_insight, embedding in zip(generated, embeddings, strict=True):
         insight = generated_insight.insight
@@ -78,6 +83,19 @@ async def _persist_generated_insights(
         )
         session.add(model_run)
         await session.flush()
+        verification_audit = generated_insight.verification_audit
+        verification_model_run = ModelRunRow(
+            operation="insight.verify",
+            model_used=verification_audit.model_used,
+            evidence_sha256=verification_audit.evidence_sha256,
+            output_sha256=verification_audit.output_sha256,
+            input_tokens=verification_audit.input_tokens,
+            output_tokens=verification_audit.output_tokens,
+            settled_usd=verification_audit.settled_usd,
+            provider_attempts=verification_audit.attempts,
+        )
+        session.add(verification_model_run)
+        await session.flush()
         row = InsightRow(
             raw_item_ids=insight.raw_item_ids,
             title=insight.title,
@@ -90,8 +108,16 @@ async def _persist_generated_insights(
             confidence=insight.confidence,
             model_used=insight.model_used,
             model_run_id=model_run.id,
-            human_review_notes=review_notes,
-            reviewed_at=reviewed_at,
+            verification_model_run_id=verification_model_run.id,
+            claims=[claim.model_dump(mode="json") for claim in insight.claims],
+            upstream_release_type=insight.upstream_release_type.value,
+            operator_risks=[risk.value for risk in insight.operator_risks],
+            applicability_conditions=insight.applicability_conditions,
+            publication_status=PublicationStatus.DRAFT.value,
+            verification_status=VerificationStatus.PASSED.value,
+            verified_at=verified_at,
+            human_review_notes=None,
+            reviewed_at=None,
             embedding=embedding,
         )
         session.add(row)
@@ -108,10 +134,9 @@ async def run_capture(
     per_source_limit: int = 1,
     max_items: int = 3,
     tier: Tier = Tier.DEV,
-    review_notes: str | None = None,
     client: Any | None = None,
 ) -> CaptureResult:
-    """Fetch, persist, generate, embed, and save a small live Insight capture."""
+    """Fetch, persist, generate, embed, and save a small review-required capture."""
     settings.validate()
     if settings.mode != "live":
         raise RuntimeError("DRIFT_MODE=live is required for a model-backed capture.")
@@ -188,7 +213,6 @@ async def run_capture(
             session,
             generated,
             embeddings,
-            review_notes=review_notes,
         )
     return CaptureResult(
         fetched_count=len(fetched),
@@ -209,10 +233,6 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--per-source-limit", type=int, default=1)
     parser.add_argument("--max-items", type=int, default=3)
     parser.add_argument("--tier", choices=[tier.value for tier in Tier], default=Tier.DEV.value)
-    parser.add_argument(
-        "--review-notes",
-        help="Human review notes recorded with each generated Insight after review.",
-    )
     return parser.parse_args()
 
 
@@ -225,13 +245,12 @@ def main() -> None:
             per_source_limit=args.per_source_limit,
             max_items=args.max_items,
             tier=Tier(args.tier),
-            review_notes=args.review_notes,
         )
     )
     print(
         "Capture complete: "
         f"fetched={result.fetched_count} selected={result.selected_count} "
-        f"new_raw_items={result.persisted_raw_count} insight_ids={result.insight_ids}"
+        f"new_raw_items={result.persisted_raw_count} draft_insight_ids={result.insight_ids}"
     )
 
 
