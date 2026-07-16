@@ -255,7 +255,7 @@ the same system light/dark preference as the canonical banner.
 
 | | |
 | --- | --- |
-| **Current hosted API** | `v0.6.1` `live` — `/health`, empty fail-closed `/briefing`, `/docs`, and Vercel-origin CORS verified on 2026-07-16 |
+| **Current hosted API** | `v0.6.1` `live` — `/health`, `/briefing` (four reviewed Insights), `/search`, `/chat`, `/docs`, and Vercel-origin CORS verified provider-backed on 2026-07-16 |
 | **Hosted frontend source** | Vercel HTML references the canonical API-served light/dark banner pair; the browser post-fetch empty-state rendering is not separately recorded |
 | **API docs branding** | The Swagger banner frame and canonical banner pair follow the same system light/dark preference |
 | **Historical evidence** | `v0.5.1` `live` — one unreviewed vLLM Insight served through `/briefing` on 2026-07-15; retained as pre-gate evidence only |
@@ -270,10 +270,11 @@ the same system light/dark preference as the canonical banner.
 
 One unreviewed real-model vLLM capture is saved as historical hosted evidence.
 The fixture path remains the reproducible no-key demo. The review-gated code
-is now deployed with its Railway schema migration. `/briefing` remains empty
-until a human-reviewed capture is published; hosted `/search`/`/chat` smoke
-tests and further reviewed evidence are required before any broad live-analysis
-claim.
+is deployed with its Railway schema migration. On 2026-07-16 an eight-source
+capture produced six verifier-passed drafts; four were published after human
+review, so hosted `/briefing`, `/search`, and `/chat` now serve those four
+reviewed Insights (verified provider-backed). This is a small, bounded reviewed
+set, not broad live-release analysis.
 
 The Swagger contract groups the backend into **System**, **Briefing**,
 **Search**, and **Chat** sections so reviewers can navigate the API by job.
@@ -442,7 +443,7 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **142 tests passed and 100.00% backend coverage**.
+The current local result is **148 tests passed and 100.00% backend coverage**.
 The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline boundaries remain visible while
@@ -464,9 +465,10 @@ the repository-specific [Codecov report](https://codecov.io/gh/iarjunganesh/drif
 ### Load & Resilience
 
 The live-chat boundary and synchronous capture calls have deterministic budget,
-retry, circuit, and provider-failure coverage. A reviewed real PostgreSQL
-capture, load testing, and provider-backed hosted `/search`/`/chat` smoke tests
-remain future work before any production-readiness claim.
+retry, circuit, and provider-failure coverage. The initial reviewed PostgreSQL
+capture and provider-backed hosted `/search`/`/chat` smoke tests were completed
+on 2026-07-16; a larger reviewed capture and load testing remain future work
+before any production-readiness claim.
 
 ---
 
@@ -480,11 +482,10 @@ The remaining hosted verification operations are documented in
 2. enable branch protection requiring the CI quality gate.
 
 The earlier populated `v0.5.1` `/briefing` response was verified on 2026-07-15.
-On 2026-07-16, hosted `v0.6.1` health, empty fail-closed `/briefing`, `/docs`,
-Vercel canonical-banner source, CORS, and Railway PostgreSQL migration `0003`
-were verified. The API-docs banner frame follows the selected system theme.
-Hosted provider-backed `/search`/`/chat` smoke tests and human-reviewed captures
-remain pending.
+On 2026-07-16, hosted `v0.6.1` health, `/briefing` (four reviewed Insights),
+`/docs`, Vercel canonical-banner source, CORS, and Railway PostgreSQL migration
+`0003` were verified, and hosted provider-backed `/search`/`/chat` were
+smoke-tested. The API-docs banner frame follows the selected system theme.
 
 ---
 
@@ -499,14 +500,14 @@ frontend.
 
 **Next implementation slices:**
 
-- run the review-first manual notebook against a reachable database and
-  human-review three to five bounded primary-source captures;
+- expand beyond the initial reviewed capture (the first eight-source run
+  produced six verifier-passed drafts and four reviewed Insights on 2026-07-16);
 - exercise the Alembic migration and capture path against a clean PostgreSQL
   instance, then add a real integration run to delivery verification;
 - add scheduled Scout execution only after the reviewed capture path is proven;
 - maintain 100% implemented-code coverage as each live stage becomes real;
-- publish a reviewed database-backed capture, then run/record hosted
-  provider-backed search and chat smoke tests;
+- schedule a repeatable reviewed-capture cadence (the first reviewed
+  database-backed capture and its hosted search/chat smoke tests are complete);
 - record and submit the public narrated demo.
 
 Full decisions and sequencing live in [docs/adr/](docs/adr/),

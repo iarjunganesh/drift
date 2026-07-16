@@ -51,16 +51,37 @@ the annotated `v0.1.0` tag.
 ### Added
 
 - `scripts/check_openai_spend.py`: a read-only, admin-key OpenAI cost check that
-  reconciles real per-project spend against the local `.drift/spend-ledger.json`
-  guard, with `scripts/README.md`.
+  reconciles the DRIFT project's real spend against the local
+  `.drift/spend-ledger.json` guard (the local guard tracks only DRIFT's calls, so
+  reconciliation is scoped to an explicit `--project-id` / `DRIFT_OPENAI_PROJECT_ID`
+  rather than the organization total), with `scripts/README.md`. Uses the Costs
+  API `group_by`/`project_ids` array query parameters.
 
 ### Testing
 
 - Added pipeline tests for per-cluster skip-on-failure and the all-skipped
   guard, an Insight test for publishing only verifier-accepted claims, and
   updated the claim-grounding calibration eval so an ambiguous inference is
-  dropped while the verified fact and check survive. Full suite: 145 tests at
-  100% backend coverage.
+  dropped while the verified fact and check survive.
+
+### Evidence-integrity, review-note redaction, and notebook hardening — 2026-07-16
+
+- Fixed the evidence archive writer to emit raw LF bytes (`write_bytes`) so the
+  manifest SHA-256 matches the evidence file's exact on-disk bytes on every
+  platform; `write_text` previously translated `\n` to `\r\n` on Windows,
+  leaving the manifest hashing bytes the file no longer contained. Added
+  `.gitattributes` pinning `assets/evidence/*.json` to LF so `core.autocrlf`
+  cannot re-introduce the mismatch, and a byte-level hash regression test.
+- Made `human_review_notes` database-only: the public `Insight` contract now
+  excludes it from serialization (`Field(exclude=True)`) and the live-store
+  reader no longer copies it across the API boundary, so `/briefing`, `/search`,
+  and `/chat` can never return internal review text. Added model- and
+  endpoint-level regression tests.
+- Sanitized `notebooks/drift_manual_run.ipynb` to a clean, output-free template
+  (reset capture trigger, publish/archive IDs, and review notes) and added a
+  redacted, read-only `notebooks/drift_manual_run.results.ipynb` snapshot; the
+  operator database host, provider/budget logs, and review notes are removed.
+- Full suite: 148 tests at 100% backend coverage.
 
 ## [0.6.1] - 2026-07-16
 

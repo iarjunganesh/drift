@@ -1,0 +1,7 @@
+# Integrity-checked evidence artifacts are hashed byte-for-byte by their
+# *.manifest.json companions. They must never undergo end-of-line conversion,
+# or the on-disk bytes stop matching the recorded SHA-256. `-text` disables all
+# CRLF/LF translation so these files are checked out verbatim on every platform
+# (without this, core.autocrlf=true smudges the LF blob to CRLF on Windows and
+# breaks the hash locally).
+assets/evidence/*.json -text

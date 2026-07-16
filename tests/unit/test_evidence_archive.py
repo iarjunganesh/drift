@@ -1,5 +1,6 @@
 import json
 from datetime import UTC, datetime
+from hashlib import sha256
 
 import pytest
 
@@ -51,6 +52,25 @@ def test_archive_reviewed_capture_writes_scrubbed_evidence_and_manifest(tmp_path
     assert "human_review_notes" not in payload["insights"][0]
     assert manifest["evidence_file"] == result.evidence_path.name
     assert manifest["sha256"] == result.sha256
+
+
+def test_archive_manifest_hash_matches_exact_evidence_bytes(tmp_path) -> None:
+    result = archive_reviewed_capture(
+        [make_insight()],
+        archive_name="2026-07-15-byte-exact",
+        capture_metadata={"source_ids": ["vllm"], "selected_count": 1},
+        evidence_directory=tmp_path,
+    )
+
+    evidence_bytes = result.evidence_path.read_bytes()
+    manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
+    # The recorded hash must match the evidence file's exact on-disk bytes, not a
+    # newline-normalized variant. Guards the Windows write_text CRLF regression:
+    # write_text would emit "\r\n" while the hash was computed over "\n" bytes.
+    assert sha256(evidence_bytes).hexdigest() == manifest["sha256"]
+    assert manifest["sha256"] == result.sha256
+    assert b"\r\n" not in evidence_bytes
+    assert b"\r\n" not in result.manifest_path.read_bytes()
 
 
 def test_archive_reviewed_capture_rejects_unsafe_inputs_and_overwrite(tmp_path) -> None:

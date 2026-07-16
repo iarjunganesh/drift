@@ -1,6 +1,43 @@
 import pytest
 
-from backend.models.schema import Base, ModelRunRow, get_session
+from backend.models.schema import (
+    Base,
+    BriefingItem,
+    ChangeSeverity,
+    Insight,
+    ModelRunRow,
+    get_session,
+)
+
+
+def _insight_with_notes() -> Insight:
+    return Insight(
+        id=1,
+        raw_item_ids=[1],
+        title="Release",
+        summary="A direct source fact.",
+        why_it_matters="A labelled interpretation.",
+        what_to_check="Run one bounded check.",
+        severity=ChangeSeverity.MINOR,
+        affected_libraries=["vllm"],
+        source_citations=["https://example.com/release"],
+        confidence=0.9,
+        model_used="gpt-5.6-luna",
+        human_review_notes="INTERNAL reviewer detail that must never be public.",
+    )
+
+
+def test_insight_never_serializes_human_review_notes() -> None:
+    insight = _insight_with_notes()
+    # The field is settable/readable in Python (used by internal review audit)...
+    assert insight.human_review_notes.startswith("INTERNAL")
+    # ...but it must never appear in any serialized public response, directly...
+    dumped = insight.model_dump(mode="json")
+    assert "human_review_notes" not in dumped
+    assert "INTERNAL" not in insight.model_dump_json()
+    # ...or nested inside a BriefingItem (the /briefing contract).
+    item = BriefingItem(insight=insight, rank=1).model_dump(mode="json")
+    assert "human_review_notes" not in item["insight"]
 
 
 def test_durable_metadata_contains_day_one_tables() -> None:

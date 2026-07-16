@@ -1,3 +1,40 @@
+from backend import main
+from backend.core.store import InsightStore
+from backend.models.schema import ChangeSeverity, Insight
+
+
+def test_reviewed_notes_are_never_exposed_publicly(api_client) -> None:
+    secret = "PRIVATE reviewer rationale that must never reach a public response."
+    reviewed = Insight(
+        id=999,
+        raw_item_ids=[999],
+        title="vllm reviewed release note",
+        summary="A direct source fact about the vllm runtime.",
+        why_it_matters="A labelled interpretation.",
+        what_to_check="Run one bounded check.",
+        severity=ChangeSeverity.MINOR,
+        affected_libraries=["vllm"],
+        source_citations=["https://example.com/vllm-release"],
+        confidence=0.99,
+        model_used="gpt-5.6-luna",
+        human_review_notes=secret,
+    )
+    store = main.app.state.insight_store
+    main.app.state.insight_store = InsightStore([*store.all(), reviewed])
+
+    briefing = api_client.get("/briefing", params={"top_n": 10})
+    search = api_client.get("/search", params={"q": "vllm reviewed release note"})
+
+    assert briefing.status_code == 200
+    assert search.status_code == 200
+    # The secret text must not appear anywhere in the serialized payloads...
+    assert secret not in briefing.text
+    assert secret not in search.text
+    # ...and the field key itself must be absent from every returned insight.
+    assert all("human_review_notes" not in item["insight"] for item in briefing.json())
+    assert all("human_review_notes" not in item for item in search.json())
+
+
 def test_health_and_briefing(api_client) -> None:
     root = api_client.get("/")
     health = api_client.get("/health")
