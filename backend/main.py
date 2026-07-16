@@ -17,9 +17,12 @@ handling), but do NOT bring in anything related to its media-generation dependen
 
 import asyncio
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.responses import FileResponse, HTMLResponse
 
 from backend.agents.briefing import (
     answer_question,
@@ -82,7 +85,11 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
-    description="GPT-5.6 reasoning over GPU/AI-infra release drift.",
+    docs_url=None,
+    description=(
+        "Review-first, claim-grounded release intelligence for GPU/AI-infrastructure teams. "
+        "Live endpoints expose only human-reviewed, verifier-passed captures."
+    ),
     openapi_tags=[
         {
             "name": "system",
@@ -110,6 +117,46 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+
+_brand_directory = Path(__file__).parent.parent / "assets" / "brand"
+_brand_files = {
+    "dark": "drift-banner-dark.svg",
+    "light": "drift-banner-light.svg",
+}
+
+
+@app.get("/brand/{theme}.svg", include_in_schema=False)
+async def brand_asset(theme: str) -> FileResponse:
+    """Serve the canonical DRIFT banner used by API documentation."""
+    filename = _brand_files.get(theme)
+    if filename is None:
+        raise HTTPException(status_code=404, detail="Unknown DRIFT brand theme.")
+    return FileResponse(_brand_directory / filename, media_type="image/svg+xml")
+
+
+@app.get("/docs", include_in_schema=False)
+async def swagger_ui() -> HTMLResponse:
+    """Render Swagger UI beneath the canonical theme-aware DRIFT banner."""
+    swagger_html = get_swagger_ui_html(
+        openapi_url=app.openapi_url or "/openapi.json",
+        title=f"{settings.app_name} API documentation",
+    ).body
+    brand_header = """
+<style>
+  .drift-api-brand { background: #061426; padding: 20px max(20px, calc((100vw - 1120px) / 2)); }
+  .drift-api-brand picture, .drift-api-brand img { display: block; margin: 0 auto; max-width: 1120px; width: 100%; }
+</style>
+<header class="drift-api-brand">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="/brand/dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="/brand/light.svg">
+    <img src="/brand/light.svg" alt="DRIFT — release intelligence for AI infrastructure">
+  </picture>
+</header>
+"""
+    return HTMLResponse(
+        bytes(swagger_html).decode("utf-8").replace("<body>", f"<body>{brand_header}", 1)
+    )
 
 
 async def _retrieve_live_insights(query: str, *, limit: int = 5) -> list[Insight]:
@@ -161,7 +208,10 @@ async def health() -> dict:
     "/briefing",
     tags=["briefing"],
     summary="Build daily briefing",
-    description="Rank the most important cited insights for the current briefing.",
+    description=(
+        "Rank the most important cited insights for the current briefing. In live mode, "
+        "only human-reviewed, verifier-passed captures are eligible."
+    ),
 )
 async def briefing(top_n: int = Query(default=5, ge=1, le=10)) -> list[BriefingItem]:
     if settings.mode == "live":
@@ -179,7 +229,9 @@ async def briefing(top_n: int = Query(default=5, ge=1, le=10)) -> list[BriefingI
     "/search",
     tags=["search"],
     summary="Search insights",
-    description="Find cited insights matching a library, release, or risk query.",
+    description=(
+        "Find reviewed, claim-grounded insights matching a library, release, or risk query."
+    ),
 )
 async def search(q: str = Query(min_length=2, max_length=300)) -> list[Insight]:
     if settings.mode == "live":
@@ -197,7 +249,9 @@ async def search(q: str = Query(min_length=2, max_length=300)) -> list[Insight]:
     "/chat",
     tags=["chat"],
     summary="Ask grounded question",
-    description="Answer a question using only matching DRIFT insight evidence.",
+    description=(
+        "Answer a question using only matching human-reviewed DRIFT insight evidence."
+    ),
 )
 async def chat(request: ChatRequest) -> ChatResponse:
     if settings.mode == "live":

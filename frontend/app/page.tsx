@@ -12,6 +12,16 @@ type Insight = {
   confidence: number;
   source_citations: string[];
   model_used: string;
+  claims?: {
+    text: string;
+    kind: "direct_fact" | "inference" | "recommended_check";
+    evidence: { excerpt: string; source_url: string; start_char: number; end_char: number }[];
+  }[];
+  upstream_release_type?: "major" | "minor" | "patch" | "pre_release" | "unknown";
+  operator_risks?: string[];
+  applicability_conditions?: string[];
+  publication_status?: "draft" | "reviewed";
+  verification_status?: "passed" | "legacy_unverified";
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -36,8 +46,14 @@ export default function Home() {
   return (
     <main className="shell">
       <nav className="nav">
-        <a className="wordmark" href="/">DRIFT</a>
-        <a href={`${API_URL}/docs`} target="_blank" rel="noreferrer">API docs ↗</a>
+        <a className="brand-lockup" href="/" aria-label="DRIFT home">
+          <span className="wordmark">DRIFT</span>
+          <span className="product-line">Release intelligence</span>
+        </a>
+        <div className="nav-links">
+          <a href="#briefing">Briefing</a>
+          <a href={`${API_URL}/docs`} target="_blank" rel="noreferrer">API docs ↗</a>
+        </div>
       </nav>
 
       <section className="hero">
@@ -52,13 +68,22 @@ export default function Home() {
             <a className="button primary" href="#briefing">View today&apos;s briefing</a>
             <a className="button" href={`${API_URL}/docs`} target="_blank" rel="noreferrer">Explore the API</a>
           </div>
+          <div className="proof-line" aria-label="DRIFT evidence process">
+            <span>Primary releases</span><i>→</i><span>Cited claims</span><i>→</i><span>Human-reviewed checks</span>
+          </div>
         </div>
         <aside className="signal">
+          <img
+            className="signal-brand"
+            src="/brand/drift-banner-dark.svg"
+            alt="DRIFT evidence path: a primary release flows through a GPU compute lattice into cited evidence, human review, and a bounded engineering check"
+          />
           <div className="signal-label">Current operating mode</div>
-          <h2>{mode === "fixture" ? "Deterministic fixture briefing" : "Live grounded chat over cited evidence"}</h2>
-          <p>{error || "Every insight keeps its source, confidence, and bounded follow-up action visible."}</p>
+          <h2>{mode === "fixture" ? "Deterministic fixture briefing" : "Human-reviewed, claim-grounded live evidence"}</h2>
+          <p>{error || "Every insight keeps its source span, claim type, confidence, and bounded follow-up action visible."}</p>
           <div className="rail">
             <div><span>Evidence</span><strong>Primary source</strong></div>
+            <div><span>Publication</span><strong>Human review gate</strong></div>
             <div><span>Confidence</span><strong>Always visible</strong></div>
             <div><span>Action</span><strong>Bounded check</strong></div>
           </div>
@@ -69,8 +94,8 @@ export default function Home() {
         <div className="eyebrow">Top things that matter</div>
         <h2>Today&apos;s briefing</h2>
         <p>
-          Fixture examples are clearly labelled. Captured model output remains reviewable
-          through its model label, confidence, source links, and bounded next check.
+          Fixture examples are clearly labelled. In live mode, only verifier-passed,
+          human-reviewed records are public; facts, interpretations, and checks stay distinct.
         </p>
         <div className="items">
           {insights.map((insight) => (
@@ -79,7 +104,7 @@ export default function Home() {
                 <div className="item-heading">
                   <strong>{insight.title}</strong>
                   <span className="audit-label">
-                    {insight.model_used === "fixture-curated" ? "Fixture example" : "Captured model output"}
+                    {insight.model_used === "fixture-curated" ? "Fixture example" : "Reviewed live evidence"}
                   </span>
                 </div>
                 <p>{insight.summary}</p>
@@ -88,7 +113,25 @@ export default function Home() {
                 <div className="evidence-row">
                   <span>Confidence {Math.round(insight.confidence * 100)}%</span>
                   <span>Model {insight.model_used}</span>
+                  {insight.upstream_release_type && <span>Upstream release: {insight.upstream_release_type}</span>}
+                  {insight.operator_risks?.length ? <span>Potential risks: {insight.operator_risks.join(", ")}</span> : null}
                 </div>
+                {insight.claims?.length ? (
+                  <details className="claims">
+                    <summary>Inspect claim evidence</summary>
+                    {insight.claims.map((claim, index) => (
+                      <div className="claim" key={`${claim.kind}-${index}`}>
+                        <strong>{claim.kind.replace("_", " ")}</strong>
+                        <span>{claim.text}</span>
+                        {claim.evidence.map((evidence) => (
+                          <a key={`${evidence.source_url}-${evidence.start_char}`} href={evidence.source_url} target="_blank" rel="noreferrer">
+                            “{evidence.excerpt}” ↗
+                          </a>
+                        ))}
+                      </div>
+                    ))}
+                  </details>
+                ) : null}
                 <div className="citations" aria-label={`Sources for ${insight.title}`}>
                   {insight.source_citations.map((citation) => (
                     <a key={citation} href={citation} target="_blank" rel="noreferrer">
@@ -108,13 +151,13 @@ export default function Home() {
         <div className="eyebrow">The DRIFT contract</div>
         <h2>Useful because it stays inspectable.</h2>
         <div className="cards">
-          <div className="card"><h3>What changed</h3><p>Plain-language release intelligence instead of changelog paraphrase.</p></div>
-          <div className="card"><h3>Why it matters</h3><p>Reasoning tied to a production inference, training, or build workflow.</p></div>
-          <div className="card"><h3>What to check</h3><p>A concrete next test, image, flag, or compatibility assumption to review.</p></div>
+          <div className="card"><h3>Primary facts</h3><p>Each live factual claim retains an exact, frozen source excerpt and offset.</p></div>
+          <div className="card"><h3>Labelled interpretation</h3><p>Potential operator risk is distinct from what the upstream source directly states.</p></div>
+          <div className="card"><h3>Review before publication</h3><p>Verifier-passed drafts stay private until a human records their review.</p></div>
         </div>
       </section>
 
-      <footer className="footer">DRIFT · fixture-first today · cited and confidence-aware by design</footer>
+      <footer className="footer">DRIFT · fixture-first today · review-gated, claim-grounded live evidence</footer>
     </main>
   );
 }

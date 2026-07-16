@@ -28,6 +28,22 @@ def test_openapi_routes_have_clear_groups(api_client) -> None:
     assert schema["paths"]["/chat"]["post"]["tags"] == ["chat"]
 
 
+def test_api_docs_and_brand_assets_use_canonical_banners(api_client) -> None:
+    docs = api_client.get("/docs")
+    dark = api_client.get("/brand/dark.svg")
+    light = api_client.get("/brand/light.svg")
+    missing = api_client.get("/brand/unknown.svg")
+
+    assert docs.status_code == 200
+    assert "/brand/dark.svg" in docs.text
+    assert "/brand/light.svg" in docs.text
+    assert dark.headers["content-type"].startswith("image/svg+xml")
+    assert light.headers["content-type"].startswith("image/svg+xml")
+    assert b"DRIFT" in dark.content
+    assert b"DRIFT" in light.content
+    assert missing.status_code == 404
+
+
 def test_search_and_grounded_chat(api_client) -> None:
     search = api_client.get("/search", params={"q": "vllm runtime"})
     chat = api_client.post("/chat", json={"question": "What should I check for vllm?"})

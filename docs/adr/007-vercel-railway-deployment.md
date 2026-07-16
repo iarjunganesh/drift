@@ -29,6 +29,21 @@ against Railway PostgreSQL and served one bounded, unreviewed vLLM Insight
 through `/briefing`; Vercel CORS was reverified. This is not yet broad live
 release analysis or hosted `/search`/`/chat` verification.
 
+**2026-07-15 review-gate addendum:** the local code now requires migration
+`0003_claim_evidence_review_gate` and filters live reads to human-reviewed,
+verifier-passed records. Railway PostgreSQL was verified at that migration
+through its public TCP proxy on 2026-07-16, but the `v0.6.0` application has
+not been deployed to Railway. The prior hosted result remains historical
+evidence, not verification of the new gate.
+
+**2026-07-16 brand-assets addendum:**
+`assets/brand/drift-banner-dark.svg` and
+`assets/brand/drift-banner-light.svg` are the canonical theme-aware hero
+banners. The Vercel build derives its deployable dark asset from this source;
+the Railway Docker image copies the source pair and FastAPI serves them to its
+Swagger page at `/brand/dark.svg` and `/brand/light.svg`. This prevents
+hand-maintained frontend or backend banner copies from diverging.
+
 ## Context
 
 DRIFT has two deployable surfaces with different runtime needs. Next.js is a

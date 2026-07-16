@@ -15,6 +15,7 @@ ENV PATH="/app/.venv/bin:${PATH}"
 
 COPY pyproject.toml uv.lock ./
 COPY README.md ./
+COPY assets/brand/ ./assets/brand/
 COPY backend/ ./backend/
 COPY alembic.ini ./
 COPY migrations/ ./migrations/
