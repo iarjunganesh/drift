@@ -60,23 +60,30 @@ blocker.
 ## P1 — High leverage (Jul 18–19). Largest scoring uplift per hour.
 
 ### 4. Restructure README top (Potential Impact / first impression)
-- [ ] First screen: problem → what DRIFT does → live demo links (now showing real
-      content) → 60-second judge path (`docker compose up` + hosted URLs).
-- [ ] Move the boundary/disclaimer material lower and reframe it as the trust
+- [x] First screen: problem → what DRIFT does → live demo links (now showing real
+      content) → 60-second judge path (`docker compose up` + hosted URLs). Added a
+      **Try DRIFT in 60 Seconds** block and embedded the reviewed-briefing and
+      claim-evidence screenshots as live-state evidence.
+- [x] Move the boundary/disclaimer material lower and reframe it as the trust
       model — "release notes are untrusted input; every claim carries a frozen
       source span, a separate verifier pass, and a human review gate" — not as
-      an apology.
-- [ ] Keep the Codex/GPT-5.6 usage section prominent (judges are told to look for it).
+      an apology. (Renamed the closing **Disclaimer** section to **Trust Model**.)
+- [x] Keep the Codex/GPT-5.6 usage section prominent (judges are told to look for it).
 
 ### 5. Add a minimal chat/search box to the frontend (Design)
-- [ ] One component against the existing `/search` + `/chat` endpoints; show the
+- [x] One component against the existing `/search` + `/chat` endpoints; show the
       grounded answer with citations. This is the single biggest demo-video uplift.
-- [ ] If credits run short, cut this before cutting anything in P0.
+      Added `frontend/app/AskDrift.tsx` (**Ask DRIFT**): posts to `/chat`, renders
+      the grounded answer, source citations, model label, and grounded insight IDs,
+      with loading / no-match (404) / error states. Contract verified against the
+      fixture backend; frontend build passes.
+- [ ] If credits run short, cut this before cutting anything in P0. (Not needed;
+      built by hand without spending Codex credits.)
 
 ### 6. Cross-platform judge path
-- [ ] Add bash/curl equivalents beside every PowerShell command in Quick Start
+- [x] Add bash/curl equivalents beside every PowerShell command in Quick Start
       (judges will likely test on macOS/Linux).
-- [ ] Promote `docker compose up` as the one-command local path.
+- [x] Promote `docker compose up` as the one-command local path.
 
 ---
 

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import AskDrift from "./AskDrift";
+
 type Insight = {
   id: number | null;
   title: string;
@@ -79,6 +81,7 @@ export default function Home() {
         </a>
         <div className="nav-links">
           <a href="#briefing">Briefing</a>
+          <a href="#ask">Ask</a>
           <a href={`${API_URL}/docs`} target="_blank" rel="noreferrer">API docs ↗</a>
         </div>
       </nav>
@@ -192,6 +195,8 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      <AskDrift />
 
       <section className="section">
         <div className="eyebrow">The DRIFT contract</div>
