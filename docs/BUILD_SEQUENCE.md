@@ -38,16 +38,20 @@ AI-infrastructure release intelligence.
       Insight rows and live `/briefing` reads that store
 - [x] Operator: Railway PostgreSQL schema verified through
       `0003_claim_evidence_review_gate` via its public TCP proxy (2026-07-16)
-- [x] Operator: hosted `v0.6.0` `/health`, empty fail-closed `/briefing`,
-      branded docs/banner routes, Vercel frontend, and CORS verified (2026-07-16)
+- [x] Operator: hosted `v0.6.1` `/health`, empty fail-closed `/briefing`,
+      `/docs`, Vercel canonical-banner source, and CORS verified (2026-07-16)
 - [ ] YOU: execute one reviewed capture, then smoke-test provider-backed hosted
       `/search` and `/chat` against the resulting live store
 - [x] Model tier: live (Terra) for bounded local grounded chat
 
 ## Day 6-7 — Frontend
 - [x] Codex: fixture briefing hero screen with severity, confidence, and
-      source-aware presentation; live cards expose review status, claim types,
-      exact evidence links, risk labels, bounded check, and model label
+      source-aware presentation; explicit loading, empty, and error states;
+      system-theme-aware canonical banners; live cards expose review status,
+      claim types, exact evidence links, risk labels, bounded check, and model label
+- [x] Codex: released `v0.6.1` frontend/documentation changes; Railway and
+      Vercel source deployment were verified, including the API-docs
+      system-theme-aware banner frame
 - [x] No new model calls — the current UI remains presentation-only
 
 ## Day 8 — Final content + docs
@@ -106,7 +110,7 @@ Insight stage now has structured-output coverage.
 
 The baseline, hosted-deployment follow-up, bounded v0.4.0 baseline, v0.5.0
 capture-path release, and
-implementation follow-ups are supported by eight project initiatives:
+implementation follow-ups are supported by nine project initiatives:
 
 - Foundation and inspectable vertical slice —
   `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -124,5 +128,7 @@ implementation follow-ups are supported by eight project initiatives:
   `019f66b4-78b8-7943-a41d-91e836d28f00`
 - Grounding guardrails and capture readiness —
   `019f6773-0e96-7363-9657-0e0531c3d594`
+- Submission audit and frontend evidence presentation —
+  `019f6a46-e3eb-7de2-81b1-91515ae80043`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.

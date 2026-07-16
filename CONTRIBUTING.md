@@ -9,7 +9,7 @@ evidence, model reasoning, and fixture examples.
 Requirements: Python 3.14, `uv`, and Node.js 24.x for frontend work.
 
 ```powershell
-git clone <DRIFT-GITHUB-URL>
+git clone https://github.com/iarjunganesh/drift.git
 cd drift
 Copy-Item .env.example .env
 uv venv .venv
@@ -90,6 +90,6 @@ The source of truth for the main architecture visual is
 with the instructions in `assets/architecture/README.md`; do not hand-edit a
 rendered diagram. Architecture decisions belong in `docs/adr/`.
 
-The eight project initiatives and their Codex Session IDs are recorded in
+The nine project initiatives and their Codex Session IDs are recorded in
 [`docs/INITIATIVES.md`](docs/INITIATIVES.md); update that record if a future
 initiative materially changes the baseline.

@@ -9,10 +9,8 @@ Endpoints:
   GET  /health           — liveness check
 
 Fixture and live-store HTTP adapters are wired here; scheduled live-store
-population remains an explicit boundary. Follow the async FastAPI pattern from the
-bankers-wrapped reference repo (structlog request logging, consistent error
-handling), but do NOT bring in anything related to its media-generation dependencies
-(Genblaze, FFmpeg, B2) — DRIFT has no media component.
+population remains an explicit boundary. The API uses structured request logging
+and consistent error handling; DRIFT has no media-generation component.
 """
 
 import asyncio
@@ -143,7 +141,8 @@ async def swagger_ui() -> HTMLResponse:
     ).body
     brand_header = """
 <style>
-  .drift-api-brand { background: #061426; padding: 20px max(20px, calc((100vw - 1120px) / 2)); }
+  .drift-api-brand { background: #edf4ff; padding: 20px max(20px, calc((100vw - 1120px) / 2)); }
+  @media (prefers-color-scheme: dark) { .drift-api-brand { background: #061426; } }
   .drift-api-brand picture, .drift-api-brand img { display: block; margin: 0 auto; max-width: 1120px; width: 100%; }
 </style>
 <header class="drift-api-brand">

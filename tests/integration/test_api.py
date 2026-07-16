@@ -37,6 +37,8 @@ def test_api_docs_and_brand_assets_use_canonical_banners(api_client) -> None:
     assert docs.status_code == 200
     assert "/brand/dark.svg" in docs.text
     assert "/brand/light.svg" in docs.text
+    assert "background: #edf4ff" in docs.text
+    assert "@media (prefers-color-scheme: dark)" in docs.text
     assert dark.headers["content-type"].startswith("image/svg+xml")
     assert light.headers["content-type"].startswith("image/svg+xml")
     assert b"DRIFT" in dark.content

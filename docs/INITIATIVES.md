@@ -1,6 +1,6 @@
 # DRIFT project initiatives
 
-These are the eight Codex project initiatives associated with the DRIFT baseline,
+These are the nine Codex project initiatives associated with the DRIFT baseline,
 publication follow-up, `0.2.0` release candidate, and the current build-sequence
 implementation work. They are submission evidence pointers for the build work;
 they are not model-run provenance and do not turn fixture records into live
@@ -269,20 +269,40 @@ The planned guardrails are now implemented locally and covered by 142 tests at
   per configured source (at most eight).
 
 Railway PostgreSQL schema `0003_claim_evidence_review_gate` was verified
-through its public TCP proxy on 2026-07-16. Later that day hosted `v0.6.0`
-health, empty fail-closed briefing, branded docs/banner routes, Vercel frontend,
+through its public TCP proxy on 2026-07-16. Later that day hosted `v0.6.1`
+health, empty fail-closed briefing, `/docs`, Vercel canonical-banner source,
 and CORS were verified. A reviewed capture and provider-backed hosted
 search/chat smoke tests remain operator gates. The prior hosted vLLM capture is
 historical pre-gate evidence and is not retroactively reviewed.
 
+## Initiative 09 — Submission audit and frontend evidence presentation
+
+**Codex Session ID:** `019f6a46-e3eb-7de2-81b1-91515ae80043`
+
+**Date:** 2026-07-16
+
+This follow-up audited the handwritten submission next steps against the local
+source and deployed boundaries. It made the frontend distinguish loading, API
+failure, and the intentional empty reviewed-evidence state; aligned the page
+palette with the user's light/dark preference; and made the frontend load the
+canonical banners through FastAPI's `assets/brand/` routes without a duplicate
+Vercel copy. It also synchronized the current 142-test result, public clone
+URLs, legacy path cleanup, and status documentation. It did not publish a
+reviewed capture, call a provider, deploy Vercel, record the demo video, or
+change the primary Initiative 04 `/feedback` session. The Git-connected
+`v0.6.1` deployment subsequently reached Railway and Vercel; its Railway
+health, empty briefing, docs, CORS, and Vercel banner source were verified.
+The amended `v0.6.1` release also makes the API-docs banner frame system-theme-aware.
+
 ## Submission usage
 
-Devpost requires one primary `/feedback` session, use Initiative 04. All eight
+Devpost requires one primary `/feedback` session, use Initiative 04. All nine
 IDs should be retained in the project README, changelog, and submission notes.
 If Devpost requires one primary `/feedback` session, use Initiative 04:
 `019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
 2 implementation and synchronization record, Initiative 06 is the additive
 Day 3/Day 4 Insight implementation record, and Initiative 07 is the bounded
 capture/provenance and cleanup record. Initiative 08 is the additive grounding
-guardrail and capture-readiness record; the earlier sessions remain the
+guardrail and capture-readiness record, and Initiative 09 is the additive
+submission-audit/frontend-presentation record; the earlier sessions remain the
 foundation, publication, and hosted-demo follow-up initiatives.

@@ -32,18 +32,25 @@ analysis or hosted `/search`/`/chat` verification.
 **2026-07-15 review-gate addendum:** the local code now requires migration
 `0003_claim_evidence_review_gate` and filters live reads to human-reviewed,
 verifier-passed records. Railway PostgreSQL was verified at that migration
-through its public TCP proxy on 2026-07-16. Later that day, the hosted `v0.6.0`
-application passed `/health`, empty fail-closed `/briefing`, branded docs/banner
-routes, and Vercel CORS checks. The prior populated hosted result remains
+through its public TCP proxy on 2026-07-16. Later that day, the hosted `v0.6.1`
+application passed `/health`, empty fail-closed `/briefing`, `/docs`, and Vercel
+CORS checks. The prior populated hosted result remains
 historical evidence, not verification of the new gate with reviewed data.
 
 **2026-07-16 brand-assets addendum:**
 `assets/brand/drift-banner-dark.svg` and
 `assets/brand/drift-banner-light.svg` are the canonical theme-aware hero
-banners. The Vercel build derives its deployable dark asset from this source;
-the Railway Docker image copies the source pair and FastAPI serves them to its
-Swagger page at `/brand/dark.svg` and `/brand/light.svg`. This prevents
-hand-maintained frontend or backend banner copies from diverging.
+banners. The Railway Docker image copies the source pair and FastAPI serves
+them at `/brand/dark.svg` and `/brand/light.svg`. **2026-07-16 frontend theme
+addendum:** the Vercel frontend renders those API-served canonical files through
+a `<picture>` element keyed to `prefers-color-scheme`, and the page palette
+follows the same system preference. It does not carry a second frontend copy.
+The FastAPI documentation banner frame follows the same light/dark preference.
+The Git-connected `v0.6.1` deployment subsequently reported `/health` version
+`0.6.1`, an empty fail-closed `/briefing`, and a `200` `/docs`; a Vercel-origin
+CORS preflight also passed. The Vercel HTML references the canonical API-served
+light/dark banner pair. The amended `v0.6.1` release also makes the API-docs
+banner frame follow the same system preference.
 
 ## Context
 

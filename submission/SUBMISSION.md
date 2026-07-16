@@ -17,6 +17,8 @@
         `019f66b4-78b8-7943-a41d-91e836d28f00`
       - Grounding guardrails and capture readiness:
         `019f6773-0e96-7363-9657-0e0531c3d594`
+      - Submission audit and frontend evidence presentation:
+        `019f6a46-e3eb-7de2-81b1-91515ae80043`
 - [x] Use `019f62b9-10b7-7d82-a463-e6eb1192141c` as the primary `/feedback`
       Session ID if the Devpost form accepts only one.
 - [x] Implement local claim-level evidence, separate verification, and
@@ -25,10 +27,10 @@
       `notebooks/drift_manual_run.ipynb` against a reachable database, then cite
       their primary release URLs and verify hosted provider-backed `/search` and
       `/chat` against reviewed evidence. Railway PostgreSQL schema `0003` and
-      hosted `v0.6.0` health/empty briefing/docs/banner/CORS were verified on
-      2026-07-16.
+      hosted `v0.6.1` health/empty briefing/docs/CORS were verified on
+      2026-07-16; Vercel source references the canonical API-served banner pair.
 - [x] Provide a judge path: hosted app is available at
-      `https://dr1ftless.vercel.app` with a verified `v0.6.0` Railway API;
+      `https://dr1ftless.vercel.app` with a verified `v0.6.1` Railway API;
       reviewed live evidence remains an explicit operator gate.
 - [ ] Upload a public YouTube video under three minutes with English narration.
 - [ ] Replace the placeholder with the final video URL:

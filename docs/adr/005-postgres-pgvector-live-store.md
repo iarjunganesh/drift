@@ -42,6 +42,6 @@ verification fields, and a second audit pointer; live reads filter to reviewed
 verifier-passed records. On 2026-07-15, the earlier Railway migration and one
 unreviewed vLLM capture served through hosted `/briefing` were verified; that
 predates `0003`. Railway PostgreSQL was verified through `0003` on 2026-07-16
-using its public TCP proxy; later that day hosted `v0.6.0` `/health` and its
+using its public TCP proxy; later that day hosted `v0.6.1` `/health` and its
 empty fail-closed `/briefing` were verified. A reviewed capture corpus and
 review-gated hosted `/search`/`/chat` smoke tests remain pending.

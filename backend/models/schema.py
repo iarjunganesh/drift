@@ -8,8 +8,8 @@ Three tables:
                changes, each with a source citation and confidence flag
 
 Uses SQLAlchemy models + pgvector for the insights embedding column. The
-async Base/engine/session wiring follows the conceptual pattern from the
-bankers-wrapped reference repo without importing its unrelated dependencies.
+async Base/engine/session wiring stays independently usable without importing
+unrelated runtime dependencies.
 """
 
 from collections.abc import AsyncIterator

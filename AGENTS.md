@@ -6,8 +6,9 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.6.0` is the current local source and hosted release;
-`v0.5.1` is historical pre-review-gate evidence. The new local
+**Current phase:** `v0.6.1` is the current hosted Railway release, including
+the documentation-banner-frame correction. `v0.5.1` is historical pre-review-
+gate evidence. The new local
 guardrail work adds claim-level evidence, a separate verifier, and a human
 publication gate. `DRIFT_MODE=live`
 can make a bounded `backend.pipeline` **draft** capture: persist/reload source
@@ -18,9 +19,10 @@ reviewed verifier-passed records. All provider calls are budgeted and
 retry-bounded. On 2026-07-15, `v0.5.1` served one bounded, unreviewed vLLM
 capture through `/briefing` with Vercel CORS verified. On 2026-07-16, Railway
 PostgreSQL was verified at migration `0003` through its public TCP proxy, and
-the hosted `v0.6.0` app was verified through `/health`, `/briefing` (empty as
-intended without reviewed evidence), branded `/docs`, banner routes, and a
-Vercel-to-Railway CORS preflight. Do not claim broad live release analysis or
+the hosted `v0.6.1` app was verified through `/health`, `/briefing` (empty as
+intended without reviewed evidence), branded `/docs`, and a Vercel-to-Railway
+CORS preflight. The Vercel HTML also references the canonical API-served
+banner pair. Do not claim broad live release analysis or
 hosted `/search`/`/chat` verification without a reviewed capture.
 
 ## Key commands
@@ -98,6 +100,10 @@ records as fresh release analysis.
   a date; do not infer hosted state from local configuration alone.
 - FastAPI generates the OpenAPI document at `/openapi.json`; do not commit a
   generated copy until the live API contract is stable.
+- `assets/brand/` is the sole source of truth for DRIFT banner SVGs. The
+  frontend must load the canonical files through the API's `/brand/dark.svg`
+  and `/brand/light.svg` routes; do not copy, derive, or commit banner SVGs
+  under `frontend/public/`.
 
 ## Session synchronization (mandatory)
 
@@ -161,10 +167,11 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The verified hosted application is
-`v0.6.0` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS.
-On 2026-07-16, `/health` reported `v0.6.0`, `/briefing` returned an intentional
-empty list because no capture is human-reviewed, branded `/docs` and banner
-routes returned `200`, and the Vercel frontend served the canonical banner.
+`v0.6.1` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS.
+On 2026-07-16, `/health` reported `v0.6.1`, `/briefing` returned an intentional
+empty list because no capture is human-reviewed, `/docs` returned `200`, and
+the Vercel HTML referenced the canonical API-served banner pair. The Swagger
+banner frame follows the same light/dark preference as the canonical banners.
 Railway PostgreSQL is verified at migration `0003` through a public TCP proxy.
 Further reviewed evidence and hosted `/search`/`/chat` smoke tests are still
 required before any broad live-analysis claim.

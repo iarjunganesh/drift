@@ -28,19 +28,46 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function Home() {
   const [insights, setInsights] = useState<Insight[]>([]);
-  const [mode, setMode] = useState("fixture");
+  const [mode, setMode] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    Promise.all([
-      fetch(`${API_URL}/health`).then((response) => response.json() as Promise<{ mode?: string }>),
-      fetch(`${API_URL}/briefing?top_n=3`).then((response) => response.json() as Promise<{ insight: Insight }[]>),
-    ])
-      .then(([health, briefing]) => {
+    let isMounted = true;
+
+    async function loadBriefing() {
+      try {
+        const [healthResponse, briefingResponse] = await Promise.all([
+          fetch(`${API_URL}/health`),
+          fetch(`${API_URL}/briefing?top_n=3`),
+        ]);
+        if (!healthResponse.ok || !briefingResponse.ok) {
+          throw new Error("The DRIFT API returned an unsuccessful response.");
+        }
+
+        const [health, briefing] = await Promise.all([
+          healthResponse.json() as Promise<{ mode?: string }>,
+          briefingResponse.json() as Promise<{ insight: Insight }[]>,
+        ]);
+        if (!isMounted) return;
+
         setMode(health.mode || "fixture");
         setInsights(briefing.map((item) => item.insight));
-      })
-      .catch(() => setError("The DRIFT API is not reachable. Start the backend and try again."));
+        setError("");
+      } catch {
+        if (!isMounted) return;
+
+        setInsights([]);
+        setError("The DRIFT API is not reachable. Start the backend and try again.");
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    }
+
+    void loadBriefing();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -73,13 +100,22 @@ export default function Home() {
           </div>
         </div>
         <aside className="signal">
-          <img
-            className="signal-brand"
-            src="/brand/drift-banner-dark.svg"
-            alt="DRIFT evidence path: a primary release flows through a GPU compute lattice into cited evidence, human review, and a bounded engineering check"
-          />
+          <picture className="signal-brand">
+            <source media="(prefers-color-scheme: dark)" srcSet={`${API_URL}/brand/dark.svg`} />
+            <source media="(prefers-color-scheme: light)" srcSet={`${API_URL}/brand/light.svg`} />
+            <img
+              src={`${API_URL}/brand/light.svg`}
+              alt="DRIFT evidence path: a primary release flows through a GPU compute lattice into cited evidence, human review, and a bounded engineering check"
+            />
+          </picture>
           <div className="signal-label">Current operating mode</div>
-          <h2>{mode === "fixture" ? "Deterministic fixture briefing" : "Human-reviewed, claim-grounded live evidence"}</h2>
+          <h2>
+            {mode === "fixture"
+              ? "Deterministic fixture briefing"
+              : mode === "live"
+                ? "Human-reviewed, claim-grounded live evidence"
+                : "Checking published evidence"}
+          </h2>
           <p>{error || "Every insight keeps its source span, claim type, confidence, and bounded follow-up action visible."}</p>
           <div className="rail">
             <div><span>Evidence</span><strong>Primary source</strong></div>
@@ -143,7 +179,17 @@ export default function Home() {
               <span className={`pill ${insight.severity}`}>{insight.severity}</span>
             </article>
           ))}
-          {!insights.length && <div className="card"><p>Loading briefing…</p></div>}
+          {isLoading && <div className="card status-card"><p>Loading briefing…</p></div>}
+          {!isLoading && error && <div className="card status-card"><p>{error}</p></div>}
+          {!isLoading && !error && !insights.length && (
+            <div className="card status-card">
+              <h3>No reviewed insights published yet</h3>
+              <p>
+                When a reviewer publishes a verifier-passed capture, this briefing will show
+                cited changes, why they matter, a bounded check, and inspectable claim evidence.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 

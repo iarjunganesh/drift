@@ -4,10 +4,10 @@ Ordered for a two-day push. Feed these one at a time to Codex (Terra tier).
 Each prompt is self-contained — paste as-is into a fresh Codex session, or
 chain them in one session if context allows.
 
-Reference repo: `C:\ws\bankers-wrapped` (sibling dir, same machine) — cited
-in drift's own `docs/ARCHITECTURE.md` for pattern reuse (async pipeline, structlog,
-CI coverage-gate, provenance-manifest). Do NOT reuse its media stack
-(Genblaze, FFmpeg, Backblaze B2, NVIDIA NIM) — drift has no media component.
+These historical prompts are self-contained. They describe patterns for DRIFT's
+typed pipeline, structured logging, coverage gate, and provenance manifest;
+do not treat any legacy reference-repository paths or media-stack examples in
+later prompts as DRIFT dependencies.
 
 > Execution status (2026-07-15): the Day 1 Scout/database, Day 2 Synthesizer,
 > Day 3/4 structured Insight, Day 5 pgvector retrieval, and bounded one-shot
@@ -17,7 +17,7 @@ CI coverage-gate, provenance-manifest). Do NOT reuse its media stack
 > claim spans, separate verification, and review-first publication—do not use
 > these historical prompts to remove those guards. Railway PostgreSQL has been
 > migrated and one unreviewed vLLM capture was served through the prior hosted
-> `/briefing`; its `0003` schema and hosted `v0.6.0` empty briefing were
+> `/briefing`; its `0003` schema and hosted `v0.6.1` empty briefing were
 > verified on 2026-07-16, while a reviewed capture and hosted search/chat smoke
 > tests remain open.
 
@@ -30,12 +30,10 @@ CI coverage-gate, provenance-manifest). Do NOT reuse its media stack
 ```
 Working in C:\ws\drift. Read backend/agents/base.py if it exists (it may not
 yet — create it). I want a hand-rolled async agent base class, no external
-agent framework, following the pattern used in the sibling repo
-C:\ws\bankers-wrapped\backend\agents\base.py: an abstract BaseAgent with an
-async run(self, input_data) method that subclasses implement, and a
-__call__ wrapper that logs agent.start / agent.complete / agent.error via
-structlog around the call. Add structlog to pyproject.toml if missing, then
-refresh uv.lock.
+agent framework: an abstract BaseAgent with an async run(self, input_data)
+method that subclasses implement, and a __call__ wrapper that logs agent.start
+/ agent.complete / agent.error via structlog around the call. Add structlog to
+pyproject.toml if missing, then refresh uv.lock.
 
 Then implement backend/agents/scout.py fully. Requirements:
 - fetch_source() uses feedparser against a source's feed_url from
@@ -72,10 +70,8 @@ wiring in backend/models/schema.py as needed. Implement it fully:
   initial migration that creates all tables, including the pgvector
   extension (CREATE EXTENSION IF NOT EXISTS vector)
 
-Follow the async engine/session pattern conceptually from
-C:\ws\bankers-wrapped (it uses SQLite/B2, not Postgres, so adapt rather than
-copy — the point is the async session-per-request lifecycle, not the storage
-backend).
+Use an async session-per-request lifecycle adapted to DRIFT's PostgreSQL and
+pgvector storage boundary.
 ```
 
 ### Prompt 3 — Synthesizer + Insight agents
@@ -103,11 +99,9 @@ session from backend/models/schema.py, implement:
    defined in the file), parse structured output into an Insight object.
    Populate source_citations from the cluster's item URLs and model_used
    from the resolved model name returned by get_model() — this is the audit
-   trail. Follow the provenance-tracking shape used in
-   C:\ws\bankers-wrapped\backend\agents\media_agent.py's generation_payload
-   (model name, provider, latency_ms captured per call) but simplified —
-   drift only needs model_used + source_citations + latency, not the full
-   multi-artifact manifest bankers-wrapped builds for media.
+   trail. Retain model name, provider, and latency per call, but keep DRIFT's
+   provenance focused on model_used, source_citations, and latency rather than
+   a media-oriented multi-artifact manifest.
 
 Wrap both agents' run() methods with the BaseAgent __call__ structlog
 lifecycle logging already established for Scout.
@@ -145,9 +139,8 @@ not just import cleanly.
 ### Prompt 5 — Tests + CI
 
 ```
-Working in C:\ws\drift. Add a pytest test suite under backend/tests/
-(unit/ and integration/, mirroring the layout in
-C:\ws\bankers-wrapped\tests\). At minimum:
+Working in C:\ws\drift. Add a pytest test suite under tests/unit and
+tests/integration. At minimum:
 - Unit tests for scout.py (mock feedparser/HTTP), synthesizer.py (mock
   OpenAI embeddings + chat calls), insight.py (mock get_model output,
   assert model_used and source_citations are populated correctly),
@@ -161,13 +154,8 @@ C:\ws\bankers-wrapped\tests\). At minimum:
 
 Then add .github/workflows/ci.yml: install deps, ruff check, mypy
 backend/, pytest with --cov=backend --cov-fail-under=<pick a realistic
-number, e.g. 60> --cov-report=xml. Model the workflow structure on
-C:\ws\bankers-wrapped\.github\workflows\ci.yml but adapt the dependency
-install step to drift's actual stack (no ffmpeg/uv needed unless drift
-uses uv and its frozen lockfile). Make sure the coverage number in the
-workflow matches whatever you state in the README — don't let them drift
-apart like they do in the bankers-wrapped README (badge says 80%, CI
-enforces 70%).
+number, e.g. 60> --cov-report=xml. Use DRIFT's frozen dependency stack and
+make sure the coverage number in the workflow matches the README.
 ```
 
 ### Prompt 6 — Docker + judge demo path
@@ -180,18 +168,16 @@ Working in C:\ws\drift. Add:
   pgvector/pgvector Postgres service (with a volume + the vector extension
   pre-enabled), and frontend (once frontend has real source — if frontend
   is still just package.json with no pages, skip the frontend service for
-  now and note that in a comment). Model the two-service shape on
-  C:\ws\bankers-wrapped\docker-compose.yml but swap its storage/media
-  services for the Postgres+pgvector service drift actually needs.
+  now and note that in a comment). Keep the services scoped to DRIFT's
+  PostgreSQL + pgvector storage boundary; do not add a media service.
 - A `make demo` target (Makefile at repo root) that: brings up
   docker-compose, waits for Postgres to be healthy, runs the Alembic
   migration, then runs the Scout→Synthesizer→Insight→Briefing pipeline
   against backend/sources.yaml (or a small fixture sources file with 1-2
   fast, reliable feeds) so a judge can run one command and see a real
   briefing produced without needing their own OpenAI key for anything
-  beyond what's in .env. Mirror the intent of
-  C:\ws\bankers-wrapped\scripts\demo_run.py (one-command, no external
-  account needed) but adapt to drift's pipeline.
+  beyond what's in .env. Keep the path one-command and independent of an
+  external account where feasible.
 - Update README.md's setup section to lead with `make demo` as the
   fastest path, keeping the manual venv/npm steps below it as the
   from-scratch alternative.
@@ -203,10 +189,8 @@ Working in C:\ws\drift. Add:
 Working in C:\ws\drift. Do the following, all documentation-only, no code
 changes:
 
-1. Add a LICENSE file at repo root — MIT license. Use
-   C:\ws\bankers-wrapped\LICENSE as a formatting reference but set the
-   copyright holder/year appropriately for this project (check with the
-   repo owner if unsure — do not assume the same name unless it matches).
+1. Add a LICENSE file at repo root — MIT license — with the correct copyright
+   holder and year for this project.
 
 2. Fill in README.md's "How Codex and GPT-5.6 were used" section with an
    honest, specific account: which parts Codex built end-to-end (typed agents,
@@ -232,6 +216,8 @@ changes:
      documentation cleanup
    - `019f6773-0e96-7363-9657-0e0531c3d594` — grounding guardrails and capture
      readiness
+   - `019f6a46-e3eb-7de2-81b1-91515ae80043` — submission audit and frontend
+     evidence presentation
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.
@@ -248,13 +234,13 @@ rules/FAQ reference copy, not drift's submission draft.
 
 - Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
 - Confirm which supplied initiative is the primary `/feedback` session for the
-  Devpost form; retain all eight IDs in the README, changelog, and submission
+  Devpost form; retain all nine IDs in the README, changelog, and submission
    notes.
 - Verify branch protection and the Codecov upload on the published GitHub
   repository.
 - Use `notebooks/drift_manual_run.ipynb` against a reachable database to create
   and review a small draft store, then smoke-test hosted `/search` and `/chat`
   against that reviewed, cited evidence. Railway PostgreSQL schema `0003`,
-  hosted `v0.6.0` health/empty briefing/docs/banner routes, and Vercel CORS
-  were verified on 2026-07-15/16; this does not establish broad live-release
+  hosted `v0.6.1` health/empty briefing/docs routes, Vercel canonical-banner
+  source, and CORS were verified on 2026-07-15/16; this does not establish broad live-release
   analysis.

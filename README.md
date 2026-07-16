@@ -109,9 +109,9 @@ verifier-passed records. On 2026-07-15, the prior hosted `v0.5.1` deployment
 migrated Railway PostgreSQL and served one bounded, unreviewed vLLM capture
 through `/briefing`. On 2026-07-16, Railway PostgreSQL was verified through
 `0003_claim_evidence_review_gate` using its public TCP proxy. Later that day,
-the hosted `v0.6.0` app passed `/health`, an empty fail-closed `/briefing`,
-branded `/docs`/banner routes, and Vercel-to-Railway CORS checks. It still has
-no human-reviewed capture, so this is not a broad live-release-analysis claim.
+the hosted `v0.6.1` app passed `/health`, an empty fail-closed `/briefing`,
+`/docs`, Vercel canonical-banner source, and Vercel-to-Railway CORS checks. It
+still has no human-reviewed capture, so this is not a broad live-release-analysis claim.
 
 > **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
@@ -120,7 +120,7 @@ no human-reviewed capture, so this is not a broad live-release-analysis claim.
 ### Codex project initiatives
 
 The baseline, publication follow-up, bounded release milestones, and
-documentation follow-up are tied to eight project initiatives. The grounded
+documentation follow-up are tied to nine project initiatives. The grounded
 live-chat row remains the primary v0.4.0 implementation session; v0.5.0 adds
 the bounded local capture path.
 
@@ -134,6 +134,7 @@ the bounded local capture path.
 | Day 3/Day 4 Insight structured output | `019f6336-3690-7022-a8ef-c8c0947e240f` | Standalone `generate_insight()` structured parsing, strict validation, citations, confidence, and model provenance |
 | Bounded capture, provenance, and status cleanup | `019f66b4-78b8-7943-a41d-91e836d28f00` | One-shot persisted capture, all-call budget/retry controls, live briefing adapter, evidence UI, and documentation synchronization |
 | Grounding guardrails and capture readiness | `019f6773-0e96-7363-9657-0e0531c3d594` | Claim spans/hashes, separate verifier, review-gated publication, cross-references, calibration cases, manual notebook, and all-source capture preflight |
+| Submission audit and frontend evidence presentation | `019f6a46-e3eb-7de2-81b1-91515ae80043` | Handwritten-next-step audit, explicit briefing states, system-theme presentation, canonical API-served banners, and status synchronization |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -147,7 +148,9 @@ follow-up session is `019f62e8-6715-70e2-a92a-fe28254f7b71`. The earlier
 initiative records preserve the foundation, publication, and hosted-demo work;
 the Day 3/Day 4 Insight implementation session is
 `019f6336-3690-7022-a8ef-c8c0947e240f`; the grounding guardrail and
-capture-readiness follow-up is `019f6773-0e96-7363-9657-0e0531c3d594`.
+capture-readiness follow-up is `019f6773-0e96-7363-9657-0e0531c3d594`; and the
+submission-audit/frontend-presentation follow-up is
+`019f6a46-e3eb-7de2-81b1-91515ae80043`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
 provides an API key. The local capture job routes embeddings, classification,
@@ -241,13 +244,16 @@ that frozen lockfile. JavaScript dependencies are locked in
 ## Live & Interactive Demo
 
 The Railway API and Vercel frontend are live. The Vercel project deploys from
-`frontend/` using its checked-in build configuration. On 2026-07-16, the
-hosted `v0.6.0` API and frontend were verified after Railway PostgreSQL reached
-the review-gate migration.
+`frontend/` using its checked-in build configuration. On 2026-07-16, hosted
+`v0.6.1` verified the briefing-state and canonical-banner release after Railway
+PostgreSQL reached the review-gate migration. The API-docs banner frame follows
+the same system light/dark preference as the canonical banner.
 
 | | |
 | --- | --- |
-| **Current release** | `v0.6.0` hosted `live` — `/health`, empty fail-closed `/briefing`, branded Swagger/banner routes, Vercel frontend, and CORS verified on 2026-07-16 |
+| **Current hosted API** | `v0.6.1` `live` — `/health`, empty fail-closed `/briefing`, `/docs`, and Vercel-origin CORS verified on 2026-07-16 |
+| **Hosted frontend source** | Vercel HTML references the canonical API-served light/dark banner pair; the browser post-fetch empty-state rendering is not separately recorded |
+| **API docs branding** | The Swagger banner frame and canonical banner pair follow the same system light/dark preference |
 | **Historical evidence** | `v0.5.1` `live` — one unreviewed vLLM Insight served through `/briefing` on 2026-07-15; retained as pre-gate evidence only |
 | **Database schema** | Railway PostgreSQL verified at `0003_claim_evidence_review_gate` through its public TCP proxy on 2026-07-16 |
 | **Frontend** | [https://dr1ftless.vercel.app](https://dr1ftless.vercel.app) |
@@ -287,8 +293,10 @@ record and SHA-256 manifest there without including review notes or secrets.
 
 The Next.js briefing view exposes each record's status label, confidence,
 model/audit label, rationale, bounded action, source links, and—when present—
-claim-type evidence. The current hosted UI remains a separately verified,
-pre-guardrail deployment boundary.
+claim-type evidence. On 2026-07-16, the hosted UI was verified against the
+review-gated `v0.6.0` API; its empty briefing is intentional until reviewed
+evidence exists. The local `v0.6.1` theme and briefing-state corrections require
+a Vercel deployment before they become hosted verification facts.
 
 ---
 
@@ -297,8 +305,8 @@ pre-guardrail deployment boundary.
 Requirements: Python 3.14, `uv`, and Node.js 24.x for the frontend.
 
 ```powershell
-# 1. Clone after the GitHub repository is published
-git clone <DRIFT-GITHUB-URL>
+# 1. Clone the public repository
+git clone https://github.com/iarjunganesh/drift.git
 cd drift
 
 # 2. Configure the no-key fixture path
@@ -429,7 +437,7 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **133 tests passed and 100.00% backend coverage**.
+The current local result is **142 tests passed and 100.00% backend coverage**.
 The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline boundaries remain visible while
@@ -467,10 +475,11 @@ The remaining hosted verification operations are documented in
 2. enable branch protection requiring the CI quality gate.
 
 The earlier populated `v0.5.1` `/briefing` response was verified on 2026-07-15.
-On 2026-07-16, hosted `v0.6.0` health, empty fail-closed `/briefing`, branded
-docs/banner routes, Vercel frontend, CORS, and Railway PostgreSQL migration
-`0003` were verified. Hosted provider-backed `/search`/`/chat` smoke tests and
-human-reviewed captures remain pending.
+On 2026-07-16, hosted `v0.6.1` health, empty fail-closed `/briefing`, `/docs`,
+Vercel canonical-banner source, CORS, and Railway PostgreSQL migration `0003`
+were verified. The API-docs banner frame follows the selected system theme.
+Hosted provider-backed `/search`/`/chat` smoke tests and human-reviewed captures
+remain pending.
 
 ---
 

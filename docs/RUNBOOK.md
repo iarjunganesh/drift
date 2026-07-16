@@ -10,9 +10,9 @@ truth boundary in [`ARCHITECTURE.md`](ARCHITECTURE.md).
    `uv venv .venv` followed by `uv sync --locked --group dev`.
 2. Copy `.env.example` to `.env`; leave `DRIFT_MODE=fixture`.
 3. Start `uv run uvicorn backend.main:app --reload` from the repository root.
-4. Open `/docs` and point out the same theme-aware DRIFT banner used in the
-   README and frontend, then inspect `/briefing`, search `vllm`, and send a chat
-   question.
+4. Open `/docs` and point out the same paired, system-theme-aware DRIFT banners
+   used in the README and frontend, then inspect `/briefing`, search `vllm`, and
+   send a chat question.
 5. Point out the source links, confidence, and `fixture-curated` audit label.
 6. If showing the frontend, run `npm --prefix frontend ci` and
    `npm --prefix frontend run dev` in a second terminal.
@@ -82,8 +82,9 @@ This path uses committed example data and makes no external calls.
    Railway PostgreSQL migrations and one unreviewed vLLM capture were verified
    through the prior hosted `/briefing` and the Vercel CORS preflight. The new
    gate's `0003` schema was verified through Railway's public TCP proxy on
-   2026-07-16; hosted `v0.6.0` then passed `/health`, empty fail-closed
-   `/briefing`, branded docs/banner routes, and CORS checks. Scheduled
+   2026-07-16; hosted `v0.6.1` then passed `/health`, empty fail-closed
+   `/briefing`, `/docs`, and CORS checks. The Vercel HTML references the
+   canonical API-served banner pair. Scheduled
    population, reviewed evidence, and provider-backed `/search`/`/chat` smoke
    tests remain future work.
 
@@ -102,7 +103,7 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The eight Codex initiatives associated with this baseline, deployment follow-up,
+The nine Codex initiatives associated with this baseline, deployment follow-up,
 the v0.4.0 baseline, v0.5.0 capture-path release, and implementation follow-ups
 are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
@@ -117,3 +118,5 @@ are listed in
   `019f66b4-78b8-7943-a41d-91e836d28f00`
 - Grounding guardrails and capture readiness:
   `019f6773-0e96-7363-9657-0e0531c3d594`
+- Submission audit and frontend evidence presentation:
+  `019f6a46-e3eb-7de2-81b1-91515ae80043`

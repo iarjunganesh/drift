@@ -8,7 +8,44 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning:
 The `0.1.0` entry is the initial repository baseline published on GitHub as
 the annotated `v0.1.0` tag.
 
-## [Unreleased]
+## [0.6.1] - 2026-07-16
+
+### Fixed
+
+- Made the FastAPI documentation banner frame follow `prefers-color-scheme`,
+  so the light canonical banner no longer sits inside a dark wrapper.
+
+- Made the frontend briefing state explicit: it now distinguishes a loading
+  request, an unreachable API, and the intentional empty state before reviewed
+  evidence has been published.
+- Made the frontend select the API-served canonical DRIFT banner pair with
+  `prefers-color-scheme`; it no longer copies SVGs into the Vercel build, and
+  its palette follows the same light/dark system preference as the README and
+  API docs.
+- Corrected current local-test documentation to 142 tests at 100.00% backend
+  coverage and replaced the placeholder clone URL.
+
+### Hosted deployment verification — 2026-07-16
+
+- Verified the Git-connected Railway `v0.6.1` deployment in `DRIFT_MODE=live`:
+  `/health` reported `v0.6.1`, `/briefing` returned `[]` because no Insight is
+  human-reviewed, `/docs` returned `200`, and a Vercel-origin CORS preflight
+  passed.
+- Verified that the deployed Vercel HTML references the canonical API-served
+  light/dark banner pair. This is source-markup verification, not a separate
+  browser visual check of the post-fetch empty state.
+
+### Codex session record
+
+- Added `019f6a46-e3eb-7de2-81b1-91515ae80043` for the submission audit and
+  frontend evidence-presentation follow-up. Initiative 04 remains the primary
+  `/feedback` session for core functionality.
+
+## [0.6.0] - 2026-07-16
+
+At release-tag creation, `v0.6.0` was the current local source release and its
+hosted verification had not yet occurred. The dated hosted-deployment addendum
+below records the subsequent verification without rewriting that history.
 
 ### Hosted deployment verification — 2026-07-16
 
@@ -19,12 +56,6 @@ the annotated `v0.1.0` tag.
 - Verified the Vercel frontend serves the canonical banner and Railway accepts a
   Vercel-origin CORS preflight. Hosted `/search` and `/chat` remain untested to
   avoid provider-backed calls before a reviewed capture exists.
-
-## [0.6.0] - 2026-07-16
-
-At release-tag creation, `v0.6.0` was the current local source release and its
-hosted verification had not yet occurred. The dated Unreleased addendum records
-the subsequent hosted deployment verification without rewriting that history.
 
 ### Added
 
@@ -367,6 +398,7 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.6.1]: #061---2026-07-16
 [0.6.0]: #060---2026-07-16
 [0.5.1]: #051---2026-07-15
 [0.5.0]: #050---2026-07-15

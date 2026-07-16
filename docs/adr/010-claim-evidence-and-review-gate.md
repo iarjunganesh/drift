@@ -57,7 +57,7 @@ filters live reads to verified/reviewed rows, and the frontend displays claim
 types and evidence when present. Calibration fixtures cover unsupported claims,
 ambiguous interpretation, and instruction-shaped release text. The changes are
 locally tested; Railway PostgreSQL was verified at migration `0003` through its
-public TCP proxy on 2026-07-16. Later that day hosted `v0.6.0` health, empty
+public TCP proxy on 2026-07-16. Later that day hosted `v0.6.1` health, empty
 fail-closed briefing, branded docs/banner routes, and CORS were verified. The
 2026-07-15 hosted vLLM response remains historical pre-gate evidence; a reviewed
 capture and hosted provider-backed search/chat smoke tests remain outstanding.
