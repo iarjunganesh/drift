@@ -329,9 +329,9 @@ with `/health`, `/docs`, and `/openapi.json` exposed publicly. As of
 2026-07-16, its `v0.6.1` live mode, `/docs`, provider-backed
 `/briefing`/`/search`/`/chat` over four reviewed Insights, and Vercel CORS
 configuration are verified. The Vercel HTML references the canonical API-served
-banner pair. The `v0.7.0` source release makes review notes database-only and
-raises the frontend briefing limit to ten; its hosted deployment requires its
-own verification record. See
+banner pair. The `v0.7.0` deployment makes review notes database-only and
+raises the frontend briefing limit to ten; its `/briefing`, `/openapi.json`,
+and Vercel bundle were verified after rollout. See
 [ADR-007](adr/007-vercel-railway-deployment.md).
 
 The browser can consume the hosted API from Vercel. On 2026-07-15, Vercel CORS

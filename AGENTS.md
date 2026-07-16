@@ -6,10 +6,9 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.7.0` is the current source release; it hardens evidence
-byte integrity, makes human review notes database-only, and raises the frontend
-briefing limit to ten. Its Railway/Vercel deployment must be verified before it
-is described as the current hosted release. `v0.6.1` is the previously verified
+**Current phase:** `v0.7.0` is the current hosted Railway/Vercel release. It
+hardens evidence byte integrity, makes human review notes database-only, and
+raises the frontend briefing limit to ten. `v0.6.1` is the previously verified
 hosted Railway revision, and `v0.5.1` is historical pre-review-gate evidence. The new local
 guardrail work adds claim-level evidence, a separate verifier, and a human
 publication gate. `DRIFT_MODE=live`
@@ -179,9 +178,11 @@ the Vercel HTML referenced the canonical API-served banner pair. The Swagger
 banner frame follows the same light/dark preference as the canonical banners.
 Railway PostgreSQL is verified at migration `0003` through a public TCP proxy.
 Hosted `/search` and `/chat` were verified provider-backed the same day; this
-is a small, bounded reviewed set, not broad live-release analysis. Deploy and
-verify `v0.7.0` before claiming its review-note redaction or ten-item frontend
-view is hosted.
+is a small, bounded reviewed set, not broad live-release analysis. The
+Git-connected `v0.7.0` deployment was verified through `/health`, `/docs`,
+Vercel CORS, a four-record `/briefing` with no review notes, and the Vercel
+bundle's `top_n=10` request; `/search` and `/chat` were not re-invoked for this
+privacy/frontend-only release.
 
 [`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb) is the
 local operator path for bounded capture and manual publication. It requires a

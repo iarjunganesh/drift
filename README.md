@@ -255,7 +255,7 @@ the same system light/dark preference as the canonical banner.
 
 | | |
 | --- | --- |
-| **Current hosted API** | `v0.6.1` `live` — `/health`, `/briefing` (four reviewed Insights), `/search`, `/chat`, `/docs`, and Vercel-origin CORS verified provider-backed on 2026-07-16; `v0.7.0` deployment verification remains pending |
+| **Current hosted API** | `v0.7.0` `live` — `/health`, `/briefing` (four reviewed Insights with review notes redacted), `/docs`, and Vercel-origin CORS verified on 2026-07-16; deployed Vercel requests `top_n=10` |
 | **Hosted frontend source** | Vercel HTML references the canonical API-served light/dark banner pair; the browser post-fetch empty-state rendering is not separately recorded |
 | **API docs branding** | The Swagger banner frame and canonical banner pair follow the same system light/dark preference |
 | **Historical evidence** | `v0.5.1` `live` — one unreviewed vLLM Insight served through `/briefing` on 2026-07-15; retained as pre-gate evidence only |
@@ -300,10 +300,10 @@ The Next.js briefing view exposes each record's status label, confidence,
 model/audit label, rationale, bounded action, source links, and—when present—
 claim-type evidence. On 2026-07-16, the hosted UI was verified against the
 review-gated API; reviewed evidence has since been published, so `/briefing`
-now serves four reviewed Insights instead of the intentional empty state. The
-`v0.7.0` source adds review-note redaction and requests all ten available
-briefing items; Railway/Vercel deployment and visual verification are still
-required before those become hosted facts.
+now serves four reviewed Insights instead of the intentional empty state.
+`v0.7.0` deployed the review-note redaction and ten-item briefing request;
+Railway, CORS, public-contract, and Vercel-bundle checks are recorded in the
+changelog. This did not re-run paid provider chat.
 
 ---
 

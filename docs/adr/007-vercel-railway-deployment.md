@@ -84,6 +84,10 @@ capacity commitment.
 - As of 2026-07-15, `FRONTEND_ORIGIN=https://dr1ftless.vercel.app` is verified
   through a successful browser CORS preflight.
 - Vercel and Railway have separate logs, deploys, and usage limits to monitor.
+- **2026-07-16 v0.7.0 addendum:** the Git-connected Railway deployment reports
+  `0.7.0`; `/docs` and Vercel CORS remain available, `/briefing` returns four
+  reviewed Insights without `human_review_notes`, and `/openapi.json` omits
+  that private field. The production Vercel bundle requests `top_n=10`.
 - A future alternative may consolidate the frontend and API, but that would
   require a new ADR because it changes operational boundaries.
 

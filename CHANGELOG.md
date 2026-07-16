@@ -12,6 +12,15 @@ the annotated `v0.1.0` tag.
 
 ## [0.7.0] - 2026-07-16
 
+### Hosted deployment verification — 2026-07-16
+
+- Verified the Git-connected Railway `v0.7.0` deployment in `DRIFT_MODE=live`:
+  `/health` reports `0.7.0`, `/docs` returns `200`, and a Vercel-origin CORS
+  preflight allows `GET, POST`.
+- Verified that `/briefing?top_n=10` returns the four reviewed Insights without
+  `human_review_notes`, and that `/openapi.json` does not expose that field.
+- Verified the deployed Vercel bundle requests `briefing?top_n=10`.
+
 ### Reviewed-evidence capture and hosted verification — 2026-07-16
 
 - Published four human-reviewed Insights through `publish_verified_insights`

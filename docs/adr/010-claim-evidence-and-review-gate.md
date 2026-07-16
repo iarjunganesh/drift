@@ -66,5 +66,5 @@ fail-closed briefing, branded docs/banner routes, and CORS were verified. The
 **2026-07-16 privacy addendum:** `v0.7.0` makes `human_review_notes`
 database-only in the serialized Insight contract and prevents the live-store
 reader from copying them into public records. It also tests the public API and
-OpenAPI boundary. This source change must be deployed and verified before it is
-represented as a hosted mitigation.
+OpenAPI boundary. The Git-connected `v0.7.0` deployment was verified to omit
+the field from `/briefing` and `/openapi.json`.

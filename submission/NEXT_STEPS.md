@@ -5,12 +5,13 @@
 release and submission work only; do P2 polish by hand where possible.
 **OpenAI API budget (separate from Codex credits):** capture runs and hosted smoke tests draw on the `drift` project key, bounded by `DRIFT_MAX_SPEND_USD=10`. That is enough for several capture runs; do not raise the cap.
 
-Audit verdict: `v0.7.0` source is locally verified (149 tests and 100% backend
+Audit verdict: hosted `v0.7.0` is verified (149 tests and 100% backend
 coverage), including evidence-byte integrity, public review-note redaction, and
-the ten-item frontend request. The currently verified hosted revision remains
-`v0.6.1`; deploy and verify `v0.7.0` before making hosted claims for those
-changes. The reviewed-output blocker is otherwise cleared by the four published
-Insights; the demo video remains the final submission blocker.
+the ten-item frontend request. Railway `/health`/`/docs`, Vercel CORS,
+`/briefing` (four records with no review notes), `/openapi.json` (no review-note
+field), and the deployed Vercel bundle were checked on 2026-07-16. The
+reviewed-output blocker is cleared; the demo video remains the final submission
+blocker.
 
 ---
 
@@ -40,9 +41,9 @@ Insights; the demo video remains the final submission blocker.
 - [x] `frontend/app/page.tsx`: separate **loading**, **empty**, and **error**
       states; local `v0.6.1` also renders canonical light/dark API-served
       banners without frontend SVG copies.
-- [ ] Deploy `v0.7.0` to Railway and Vercel, then verify `/health` reports
-      `0.7.0`, `/briefing` and `/openapi.json` omit `human_review_notes`, CORS
-      still allows Vercel, and the deployed frontend requests `top_n=10`.
+- [x] Deployed `v0.7.0` to Railway and Vercel; `/health` reports `0.7.0`,
+      `/briefing` and `/openapi.json` omit `human_review_notes`, CORS allows
+      Vercel, and the deployed frontend requests `top_n=10`.
 
 ### 3. Record and publish the demo video  *(≤ 3 min, public YouTube, English voiceover)*
 - [ ] Follow `submission/DEMO_SCRIPT.md`, updated for the now-populated hosted app:

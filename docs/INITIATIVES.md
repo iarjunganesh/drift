@@ -316,6 +316,8 @@ The `v0.7.0` source release fixes the Windows evidence-manifest newline mismatch
 makes review notes database-only in the public API contract, requests up to ten
 reviewed briefing records in the frontend, and replaces the recorded notebook
 with a Markdown-only results artifact. It is covered by 149 tests at 100%
-backend coverage. Deployment verification is intentionally recorded separately:
-do not claim these source changes are hosted until `/health`, `/briefing`,
-`/openapi.json`, CORS, and the Vercel bundle have been checked.
+backend coverage. The Git-connected deployment was then verified through
+`/health` (`0.7.0`), `/docs`, Vercel CORS, a four-record `/briefing` without
+review notes, `/openapi.json` without the field, and the Vercel bundle's
+`top_n=10` request. Paid chat was not re-invoked for this privacy/frontend-only
+release.

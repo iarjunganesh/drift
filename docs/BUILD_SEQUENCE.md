@@ -52,6 +52,9 @@ AI-infrastructure release intelligence.
 - [x] Codex: released `v0.6.1` frontend/documentation changes; Railway and
       Vercel source deployment were verified, including the API-docs
       system-theme-aware banner frame
+- [x] Operator: deployed `v0.7.0`; Railway `/health`/`/docs`, Vercel CORS,
+      review-note redaction in `/briefing` and `/openapi.json`, and the deployed
+      frontend's `top_n=10` request were verified
 - [x] No new model calls — the current UI remains presentation-only
 
 ## Day 8 — Final content + docs
