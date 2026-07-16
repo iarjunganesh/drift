@@ -15,21 +15,21 @@ model behavior.
 | 0:00–0:10 | DRIFT hero banner | “DRIFT turns GPU and AI-infrastructure release noise into a cited engineering check.” |
 | 0:10–0:28 | README problem section or architecture | “Teams depend on fast-moving projects such as vLLM, PyTorch, Triton, and CUDA. DRIFT answers what changed, why it matters, and what to check next.” |
 | 0:28–0:42 | Terminal: start API | Run `uv run uvicorn backend.main:app --reload`; show the no-key fixture mode. |
-| 0:42–1:00 | `/health` and `/briefing` | Show `mode: fixture`, ranked insights, severity, confidence, and citations. Say explicitly that these are committed examples, not live analysis. |
-| 1:00–1:20 | `/search?q=vllm` | Search for an affected library and point out the source-backed result. |
-| 1:20–1:45 | `POST /chat` or Swagger UI | Ask “What should I check for vLLM?” Show that the answer is grounded in matching insights and returns citations. |
-| 1:45–2:00 | Frontend at `https://dr1ftless.vercel.app` | Show the operator-facing briefing view, then the API docs link. |
-| 2:00–2:20 | Architecture diagram | Follow feeds → Scout → Synthesizer → claim draft → separate verifier → human review → Briefing. Explain that exact source spans, claim labels, and two audits are retained; drafts stay private until a human records review notes. Hosted review-gated verification remains the boundary. |
+| 0:42–1:00 | `/health` and `/briefing` | Show the live reviewed briefing after confirming the deployed version. Point out severity, confidence, citations, and that this is a small bounded four-Insight set—not broad live analysis. |
+| 1:00–1:20 | `/search?q=vllm` | Search the reviewed vLLM release and point out the frozen source-backed result. |
+| 1:20–1:45 | `POST /chat` or Swagger UI | Ask “What should I check for vLLM?” Show that the answer is grounded in matching reviewed Insights and returns citations. |
+| 1:45–2:00 | Frontend at `https://dr1ftless.vercel.app` | Show the four reviewed cards, claim-evidence panel, and API docs link. |
+| 2:00–2:20 | Architecture diagram | Follow feeds → Scout → Synthesizer → claim draft → separate verifier → human review → Briefing. Explain that exact source spans, claim labels, and two audits are retained; drafts stay private until a human records review notes, which are database-only. |
 | 2:20–2:38 | ADR index and CI workflow | Show typed stages, provenance requirements, Ruff, mypy, pytest, coverage, Codecov upload, and the enforced 100% floor for implemented code. |
-| 2:38–2:52 | Code or final briefing | Explain Codex’s role in shaping the typed pipeline, bounded live-chat safeguards, tests, docs, and gates. Explain GPT-5.6’s role only using saved, verified live output; live release ingestion and generated insights are not complete. |
+| 2:38–2:52 | Code or final briefing | Explain Codex’s role in shaping the typed pipeline, bounded live-chat safeguards, tests, docs, and gates. Explain GPT-5.6’s role using the four saved, reviewed live outputs; do not overclaim beyond that bounded set. |
 
 ## Final narration
 
 “DRIFT is intentionally honest about its boundary: the fixture path is
-reproducible today, and the local review-first capture path is implemented but
-not yet presented as hosted live analysis. Every public live insight carries
-typed claims, frozen source evidence, confidence, two audit records, human
-review, and a bounded action.”
+reproducible, and the hosted review-first path currently presents four
+human-reviewed Insights from one bounded capture—not continuous release
+monitoring. Every public live insight carries typed claims, frozen source
+evidence, confidence, two audit records, human review, and a bounded action.”
 
 ## Pre-upload checklist
 

@@ -1,0 +1,6 @@
+{
+  "record_type": "evidence_integrity_manifest",
+  "evidence_file": "2026-07-16-all-sources-reviewed.json",
+  "sha256": "2e08896b3c1c9507b557fc84e5558ce05343f9202227bb3a1ff7e964002d2318",
+  "preservation_policy": "Do not overwrite this record; create a new dated archive for every capture."
+}

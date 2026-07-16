@@ -195,6 +195,123 @@ async def test_run_capture_connects_the_bounded_stages(monkeypatch, tmp_path) ->
 
 
 @pytest.mark.asyncio
+async def test_run_capture_skips_clusters_that_fail_verification(monkeypatch, tmp_path) -> None:
+    active_settings = replace(
+        settings,
+        mode="live",
+        openai_api_key="test-key",
+        spend_ledger_path=str(tmp_path / "ledger.json"),
+    )
+    monkeypatch.setattr(pipeline, "settings", active_settings)
+    source = {"id": "vllm", "feed_url": "https://example.com/feed"}
+    rejected_item = make_item(1, "vllm")
+    surviving_item = make_item(2, "pytorch")
+    surviving = make_generated(2)
+    persisted: dict[str, object] = {}
+
+    class Context:
+        async def __aenter__(self):
+            return object()
+
+        async def __aexit__(self, *_args) -> None:
+            return None
+
+    async def store(_session, items, *, sources):
+        return len(items)
+
+    async def load(_session, urls):
+        return [rejected_item, surviving_item]
+
+    async def persist(_session, generated_items, embeddings):
+        persisted["generated"] = generated_items
+        persisted["embeddings"] = embeddings
+        return [99]
+
+    def fake_generate(cluster, severity, tier, **_kwargs):
+        if cluster == [rejected_item]:
+            raise ValueError("Claim verifier rejected one or more drafted claims.")
+        return surviving
+
+    monkeypatch.setattr(pipeline, "load_sources", lambda: [source])
+    monkeypatch.setattr(pipeline, "run_scout", lambda _sources: [rejected_item, surviving_item])
+    monkeypatch.setattr(pipeline, "store_raw_items", store)
+    monkeypatch.setattr(pipeline, "load_persisted_raw_items", load)
+    monkeypatch.setattr(pipeline, "session_factory", lambda: Context())
+    monkeypatch.setattr(
+        pipeline,
+        "run_synthesizer",
+        lambda items, **_kwargs: [
+            ([rejected_item], ChangeSeverity.MINOR),
+            ([surviving_item], ChangeSeverity.MINOR),
+        ],
+    )
+    monkeypatch.setattr(pipeline, "generate_insight_with_audit", fake_generate)
+    monkeypatch.setattr(pipeline, "embed_texts", lambda *_args, **_kwargs: [[0.1] * 1536])
+    monkeypatch.setattr(pipeline, "_persist_generated_insights", persist)
+
+    result = await pipeline.run_capture(
+        source_ids={"vllm"},
+        per_source_limit=1,
+        max_items=2,
+        tier=Tier.FINAL,
+        client=object(),
+    )
+
+    assert persisted["generated"] == [surviving]
+    assert result.insight_ids == [99]
+
+
+@pytest.mark.asyncio
+async def test_run_capture_raises_when_no_drafts_survive(monkeypatch, tmp_path) -> None:
+    active_settings = replace(
+        settings,
+        mode="live",
+        openai_api_key="test-key",
+        spend_ledger_path=str(tmp_path / "ledger.json"),
+    )
+    monkeypatch.setattr(pipeline, "settings", active_settings)
+    source = {"id": "vllm", "feed_url": "https://example.com/feed"}
+    item = make_item(1, "vllm")
+
+    class Context:
+        async def __aenter__(self):
+            return object()
+
+        async def __aexit__(self, *_args) -> None:
+            return None
+
+    async def store(_session, items, *, sources):
+        return len(items)
+
+    async def load(_session, urls):
+        return [item]
+
+    def always_reject(*_args, **_kwargs):
+        raise ValueError("Claim verifier rejected one or more drafted claims.")
+
+    monkeypatch.setattr(pipeline, "load_sources", lambda: [source])
+    monkeypatch.setattr(pipeline, "run_scout", lambda _sources: [item])
+    monkeypatch.setattr(pipeline, "store_raw_items", store)
+    monkeypatch.setattr(pipeline, "load_persisted_raw_items", load)
+    monkeypatch.setattr(pipeline, "session_factory", lambda: Context())
+    monkeypatch.setattr(
+        pipeline,
+        "run_synthesizer",
+        lambda items, **_kwargs: [([item], ChangeSeverity.MINOR)],
+    )
+    monkeypatch.setattr(pipeline, "generate_insight_with_audit", always_reject)
+
+    with pytest.raises(RuntimeError, match="No insight drafts survived"):
+        await pipeline.run_capture(
+            source_ids={"vllm"},
+            per_source_limit=1,
+            max_items=1,
+            tier=Tier.FINAL,
+            client=object(),
+        )
+
+
+@pytest.mark.asyncio
 async def test_run_capture_rejects_fixture_mode_and_empty_selection(monkeypatch) -> None:
     monkeypatch.setattr(pipeline, "settings", replace(settings, mode="fixture"))
     with pytest.raises(RuntimeError, match="DRIFT_MODE=live"):

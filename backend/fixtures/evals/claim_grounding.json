@@ -9,11 +9,12 @@
   },
   {
     "id": "ambiguous-interpretation",
-    "purpose": "Reject a model draft when the separate verifier will not accept an ambiguous operator inference.",
+    "purpose": "Drop an ambiguous operator inference the separate verifier will not accept, keeping the verified direct fact and recommended check.",
     "raw_content": "The runtime adds a startup warning.",
     "excerpt": "The runtime adds a startup warning.",
     "verdict": "reject",
-    "expected_error": "verifier rejected"
+    "accepted_claim_indexes": [0, 2],
+    "expected_error": null
   },
   {
     "id": "prompt-injection",

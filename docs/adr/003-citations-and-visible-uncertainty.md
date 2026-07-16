@@ -42,4 +42,5 @@ references. The user-visible contract distinguishes direct facts from
 inferences and recommended checks. A separate model-aided verifier rejects
 unsupported drafts, but a verifier pass is not proof; public live endpoints
 also require human review notes and reviewed publication status. The historical
-2026-07-15 hosted vLLM result predates this un-deployed gate.
+2026-07-15 hosted vLLM result predates this now-deployed review gate, which
+served four human-reviewed Insights as of 2026-07-16.

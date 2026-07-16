@@ -82,15 +82,21 @@ def archive_reviewed_capture(
         ],
     }
     serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
-    content_sha256 = sha256(serialized.encode("utf-8")).hexdigest()
+    evidence_bytes = serialized.encode("utf-8")
+    content_sha256 = sha256(evidence_bytes).hexdigest()
     manifest = {
         "record_type": "evidence_integrity_manifest",
         "evidence_file": evidence_path.name,
         "sha256": content_sha256,
         "preservation_policy": "Do not overwrite this record; create a new dated archive for every capture.",
     }
+    manifest_bytes = (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
 
     evidence_directory.mkdir(parents=True, exist_ok=True)
-    evidence_path.write_text(serialized, encoding="utf-8")
-    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    # Write raw bytes, not write_text: text mode translates "\n" to the platform
+    # newline (CRLF on Windows), which would leave the manifest SHA-256 hashing
+    # bytes the evidence file no longer contains. The recorded hash must match the
+    # evidence file's exact on-disk bytes on every platform.
+    evidence_path.write_bytes(evidence_bytes)
+    manifest_path.write_bytes(manifest_bytes)
     return EvidenceArchive(evidence_path, manifest_path, content_sha256)

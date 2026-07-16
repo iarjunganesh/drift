@@ -250,7 +250,7 @@ capture; this initiative does not turn it into a broad live-analysis claim.
 
 ### Implementation addendum — 2026-07-15
 
-The planned guardrails are now implemented locally and covered by 142 tests at
+The planned guardrails are now implemented locally and covered by 149 tests at
 100.00% backend coverage:
 
 - each live claim has a type, frozen exact primary-source excerpt, character
@@ -271,8 +271,9 @@ The planned guardrails are now implemented locally and covered by 142 tests at
 Railway PostgreSQL schema `0003_claim_evidence_review_gate` was verified
 through its public TCP proxy on 2026-07-16. Later that day hosted `v0.6.1`
 health, empty fail-closed briefing, `/docs`, Vercel canonical-banner source,
-and CORS were verified. A reviewed capture and provider-backed hosted
-search/chat smoke tests remain operator gates. The prior hosted vLLM capture is
+and CORS were verified. On 2026-07-16, four human-reviewed Insights were
+published and hosted `/briefing`, `/search`, and `/chat` were verified
+provider-backed. The prior hosted vLLM capture is
 historical pre-gate evidence and is not retroactively reviewed.
 
 ## Initiative 09 — Submission audit and frontend evidence presentation
@@ -291,8 +292,10 @@ URLs, legacy path cleanup, and status documentation. It did not publish a
 reviewed capture, call a provider, deploy Vercel, record the demo video, or
 change the primary Initiative 04 `/feedback` session. The Git-connected
 `v0.6.1` deployment subsequently reached Railway and Vercel; its Railway
-health, empty briefing, docs, CORS, and Vercel banner source were verified.
-The amended `v0.6.1` release also makes the API-docs banner frame system-theme-aware.
+health, docs, CORS, and Vercel banner source were verified, and a later
+2026-07-16 session published four human-reviewed Insights with hosted
+`/briefing`, `/search`, and `/chat` verified provider-backed. The amended
+`v0.6.1` release also makes the API-docs banner frame system-theme-aware.
 
 ## Submission usage
 
@@ -306,3 +309,15 @@ capture/provenance and cleanup record. Initiative 08 is the additive grounding
 guardrail and capture-readiness record, and Initiative 09 is the additive
 submission-audit/frontend-presentation record; the earlier sessions remain the
 foundation, publication, and hosted-demo follow-up initiatives.
+
+### Release-hardening addendum — 2026-07-16
+
+The `v0.7.0` source release fixes the Windows evidence-manifest newline mismatch,
+makes review notes database-only in the public API contract, requests up to ten
+reviewed briefing records in the frontend, and replaces the recorded notebook
+with a Markdown-only results artifact. It is covered by 149 tests at 100%
+backend coverage. The Git-connected deployment was then verified through
+`/health` (`0.7.0`), `/docs`, Vercel CORS, a four-record `/briefing` without
+review notes, `/openapi.json` without the field, and the Vercel bundle's
+`top_n=10` request. Paid chat was not re-invoked for this privacy/frontend-only
+release.

@@ -64,10 +64,15 @@ def _item(content: str) -> RawItem:
 
 @pytest.mark.parametrize("case", json.loads(_EVAL_PATH.read_text(encoding="utf-8")), ids=lambda case: case["id"])
 def test_claim_grounding_calibration_cases(case: dict) -> None:
-    verdict = (
-        json.dumps({"accepted_claim_indexes": [0, 1, 2], "notes": []})
-        if case["verdict"] == "accept"
-        else json.dumps({"accepted_claim_indexes": [0, 1], "notes": ["Not sufficiently supported."]})
+    accepted_indexes = case.get(
+        "accepted_claim_indexes",
+        [0, 1, 2] if case["verdict"] == "accept" else [0, 1],
+    )
+    verdict = json.dumps(
+        {
+            "accepted_claim_indexes": accepted_indexes,
+            "notes": [] if case["verdict"] == "accept" else ["Not sufficiently supported."],
+        }
     )
     client = FakeClient([_draft(case["excerpt"]), verdict])
 

@@ -1,28 +1,32 @@
 # DRIFT — Focused next steps (audit follow-up, 2026-07-16)
 
 **Deadline:** Devpost submission closes **Tue Jul 21, 5:00 PM PT**. Today is Wed Jul 16 — 5 working days.
-**Codex budget:** 750 of 2,500 credits remaining (~30%, ≈ $30 equivalent). Spend it on P0/P1 build work only; do P2 polish by hand where possible.
+**Codex budget:** about 500 of 2,500 credits remain (~20%). Spend it on P0/P1
+release and submission work only; do P2 polish by hand where possible.
 **OpenAI API budget (separate from Codex credits):** capture runs and hosted smoke tests draw on the `drift` project key, bounded by `DRIFT_MAX_SPEND_USD=10`. That is enough for several capture runs; do not raise the cap.
 
-Audit verdict: hosted `v0.6.1` is verified (142 tests and 100% backend coverage
-at release), with its Railway health, empty fail-closed briefing, docs, CORS,
-and Vercel canonical-banner source checked on 2026-07-16. The submission still
-has two hard blockers—no demo video and no human-reviewed GPT-5.6 output visible
-to judges. The `v0.6.1` API-docs banner frame follows the selected system theme.
+Audit verdict: hosted `v0.7.0` is verified (149 tests and 100% backend
+coverage), including evidence-byte integrity, public review-note redaction, and
+the ten-item frontend request. Railway `/health`/`/docs`, Vercel CORS,
+`/briefing` (four records with no review notes), `/openapi.json` (no review-note
+field), and the deployed Vercel bundle were checked on 2026-07-16. The
+reviewed-output blocker is cleared; the demo video remains the final submission
+blocker.
 
 ---
 
 ## P0 — Blockers (Jul 16–18). Submission fails without these.
 
 ### 1. Publish 3–5 human-reviewed live captures  *(unblocks everything else)*
-- [ ] Run `notebooks/drift_manual_run.ipynb` against Railway PostgreSQL via the public
+- [x] Ran `notebooks/drift_manual_run.ipynb` against Railway PostgreSQL via the public
       TCP proxy (`DRIFT_DATABASE_PUBLIC_HOST` / `DRIFT_DATABASE_PUBLIC_PORT`).
-- [ ] Capture one item per source (≤ 8), tier `dev` first; use `final` only for the
-      3–5 records selected for the demo.
-- [ ] Human-review and publish via `backend.review.publish_verified_insights()`
-      with real review notes.
-- [ ] Archive the reviewed evidence records + SHA-256 manifests to `assets/evidence/`.
-- [ ] Verify hosted output afterwards:
+- [x] Captured one item per source (8 total), tier `dev` (`gpt-5.6-luna`); the demo
+      set stayed at `dev` to bound cost, with `final`/Sol reserved.
+- [x] Human-reviewed and published Insight IDs 3, 6, 7, 8 via
+      `backend.review.publish_verified_insights()` with real review notes.
+- [x] Archived the reviewed evidence records + SHA-256 manifest to
+      `assets/evidence/2026-07-16-all-sources-reviewed.json`.
+- [x] Verified hosted output afterwards (all provider-backed):
   ```
   curl https://drift-api-prod.up.railway.app/briefing        # non-empty
   curl "https://drift-api-prod.up.railway.app/search?q=vllm" # non-empty
@@ -30,15 +34,16 @@ to judges. The `v0.6.1` API-docs banner frame follows the selected system theme.
     -H "Content-Type: application/json" \
     -d '{"question":"What should I check for vLLM?"}'        # grounded answer + citations
   ```
-- [ ] Record reviewed-evidence hosted smoke-test results in CHANGELOG. Empty-store
-      responses are not evidence of provider-backed retrieval or grounded chat.
+- [x] Recorded reviewed-evidence hosted smoke-test results in CHANGELOG (Unreleased).
+      Empty-store responses are not evidence of provider-backed retrieval or grounded chat.
 
-### 2. Fix the frontend empty state  *(judges currently see "Loading briefing…" forever)*
+### 2. Deploy the reviewed-evidence frontend and redaction fix
 - [x] `frontend/app/page.tsx`: separate **loading**, **empty**, and **error**
       states; local `v0.6.1` also renders canonical light/dark API-served
       banners without frontend SVG copies.
-- [ ] Deploy `v0.6.1` to Vercel and confirm the empty state plus both banner
-      themes against the live API.
+- [x] Deployed `v0.7.0` to Railway and Vercel; `/health` reports `0.7.0`,
+      `/briefing` and `/openapi.json` omit `human_review_notes`, CORS allows
+      Vercel, and the deployed frontend requests `top_n=10`.
 
 ### 3. Record and publish the demo video  *(≤ 3 min, public YouTube, English voiceover)*
 - [ ] Follow `submission/DEMO_SCRIPT.md`, updated for the now-populated hosted app:
@@ -77,7 +82,7 @@ to judges. The `v0.6.1` API-docs banner frame follows the selected system theme.
 
 ## P2 — Polish (Jul 20). Hand-edit; do not spend Codex credits here.
 
-- [x] README quality result — updated to 142 tests after a verified pytest run.
+- [x] README quality result — updated to 149 tests after a verified pytest run.
 - [x] README clone URL — replaced `git clone <DRIFT-GITHUB-URL>` with:
       `https://github.com/iarjunganesh/drift.git`.
 - [x] Scrubbed `bankers-wrapped` references from public surfaces:

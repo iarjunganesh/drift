@@ -10,12 +10,12 @@ decisions compose.
 | [002](002-typed-agents-no-framework.md) | Typed hand-rolled stages | Accepted |
 | [003](003-citations-and-visible-uncertainty.md) | Citations and visible uncertainty are mandatory | Accepted |
 | [004](004-local-budget-guard.md) | Local hard budget for live iteration | Accepted |
-| [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; Railway schema and hosted `v0.6.1` empty briefing verified; reviewed capture and hosted retrieval smoke tests pending |
+| [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; Railway schema verified; four human-reviewed Insights published 2026-07-16 with hosted `/briefing`/`/search`/`/chat` verified provider-backed |
 | [006](006-ci-quality-gates.md) | CI quality gates and coverage ratchet | Accepted |
-| [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted `v0.6.1` health/empty briefing/docs/CORS and Vercel canonical-banner source verified; reviewed search/chat smoke tests pending |
+| [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted `v0.7.0` health/docs/CORS, review-note redaction, and Vercel `top_n=10` bundle verified; reviewed `/briefing`/`/search`/`/chat` were provider-backed verified on 2026-07-16 |
 | [008](008-live-grounded-chat.md) | Live grounded chat over the fixture store | Accepted |
 | [009](009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery | Accepted |
-| [010](010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication | Accepted locally and deployed; hosted empty briefing verifies fail-closed publication; reviewed evidence pending |
+| [010](010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication | Accepted locally and deployed; four human-reviewed Insights published 2026-07-16 with hosted retrieval/chat verified provider-backed |
 
 When implementation invalidates a decision, amend the original record or add a
 new ADR. Do not silently rewrite the decision history in code comments or

@@ -16,7 +16,9 @@ nine [Codex project initiatives](INITIATIVES.md).
 > `/briefing`. On 2026-07-16, Railway PostgreSQL was verified at migration
 > `0003` through its public TCP proxy. Later that day, hosted `v0.6.1`
 > `/health`, empty fail-closed `/briefing`, `/docs`, Vercel canonical-banner
-> source, and CORS were verified; no reviewed capture exists yet. The API-docs
+> source, and CORS were verified. Four human-reviewed Insights were then
+> published and hosted `/briefing`, `/search`, and `/chat` verified
+> provider-backed. The API-docs
 > banner frame follows the same system light/dark preference as the banners.
 
 ## Visual source of truth
@@ -227,10 +229,10 @@ retrieved, citation-bearing evidence. In the current local code, live
 `/briefing`, `/search`, and `/chat` filter persisted `insights` to reviewed,
 verifier-passed rows; search and chat use pgvector retrieval. Fixture mode
 remains the no-key path. The hosted deployment served one unreviewed captured
-vLLM Insight through `/briefing` on 2026-07-15 before this gate was implemented;
-hosted `v0.6.1` now proves the gate fails closed with an empty `/briefing`.
-Provider-backed hosted `/search` and `/chat` remain to be smoke-tested after a
-reviewed capture exists.
+vLLM Insight through `/briefing` on 2026-07-15 before this gate was implemented.
+On 2026-07-16, an eight-source capture produced six verifier-passed drafts;
+four were published after human review, and hosted `/briefing`, `/search`, and
+`/chat` were verified provider-backed over those four reviewed Insights.
 
 ## Model, budget, and safety boundaries
 
@@ -324,17 +326,20 @@ $5 plan is a small-demo budget constraint, not a production availability
 guarantee. The verified Railway API is
 [`https://drift-api-prod.up.railway.app`](https://drift-api-prod.up.railway.app),
 with `/health`, `/docs`, and `/openapi.json` exposed publicly. As of
-2026-07-16, its `v0.6.1` live mode, `/docs`, empty briefing, and Vercel CORS
+2026-07-16, its `v0.6.1` live mode, `/docs`, provider-backed
+`/briefing`/`/search`/`/chat` over four reviewed Insights, and Vercel CORS
 configuration are verified. The Vercel HTML references the canonical API-served
-banner pair. See
+banner pair. The `v0.7.0` deployment makes review notes database-only and
+raises the frontend briefing limit to ten; its `/briefing`, `/openapi.json`,
+and Vercel bundle were verified after rollout. See
 [ADR-007](adr/007-vercel-railway-deployment.md).
 
 The browser can consume the hosted API from Vercel. On 2026-07-15, Vercel CORS
 and a populated hosted `/briefing` response were verified against the migrated
 pre-gate Railway store. On 2026-07-16, the `0003` schema and hosted `v0.6.1`
-application were verified; `/briefing` correctly returned no records because
-none are reviewed. A reviewed capture plus hosted `/search`/`/chat` smoke tests
-remain required before broad live-release analysis is claimed.
+application were verified; after four human-reviewed Insights were published,
+`/briefing`, `/search`, and `/chat` were verified provider-backed over that
+bounded reviewed set. This is not broad live-release analysis.
 
 The generated Swagger contract keeps route ownership visible through four
 groups: `system` for metadata and liveness, `briefing` for ranked insights,
@@ -349,7 +354,7 @@ Ruff → mypy → pytest + coverage → Codecov upload → frontend build → do
 ```
 
 The enforceable floor is 100% for implemented code; the current local suite is
-142 tests at 100.00%. Deliberately unimplemented live-stage raises remain explicit and are
+148 tests at 100.00%. Deliberately unimplemented live-stage raises remain explicit and are
 excluded only at the boundary itself. New live behavior must arrive with tests
 that preserve the 100% floor.
 

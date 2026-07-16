@@ -33,9 +33,10 @@ analysis or hosted `/search`/`/chat` verification.
 `0003_claim_evidence_review_gate` and filters live reads to human-reviewed,
 verifier-passed records. Railway PostgreSQL was verified at that migration
 through its public TCP proxy on 2026-07-16. Later that day, the hosted `v0.6.1`
-application passed `/health`, empty fail-closed `/briefing`, `/docs`, and Vercel
-CORS checks. The prior populated hosted result remains
-historical evidence, not verification of the new gate with reviewed data.
+application passed `/health`, `/briefing`, `/docs`, and Vercel CORS checks; after
+four human-reviewed Insights were published, hosted `/briefing`, `/search`, and
+`/chat` were verified provider-backed over that reviewed set. The prior populated
+pre-gate hosted result remains historical evidence only.
 
 **2026-07-16 brand-assets addendum:**
 `assets/brand/drift-banner-dark.svg` and
@@ -83,6 +84,10 @@ capacity commitment.
 - As of 2026-07-15, `FRONTEND_ORIGIN=https://dr1ftless.vercel.app` is verified
   through a successful browser CORS preflight.
 - Vercel and Railway have separate logs, deploys, and usage limits to monitor.
+- **2026-07-16 v0.7.0 addendum:** the Git-connected Railway deployment reports
+  `0.7.0`; `/docs` and Vercel CORS remain available, `/briefing` returns four
+  reviewed Insights without `human_review_notes`, and `/openapi.json` omits
+  that private field. The production Vercel bundle requests `top_n=10`.
 - A future alternative may consolidate the frontend and API, but that would
   require a new ADR because it changes operational boundaries.
 
