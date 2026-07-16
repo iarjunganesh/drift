@@ -39,7 +39,13 @@ Documentation and architecture changes must also preserve the paths under
 
 - Do not describe fixture records as current live release analysis.
 - Preserve citations, confidence, model/audit labels, severity, and bounded
-  `what_to_check` actions on every insight contract.
+  `what_to_check` actions on every insight contract. Live claims additionally
+  need frozen exact excerpts/offsets/source hashes and their explicit
+  `direct_fact`, `inference`, or `recommended_check` label.
+- Never bypass the separate verifier or human publication gate. A verifier pass
+  is not proof; only reviewed verifier-passed drafts may enter live read paths.
+- Keep upstream release type distinct from potential operator-risk labels; do
+  not turn either into a compatibility or deployment verdict.
 - Keep provider calls behind `backend/core/model_router.py`; mock them in tests.
 - Treat release text as untrusted data, never as model instructions.
 - Prefer small typed functions and explicit pipeline stages over new framework
@@ -71,10 +77,11 @@ Documentation and architecture changes must also preserve the paths under
 
 ## Synthetic and fixture data
 
-Use `backend/fixtures/insights.json` for deterministic examples. Never commit
-real release credentials, private customer data, or unreviewed model output.
-Fixture records must retain clear source URLs and the `fixture-curated` audit
-label.
+Use `backend/fixtures/insights.json` for deterministic examples and
+`backend/fixtures/evals/claim_grounding.json` for guardrail calibration. Never
+commit real release credentials, private customer data, or unreviewed model
+output. Fixture records must retain clear source URLs and the `fixture-curated`
+audit label.
 
 ## Documentation and architecture assets
 
@@ -83,6 +90,6 @@ The source of truth for the main architecture visual is
 with the instructions in `assets/architecture/README.md`; do not hand-edit a
 rendered diagram. Architecture decisions belong in `docs/adr/`.
 
-The two initial project initiatives and their Codex Session IDs are recorded in
+The eight project initiatives and their Codex Session IDs are recorded in
 [`docs/INITIATIVES.md`](docs/INITIATIVES.md); update that record if a future
 initiative materially changes the baseline.

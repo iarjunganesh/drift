@@ -1,0 +1,34 @@
+# DRIFT Manual Run notebook
+
+[`drift_manual_run.ipynb`](drift_manual_run.ipynb) is DRIFT's judge-ready
+**Manual Run**: a guided operator workflow for a small, review-first capture
+without opening a Railway shell. It calls the same
+`backend.pipeline` and `backend.review` functions used by the application; it
+does not contain a separate, less-guarded execution path.
+
+From the repository root, create an untracked `.env` with `DRIFT_MODE=live`,
+`OPENAI_API_KEY`, and a reachable `DATABASE_URL`, then launch it with:
+
+```powershell
+uv run --with jupyterlab jupyter lab notebooks/drift_manual_run.ipynb
+```
+
+Apply `alembic upgrade head` once to that database before the first capture.
+Railway's native `postgres.railway.internal` database hostname is private to
+Railway, so it cannot be used directly from a local notebook. Use local
+PostgreSQL or an operator-provided public/tunneled connection string. For a
+Railway TCP proxy, keep the complete private `DATABASE_URL` in `.env` and set
+`DRIFT_DATABASE_PUBLIC_HOST` plus `DRIFT_DATABASE_PUBLIC_PORT`; the application
+preserves the credentials/database name and replaces only the endpoint. Never
+place a connection string or API key in the notebook itself.
+
+The notebook starts at one item per configured source (at most eight) on Luna.
+It creates verifier-passed **drafts** only. A separate, empty-by-default cell
+requires the reviewer to enter the selected IDs and meaningful review notes;
+only then can live briefing, search, and chat return those records.
+
+After publication, the notebook has a second empty-by-default archive cell.
+It writes the selected reviewed Insights to `assets/evidence/` with capture
+counts and frozen claim evidence, omitting review notes and secrets, plus a
+SHA-256 manifest. Use a new lowercase dated name for each archive; it refuses
+to overwrite an existing record.

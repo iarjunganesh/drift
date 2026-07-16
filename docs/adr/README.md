@@ -10,11 +10,12 @@ decisions compose.
 | [002](002-typed-agents-no-framework.md) | Typed hand-rolled stages | Accepted |
 | [003](003-citations-and-visible-uncertainty.md) | Citations and visible uncertainty are mandatory | Accepted |
 | [004](004-local-budget-guard.md) | Local hard budget for live iteration | Accepted |
-| [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; schema, local capture population, and retrieval implemented; real PostgreSQL verification pending |
+| [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; Railway schema verified at `0003`; reviewed capture, application deployment, and hosted retrieval smoke tests pending |
 | [006](006-ci-quality-gates.md) | CI quality gates and coverage ratchet | Accepted |
-| [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted health/CORS verified before the local capture path; redeployment pending |
+| [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; historical pre-gate hosted briefing/CORS and `0003` schema verified; review-gated deployment and hosted endpoint smoke tests pending |
 | [008](008-live-grounded-chat.md) | Live grounded chat over the fixture store | Accepted |
 | [009](009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery | Accepted |
+| [010](010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication | Accepted locally; Railway schema verified at `0003`; application deployment verification pending |
 
 When implementation invalidates a decision, amend the original record or add a
 new ADR. Do not silently rewrite the decision history in code comments or

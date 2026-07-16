@@ -18,17 +18,22 @@ flowchart LR
         RAW[("raw_items<br/>Postgres")]:::data
         SYNTH["② Synthesizer<br/>embed + cluster + classify"]:::agent
         EMB["text-embedding-3-small"]:::model
-        INSIGHT["③ Insight<br/>reason + cite + bound action"]:::agent
+        INSIGHT["③ Claim extractor<br/>facts · inferences · checks"]:::agent
+        VERIFY["④ Separate verifier<br/>reject unsupported claims"]:::agent
         LLM["GPT-5.6 tiers<br/>Luna · Terra · Sol"]:::model
-        DB[("insights + vectors<br/>Postgres / pgvector")]:::data
-        BRIEF["④ Briefing<br/>rank + retrieve"]:::agent
+        DRAFT[("draft insights + frozen spans<br/>Postgres / pgvector")]:::data
+        REVIEW["⑤ Human review gate<br/>notes required"]:::agent
+        DB[("reviewed insights + vectors<br/>Postgres / pgvector")]:::data
+        BRIEF["⑥ Briefing<br/>rank + retrieve"]:::agent
 
-        FEEDS --> SCOUT --> RAW --> SYNTH --> INSIGHT --> DB --> BRIEF
+        FEEDS --> SCOUT --> RAW --> SYNTH --> INSIGHT --> VERIFY --> DRAFT --> REVIEW --> DB --> BRIEF
         SYNTH -.-> EMB
         INSIGHT -.-> LLM
+        VERIFY -.-> LLM
     end
 
     U --> API
+    U --> REVIEW
     API --> FIX
     API --> BRIEF
     FIX -.-> API

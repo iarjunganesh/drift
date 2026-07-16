@@ -28,3 +28,10 @@ planning or dynamic tool routing.
 
 Composition remains the application's responsibility. That is a small amount
 of code to maintain, in exchange for easier testing and clearer failure modes.
+
+## Implementation addendum — 2026-07-15
+
+The logical live flow now adds claim verification and an explicit human review
+gate after Insight drafting. They remain small typed functions and persistence
+boundaries rather than a dynamic orchestration framework; the fixed sequence is
+still inspectable and individually mockable.

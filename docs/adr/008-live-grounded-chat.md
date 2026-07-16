@@ -33,9 +33,11 @@ embedding retrieval, or durable model-run provenance exists.
 ## Implementation addendum — 2026-07-15
 
 The original hosted/fixture boundary remains the verified deployment behavior.
-The current local code supports a one-shot bounded capture job that populates
-PostgreSQL/pgvector Insight rows with source and model-run provenance. Local
-live `/briefing`, `/search`, and `/chat` read those rows; search and chat
-retrieve cited evidence before the model call. This is not a hosted
-live-release-analysis claim until the database is exercised, captures are
-reviewed, and the service is redeployed/verified.
+The current local code supports a one-shot bounded capture job that produces
+claim-grounded, verifier-passed **drafts** with frozen source spans and two
+model-run audits. Local live `/briefing`, `/search`, and `/chat` read only rows
+that were explicitly promoted by human review; search and chat retrieve that
+reviewed evidence before the model call. The verifier remains screening, not
+proof. Railway PostgreSQL was verified at migration `0003` on 2026-07-16. This
+is not a hosted live-release-analysis claim until `v0.6.0` is deployed and
+reviewed endpoint smoke tests are completed.

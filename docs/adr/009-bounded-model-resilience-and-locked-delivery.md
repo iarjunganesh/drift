@@ -33,3 +33,10 @@ resolve a different dependency set from CI.
 - The Dockerfile installs the application through `uv sync --frozen --no-dev`.
   The obsolete duplicate runtime requirements file is removed.
 - These controls are process-local and do not claim multi-instance coordination.
+
+## 2026-07-15 addendum — claim verifier
+
+The separate claim-verifier call uses the same router-owned model selection,
+retry/circuit policy, and spend reservation as insight drafting. It is recorded
+as its own durable audit operation so the publication gate has both model-call
+provenance records to inspect.

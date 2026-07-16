@@ -18,13 +18,16 @@ AI-infrastructure release intelligence.
 ## Day 3-4 — Insight agent (the differentiation core)
 - [x] Codex: `generate_insight()` — structured output parsing
 - [x] Codex: bounded one-shot `backend.pipeline` capture path — persists and
-      reloads source IDs, generates Insights, embeds and stores them, and
-      records source-content hashes, model-run audit data, and optional human
-      review notes
-- [ ] YOU: run and review 3-5 primary-source captures through that exact path;
+      reloads source IDs, creates claim-grounded drafts, separately verifies
+      them, embeds/stores them, and records source hashes plus both model-run
+      audits
+- [x] Codex: claim evidence spans/offsets/hashes, `direct_fact`/`inference`/
+      `recommended_check` labels, upstream PR/commit references, review-first
+      live-store filtering, calibration fixtures, and manual capture notebook
+- [ ] YOU: run and review 3-5 primary-source drafts through the manual notebook;
       use Luna for prompt iteration and Sol only for selected final examples.
-      Do not mark a generated record reviewed until its release text and action
-      are checked by a human.
+      Promote only IDs whose release text, claim labels, and action were checked
+      by a human with recorded notes.
 
 ## Day 5 — Briefing + search + chat
 - [x] Codex: deterministic `build_daily_briefing()`, fixture search, and
@@ -33,14 +36,16 @@ AI-infrastructure release intelligence.
 - [x] Codex: pgvector search and live-store retrieval for local live
       `/search` and `/chat`; the one-shot capture job now populates cited
       Insight rows and live `/briefing` reads that store
-- [ ] YOU: apply the migration to a clean PostgreSQL instance, execute one
-      reviewed capture, and deploy/verify the resulting live store
+- [x] Operator: Railway PostgreSQL schema verified through
+      `0003_claim_evidence_review_gate` via its public TCP proxy (2026-07-16)
+- [ ] YOU: execute one reviewed capture and deploy/verify the `v0.6.0`
+      application and resulting live store
 - [x] Model tier: live (Terra) for bounded local grounded chat
 
 ## Day 6-7 — Frontend
 - [x] Codex: fixture briefing hero screen with severity, confidence, and
-      source-aware presentation; each card now exposes summary, rationale,
-      bounded check, confidence, model label, and clickable citations
+      source-aware presentation; live cards expose review status, claim types,
+      exact evidence links, risk labels, bounded check, and model label
 - [x] No new model calls — the current UI remains presentation-only
 
 ## Day 8 — Final content + docs
@@ -86,7 +91,9 @@ to its repository-specific Codecov badge.
    `NEXT_PUBLIC_API_URL`. As of 2026-07-15, Railway is verified in bounded
    `DRIFT_MODE=live` with CORS allowing the Vercel origin. On 2026-07-15,
    Railway PostgreSQL migrations and one unreviewed vLLM capture were verified
-   through hosted `/briefing`; hosted `/search`/`/chat` remain to be smoke-tested.
+   through the prior hosted `/briefing`; the review-gate schema is now at
+   `0003`, while `v0.6.0` redeployment and hosted briefing/search/chat smoke
+   tests remain pending.
 
 The checked-in `codecov.yml` defines the pytest project, report path, and a
 100% project/patch floor for implemented code. Explicit live-stage boundaries
@@ -97,7 +104,7 @@ Insight stage now has structured-output coverage.
 
 The baseline, hosted-deployment follow-up, bounded v0.4.0 baseline, v0.5.0
 capture-path release, and
-implementation follow-ups are supported by seven project initiatives:
+implementation follow-ups are supported by eight project initiatives:
 
 - Foundation and inspectable vertical slice —
   `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -113,5 +120,7 @@ implementation follow-ups are supported by seven project initiatives:
   `019f6336-3690-7022-a8ef-c8c0947e240f`
 - Bounded capture/provenance and documentation cleanup —
   `019f66b4-78b8-7943-a41d-91e836d28f00`
+- Grounding guardrails and capture readiness —
+  `019f6773-0e96-7363-9657-0e0531c3d594`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.

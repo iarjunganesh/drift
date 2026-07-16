@@ -15,10 +15,16 @@
       - Day 3/Day 4 Insight structured output: `019f6336-3690-7022-a8ef-c8c0947e240f`
       - Bounded capture/provenance and documentation cleanup:
         `019f66b4-78b8-7943-a41d-91e836d28f00`
+      - Grounding guardrails and capture readiness:
+        `019f6773-0e96-7363-9657-0e0531c3d594`
 - [x] Use `019f62b9-10b7-7d82-a463-e6eb1192141c` as the primary `/feedback`
       Session ID if the Devpost form accepts only one.
+- [x] Implement local claim-level evidence, separate verification, and
+      review-first publication with calibration tests and a manual-run notebook.
 - [ ] Run and human-review real, saved GPT-5.6 output examples through
-      `backend.pipeline`, then cite their primary release URLs.
+      `notebooks/drift_manual_run.ipynb` against a reachable database, then cite
+      their primary release URLs, deploy `v0.6.0`, and verify hosted reviewed
+      endpoints. Railway PostgreSQL schema `0003` was verified on 2026-07-16.
 - [ ] Provide a judge path: hosted app, sandbox, or verified one-command local demo.
 - [ ] Upload a public YouTube video under three minutes with English narration.
 - [ ] Replace the placeholder with the final video URL:
@@ -36,3 +42,5 @@ foundation, publication, and hosted-demo sessions.
 - A live feed or GPT-5.6 integration that has not completed a recorded run.
 - A deployment, test account, or frontend that judges cannot access.
 - Specific performance, accuracy, or cost results without captured evidence.
+- A verifier pass as proof, a draft as public evidence, or a potential
+  operator-risk label as a compatibility verdict.

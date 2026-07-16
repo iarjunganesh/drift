@@ -20,7 +20,8 @@ the architecture; update the MMD and regenerate all four renders together.
 ## Diagram design rules
 
 - Keep the primary system pipeline horizontal and shallow: Engineer → API →
-  fixture/live path → Scout → Synthesizer → Insight → Briefing.
+  fixture/live path → Scout → Synthesizer → claim extraction → verifier →
+  review gate → Briefing.
 - Use subgraphs for live-only behavior so the fixture path remains visually
   obvious.
 - Keep model and persistence dependencies as dashed side paths rather than

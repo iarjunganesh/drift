@@ -1,6 +1,6 @@
 # DRIFT project initiatives
 
-These are the seven Codex project initiatives associated with the DRIFT baseline,
+These are the eight Codex project initiatives associated with the DRIFT baseline,
 publication follow-up, `0.2.0` release candidate, and the current build-sequence
 implementation work. They are submission evidence pointers for the build work;
 they are not model-run provenance and do not turn fixture records into live
@@ -221,14 +221,66 @@ The session did not run a paid model capture, apply migrations to a real
 PostgreSQL service, deploy, record a video, or submit the project. Those remain
 operator-owned verification gates.
 
+## Initiative 08 — Grounding guardrails and capture readiness
+
+**Codex Session ID:** `019f6773-0e96-7363-9657-0e0531c3d594`
+
+**Date:** 2026-07-15
+
+This follow-up assessed the first hosted vLLM evidence against its primary
+release note and prepared the bounded capture path for a broader source pass:
+
+- confirmed the first vLLM Insight's core change claims against the upstream
+  v0.25.1 release note, while separating direct facts from inferred impact and
+  recommended checks;
+- bounded only the derived raw-item text sent to embeddings, preserving full
+  source evidence and provenance in the durable store;
+- corrected successful embedding settlement to use returned token usage rather
+  than the conservative per-call cap, with mocked coverage;
+- documented the remaining claim-level citation, verification, severity, and
+  publication-gate requirements before DRIFT can promise truth-like engineer
+  guidance; and
+- verified Ruff, mypy, 124 tests, and 100.00% backend coverage. An all-source
+  preflight fetched 80 feed items and selected one from each of eight sources;
+  the authorized capture itself was blocked before database/model calls because
+  this workspace cannot resolve Railway's private PostgreSQL hostname.
+
+The first hosted vLLM record remains a single unreviewed, source-grounded
+capture; this initiative does not turn it into a broad live-analysis claim.
+
+### Implementation addendum — 2026-07-15
+
+The planned guardrails are now implemented locally and covered by 142 tests at
+100.00% backend coverage:
+
+- each live claim has a type, frozen exact primary-source excerpt, character
+  offsets, SHA-256 source hash, and retained GitHub release/PR/commit references
+  where present;
+- a separate routed verifier rejects unsupported/misclassified drafts, while
+  remaining explicitly model-aided screening rather than proof;
+- `upstream_release_type` is separate from potential `operator_risks` and
+  applicability conditions;
+- captures persist as drafts, and local briefing/search/chat filter to only
+  human-reviewed verifier-passed records after meaningful review notes;
+- calibration fixtures cover unsupported claims, ambiguity, and
+  instruction-shaped release text; and
+- `notebooks/drift_manual_run.ipynb` runs the same guarded local capture/review
+  flow, refuses Railway's private database hostname, and starts with one item
+  per configured source (at most eight).
+
+Railway PostgreSQL schema `0003_claim_evidence_review_gate` was verified
+through its public TCP proxy on 2026-07-16. `v0.6.0` deployment, a reviewed
+capture, and hosted smoke tests remain operator gates. The prior hosted vLLM
+capture is historical pre-gate evidence and is not retroactively reviewed.
+
 ## Submission usage
 
-Devpost requires one primary `/feedback` session, use Initiative 04:
-All seven IDs should be retained in the project README, changelog, and
-submission notes. If Devpost requires one primary `/feedback` session, use Initiative 04:
-Devpost requires one primary `/feedback` session, use Initiative 04:
+Devpost requires one primary `/feedback` session, use Initiative 04. All eight
+IDs should be retained in the project README, changelog, and submission notes.
+If Devpost requires one primary `/feedback` session, use Initiative 04:
 `019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
 2 implementation and synchronization record, Initiative 06 is the additive
 Day 3/Day 4 Insight implementation record, and Initiative 07 is the bounded
-capture/provenance and cleanup record; the earlier sessions remain the
+capture/provenance and cleanup record. Initiative 08 is the additive grounding
+guardrail and capture-readiness record; the earlier sessions remain the
 foundation, publication, and hosted-demo follow-up initiatives.

@@ -10,7 +10,9 @@ truth boundary in [`ARCHITECTURE.md`](ARCHITECTURE.md).
    `uv venv .venv` followed by `uv sync --locked --group dev`.
 2. Copy `.env.example` to `.env`; leave `DRIFT_MODE=fixture`.
 3. Start `uv run uvicorn backend.main:app --reload` from the repository root.
-4. Open `/docs`, inspect `/briefing`, search `vllm`, then send a chat question.
+4. Open `/docs` and point out the same theme-aware DRIFT banner used in the
+   README and frontend, then inspect `/briefing`, search `vllm`, and send a chat
+   question.
 5. Point out the source links, confidence, and `fixture-curated` audit label.
 6. If showing the frontend, run `npm --prefix frontend ci` and
    `npm --prefix frontend run dev` in a second terminal.
@@ -25,18 +27,33 @@ This path uses committed example data and makes no external calls.
 3. Run `uv run python -m backend.agents.scout` to fetch and normalize the
    configured primary release feeds. Source failures are bounded and logged;
    no model call or database write is made by this inspection command.
-4. After reviewing source candidates, set `DRIFT_MODE=live` and run the
-   bounded capture command. It persists/reloads raw items, generates and embeds
-   Insights, and writes model-run/source-hash provenance:
+4. After reviewing source candidates, set `DRIFT_MODE=live` and open the
+   **DRIFT Manual Run** in
+   [`notebooks/drift_manual_run.ipynb`](../notebooks/drift_manual_run.ipynb). It
+   presents the source roster, spend-gated capture, frozen claim evidence,
+   review decision, and immutable archive as one visible proof chain. It
+   persists/reloads raw items, generates claim-grounded drafts, runs a separate
+   verifier, embeds the results, and writes two model-run/source-hash audits.
+   Full raw evidence is retained; only the derived text sent for clustering
+   embeddings is bounded. The notebook begins with one item per configured
+   source (at most eight) and never publishes automatically:
 
    ```powershell
-   $env:DRIFT_MODE='live'
-   uv run python -m backend.pipeline --source vllm --source tensorrt --source pytorch --tier dev
+   uv run --with jupyterlab jupyter lab notebooks/drift_manual_run.ipynb
    ```
 
-5. Inspect the stored result and its citations before writing any optional
-   `--review-notes`. Re-run only selected examples on `--tier final`; this is a
-   paid provider operation bounded by the local spend ledger.
+5. The notebook refuses Railway's private `postgres.railway.internal` address;
+   use local PostgreSQL, a public/tunneled `DATABASE_URL`, or Railway's public
+   TCP proxy. For the proxy, retain the complete private `DATABASE_URL` and set
+   `DRIFT_DATABASE_PUBLIC_HOST` plus `DRIFT_DATABASE_PUBLIC_PORT`; only the
+   endpoint is replaced locally, so credentials do not enter the notebook.
+   Inspect every frozen excerpt, claim type, upstream reference, risk label, and
+   bounded action. A verifier pass is model-aided screening, not proof. Enter
+   only human-reviewed IDs and meaningful notes in the final publication cell.
+   Then use the notebook's archive cell to write the reviewed public evidence
+   and SHA-256 manifest to `assets/evidence/`; it excludes review notes and
+   secrets and refuses overwrites. Re-run only selected examples on `Tier.FINAL`;
+   this is a paid provider operation bounded by the local spend ledger.
 
 ## Live grounded-chat demo — local live store, real model response
 
@@ -49,19 +66,24 @@ This path uses committed example data and makes no external calls.
    and per-attempt reservation `$1`. Keep
    `DRIFT_MAX_CALL_USD * DRIFT_MODEL_MAX_ATTEMPTS` within the project spend
    ceiling.
-4. Apply the migration, then use `backend.pipeline` to create a deliberately
-   small reviewed capture. It writes `insights` rows with 1536-value embeddings
-   and linked `model_runs` records. Start the API and inspect live `/briefing`,
+4. Apply migrations through `0003_claim_evidence_review_gate`, then use the
+   manual notebook to create a deliberately small **draft** capture. It writes
+   `insights` rows with 1536-value embeddings, frozen claim spans, and linked
+   generation/verifier `model_runs`. Inspect the draft before using the explicit
+   publication cell. Only then start the API and inspect live `/briefing`,
    `/search`, and one matching chat question. Inspect `.drift/spend-ledger.json`;
    chat should report `gpt-5.6-terra` and preserve source citations.
 5. The request is queue-bounded and uses a per-attempt timeout, jittered
    transient retry, and a circuit breaker. A `503` with `Retry-After` means
    model capacity is busy or the circuit is open; retry later. A `429` means
    the local spend guard blocked the request.
-6. Local live `/briefing`, `/search`, and `/chat` now read the captured store.
-   On 2026-07-15, Railway PostgreSQL migrations and one unreviewed vLLM capture
-   were verified through hosted `/briefing` and the Vercel CORS preflight.
-   Scheduled population, further reviewed evidence, and hosted `/search`/`/chat`
+6. Local live `/briefing`, `/search`, and `/chat` read only reviewed,
+   verifier-passed records; drafts are intentionally invisible. On 2026-07-15,
+   Railway PostgreSQL migrations and one unreviewed vLLM capture were verified
+   through the prior hosted `/briefing` and the Vercel CORS preflight. The new
+   gate's `0003` schema was verified through Railway's public TCP proxy on
+   2026-07-16, but the `v0.6.0` application is not deployed there. Scheduled
+   population, reviewed evidence, and hosted `/briefing`/`/search`/`/chat`
    smoke tests remain future work.
 
 ## Recording order
@@ -79,7 +101,7 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The seven Codex initiatives associated with this baseline, deployment follow-up,
+The eight Codex initiatives associated with this baseline, deployment follow-up,
 the v0.4.0 baseline, v0.5.0 capture-path release, and implementation follow-ups
 are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
@@ -92,3 +114,5 @@ are listed in
 - Day 3/Day 4 Insight structured output: `019f6336-3690-7022-a8ef-c8c0947e240f`
 - Bounded capture/provenance and documentation cleanup:
   `019f66b4-78b8-7943-a41d-91e836d28f00`
+- Grounding guardrails and capture readiness:
+  `019f6773-0e96-7363-9657-0e0531c3d594`

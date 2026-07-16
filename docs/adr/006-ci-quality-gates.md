@@ -30,3 +30,11 @@ The implemented fixture, live-grounded-chat, and bounded local capture paths
 run at a 100% line-coverage floor. CI and Codecov enforce that floor. The
 capture job has mocked provider/persistence coverage; scheduled population and
 real PostgreSQL integration remain explicit verification boundaries.
+
+## 2026-07-15 addendum — claim-grounding calibration
+
+The 100% implemented-code floor now includes claim-span freezing, verifier
+rejection, review publication eligibility, and calibration fixtures for
+unsupported facts, ambiguous interpretation, and instruction-shaped source
+text. The local suite has 133 passing tests; a real database migration and
+human-reviewed provider capture remain external gates.

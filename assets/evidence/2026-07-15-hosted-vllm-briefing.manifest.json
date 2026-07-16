@@ -1,0 +1,8 @@
+{
+  "record_type": "evidence_integrity_manifest",
+  "recorded_on": "2026-07-15",
+  "evidence_file": "2026-07-15-hosted-vllm-briefing.json",
+  "sha256": "f97bcfa9bb746d5fe1d5a3582eaf93a3c04e976c204260486bb12799ac74f4b3",
+  "preservation_policy": "Keep the evidence JSON unchanged. Add future capture evidence as a new dated record; do not overwrite this historical pre-review-gate record.",
+  "scope": "Historical v0.5.1 hosted briefing verification only; unreviewed and pre-0003 claim-evidence/review-gate migration."
+}

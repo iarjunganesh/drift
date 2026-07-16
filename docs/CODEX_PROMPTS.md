@@ -13,8 +13,12 @@ CI coverage-gate, provenance-manifest). Do NOT reuse its media stack
 > Day 3/4 structured Insight, Day 5 pgvector retrieval, and bounded one-shot
 > capture/provenance path are implemented locally. The prompts remain an
 > historical build specification; current completion status is maintained in
-> `docs/BUILD_SEQUENCE.md`. The capture path still needs a real PostgreSQL run,
-> reviewed paid outputs, redeployment, and hosted verification.
+> `docs/BUILD_SEQUENCE.md`. ADR-010 supersedes the older Insight contract with
+> claim spans, separate verification, and review-first publication—do not use
+> these historical prompts to remove those guards. Railway PostgreSQL has been
+> migrated and one unreviewed vLLM capture was served through the prior hosted
+> `/briefing`; its `0003` schema was verified on 2026-07-16, while `v0.6.0`
+> deployment and hosted reviewed smoke tests remain open.
 
 ---
 
@@ -223,6 +227,10 @@ changes:
      follow-up
    - `019f6336-3690-7022-a8ef-c8c0947e240f` — Day 3/Day 4 Insight structured
      output
+   - `019f66b4-78b8-7943-a41d-91e836d28f00` — bounded capture/provenance and
+     documentation cleanup
+   - `019f6773-0e96-7363-9657-0e0531c3d594` — grounding guardrails and capture
+     readiness
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.
@@ -239,12 +247,13 @@ rules/FAQ reference copy, not drift's submission draft.
 
 - Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
 - Confirm which supplied initiative is the primary `/feedback` session for the
-   Devpost form; retain all seven IDs in the README, changelog, and submission
+  Devpost form; retain all eight IDs in the README, changelog, and submission
    notes.
 - Verify branch protection and the Codecov upload on the published GitHub
   repository.
-- Apply the capture-provenance migration to PostgreSQL, create and review a
-  small captured store, deploy the updated service, then run one hosted
-  `/briefing`, `/search`, and `/chat` smoke test. The existing 2026-07-15
-  health/CORS verification predates this capture path and does not establish
-  hosted live-release analysis.
+- Use `notebooks/drift_manual_run.ipynb` against a reachable database to create
+  and review a small draft store, then deploy `v0.6.0` and run hosted
+  `/briefing`, `/search`, and `/chat` smoke tests against reviewed, cited
+  stored evidence. Railway PostgreSQL schema `0003`, one unreviewed vLLM
+  capture, hosted `/briefing`, and Vercel CORS were verified on 2026-07-15/16;
+  this does not establish broad live-release analysis.
