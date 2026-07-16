@@ -10,14 +10,82 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-16
+
+`v0.6.0` is the current local source release. The last hosted application
+deployment remains historical `v0.5.1`; this release has not been deployed or
+hosted-smoke-tested, so it makes no new hosted live-analysis claim.
+
+### Added
+
+- Added migration `0003_claim_evidence_review_gate`, typed claim contracts, and
+  frozen exact evidence spans with character offsets, source SHA-256 hashes,
+  and retained upstream GitHub release/PR/commit references where present.
+- Added a separate, routed structured claim-verifier call and a second durable
+  `model_runs` audit pointer for each generated draft. The verifier rejects
+  unsupported or misclassified claims but remains model-aided screening, not
+  proof.
+- Added explicit `direct_fact`, `inference`, and `recommended_check` labels;
+  separate upstream release-type, potential operator-risk, and applicability
+  metadata; and claim-evidence presentation in the frontend.
+- Added `backend.review.publish_verified_insights()` and the judge-facing
+  **DRIFT Manual Run** in `notebooks/drift_manual_run.ipynb`. It makes the source
+  roster, spend-gated capture, claim evidence, human review, and archive proof
+  chain visible; it starts at one item per configured source (at most eight),
+  refuses Railway's private database hostname, and leaves publication empty by
+  default.
+- Added reviewed-capture evidence archiving with a SHA-256 sidecar manifest.
+  The notebook archives only reviewed verifier-passed Insights, excludes review
+  notes/secrets, and refuses to overwrite a dated record.
+- Added claim-grounding calibration fixtures/tests for unsupported facts,
+  ambiguous interpretation, and instruction-shaped release text.
+
+### Changed
+
+- Replaced the canonical dark and light DRIFT brand banners with a cinematic,
+  semiconductor-inspired evidence path. Vercel derives the dark variant from
+  `assets/brand/` at build time; the README renders the dark/light pair by
+  color scheme. Both show an explicitly connected primary-release → GPU
+  compute-lattice → evidence/review/check story with source-neutral copy.
+  Headline spacing is responsive and avoids compressed word shapes at narrow
+  widths.
+- Capture output is now always a verifier-passed **draft**. Live briefing,
+  search, and chat filter to human-reviewed drafts with recorded review notes;
+  no capture flag can publish output automatically.
+- Updated the product contract: DRIFT offers traceable primary facts, labelled
+  interpretation, and bounded checks—not a compatibility verdict, guarantee, or
+  automated infrastructure decision.
+- Updated architecture, ADRs, runbook, build sequence, contributor guidance,
+  submission guidance, and diagrams for the review-first boundary.
+
+### Fixed
+
+- Added an optional `DRIFT_DATABASE_PUBLIC_HOST` / `DRIFT_DATABASE_PUBLIC_PORT`
+  override that preserves a private Railway `DATABASE_URL`'s credentials and
+  database name while routing local notebook/Alembic connections through its
+  public TCP proxy.
+- Bound only the derived raw-item text sent to `text-embedding-3-small`, while
+  preserving complete fetched evidence for provenance and Insight generation.
+  This prevents oversized release bodies from exceeding the embedding API's
+  per-input limit during a bounded capture.
+- Settle successful embedding calls from their returned token usage and the
+  router's embedding rate, rather than recording the full conservative call
+  cap as spend. Failed or usage-unknown calls remain conservatively capped.
+- Reject non-JSON or secret-shaped capture metadata before an evidence archive
+  can be written, preserving the archive's no-credentials/no-review-notes
+  contract at the helper boundary as well as in the notebook.
+
 ### Hosted verification
 
-- On 2026-07-15, deployed `v0.5.1` against Railway PostgreSQL, applied
-  migrations through `0002_capture_provenance`, and captured one unreviewed
-  vLLM Insight that the public `/briefing` endpoint served with its primary
-  citation. Vercel CORS preflight also passed. Scheduled population, further
-  human-reviewed captures, and hosted `/search`/`/chat` smoke tests remain
-  pending.
+- On 2026-07-16, Railway PostgreSQL was verified at
+  `0003_claim_evidence_review_gate` through its public TCP proxy. This verifies
+  the database schema only; the Railway application still needs a `v0.6.0`
+  redeployment and reviewed endpoint smoke tests.
+- On 2026-07-15, the previous hosted `v0.5.1` deployment applied migrations
+  through `0002_capture_provenance` and served one unreviewed vLLM Insight from
+  public `/briefing` with its primary citation; Vercel CORS preflight also
+  passed. This historical application verification predates `0003`; review-gated
+  redeployment and hosted briefing/search/chat smoke tests remain pending.
 - Added a scrubbed, committed hosted-evidence record under `assets/evidence/`;
   it preserves the verified response and boundaries without credentials or
   local spend-ledger data.
@@ -91,6 +159,8 @@ All project-session IDs are retained here in addition to
   `019f6336-3690-7022-a8ef-c8c0947e240f`
 - Bounded capture/provenance and documentation cleanup —
   `019f66b4-78b8-7943-a41d-91e836d28f00`
+- Grounding guardrails and capture readiness —
+  `019f6773-0e96-7363-9657-0e0531c3d594`
 
 ## [0.4.0] - 2026-07-15
 
@@ -288,6 +358,7 @@ with explicit live-path architecture and publication-ready quality gates.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
 [Unreleased]: #unreleased
+[0.6.0]: #060---2026-07-16
 [0.5.1]: #051---2026-07-15
 [0.5.0]: #050---2026-07-15
 [0.4.0]: #040---2026-07-15

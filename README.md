@@ -65,11 +65,13 @@ production changes.
 1. **Scout** reads configured primary release feeds and normalizes source items.
 2. **Synthesizer** deduplicates, embeds, clusters, and classifies substantive
    changes.
-3. **Insight** produces a structured explanation with citations, confidence,
-   severity, and a bounded `what_to_check` action.
-4. **Briefing** ranks the useful changes and grounds search/chat in retrieved
+3. **Insight** extracts typed direct facts, inferences, and recommended checks
+   with exact source spans.
+4. **Verifier** separately rejects unsupported or misclassified claims.
+5. **Human review** promotes only verifier-passed drafts with recorded notes.
+6. **Briefing** ranks reviewed changes and grounds search/chat in retrieved
    DRIFT evidence.
-5. **FastAPI** exposes the briefing, search, chat, health, and generated OpenAPI
+7. **FastAPI** exposes the briefing, search, chat, health, and generated OpenAPI
    contract.
 
 The currently working path substitutes committed examples for the unfinished
@@ -99,13 +101,17 @@ fresh live release analysis.
 
 <sub>Click to enlarge: <a href="assets/architecture/architecture-diagram-light.svg">light SVG</a> / <a href="assets/architecture/architecture-diagram-dark.svg">dark SVG</a> · Downloadable <a href="assets/architecture/architecture-diagram-light.png">light PNG</a> / <a href="assets/architecture/architecture-diagram-dark.png">dark PNG</a> · Source: <a href="assets/architecture/architecture-diagram.mmd"><code>architecture-diagram.mmd</code></a></sub>
 
-**In short:** the fixture path is complete and no-key. The local live capture
-path can persist source evidence, generate and embed Insights, preserve
-model-run/review provenance, and serve captured results through
-briefing/search/chat. On 2026-07-15, Railway PostgreSQL was migrated and one
-bounded, unreviewed vLLM capture was served through hosted `/briefing`. Scheduled
-population, further human-reviewed captures, and hosted `/search`/`/chat` smoke
-tests remain explicit operator gates.
+**In short:** the fixture path is complete and no-key. The local live path now
+persists source evidence, generates and separately verifies claim-grounded
+drafts, embeds them, and retains two model-run audits. Drafts are quarantined;
+only a human reviewer can publish them, and live read paths filter to reviewed,
+verifier-passed records. On 2026-07-15, the prior hosted `v0.5.1` deployment
+migrated Railway PostgreSQL and served one bounded, unreviewed vLLM capture
+through `/briefing`. On 2026-07-16, Railway PostgreSQL was verified through
+`0003_claim_evidence_review_gate` using its public TCP proxy. The `v0.6.0`
+application has not been deployed, so the historical response remains evidence
+of the old deployment, not a claim of review-gated hosting or broad live
+release analysis.
 
 > **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
@@ -114,7 +120,7 @@ tests remain explicit operator gates.
 ### Codex project initiatives
 
 The baseline, publication follow-up, bounded release milestones, and
-documentation follow-up are tied to seven project initiatives. The grounded
+documentation follow-up are tied to eight project initiatives. The grounded
 live-chat row remains the primary v0.4.0 implementation session; v0.5.0 adds
 the bounded local capture path.
 
@@ -127,6 +133,7 @@ the bounded local capture path.
 | Grounded live chat, resilience, and locked delivery | `019f62b9-10b7-7d82-a463-e6eb1192141c` | Primary `0.2.0` candidate work: local live chat, async safeguards, locked delivery, and full implemented-code coverage |
 | Day 3/Day 4 Insight structured output | `019f6336-3690-7022-a8ef-c8c0947e240f` | Standalone `generate_insight()` structured parsing, strict validation, citations, confidence, and model provenance |
 | Bounded capture, provenance, and status cleanup | `019f66b4-78b8-7943-a41d-91e836d28f00` | One-shot persisted capture, all-call budget/retry controls, live briefing adapter, evidence UI, and documentation synchronization |
+| Grounding guardrails and capture readiness | `019f6773-0e96-7363-9657-0e0531c3d594` | Claim spans/hashes, separate verifier, review-gated publication, cross-references, calibration cases, manual notebook, and all-source capture preflight |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -139,20 +146,22 @@ model-call path. The primary core-functionality session is
 follow-up session is `019f62e8-6715-70e2-a92a-fe28254f7b71`. The earlier
 initiative records preserve the foundation, publication, and hosted-demo work;
 the Day 3/Day 4 Insight implementation session is
-`019f6336-3690-7022-a8ef-c8c0947e240f`.
+`019f6336-3690-7022-a8ef-c8c0947e240f`; the grounding guardrail and
+capture-readiness follow-up is `019f6773-0e96-7363-9657-0e0531c3d594`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
 provides an API key. The local capture job routes embeddings, classification,
-and structured Insight generation through the bounded provider boundary; it
-records source-content hashes and model-run metadata alongside persisted
-Insights. Fixture mode makes no provider call. No paid capture is committed or
-claimed yet. The hosted Railway service was last health/CORS-verified on
-2026-07-15 before this capture path was deployed, so it is not evidence of live
-release analysis.
+claim drafting, and a separate verifier through the bounded provider boundary;
+it records source hashes, exact evidence spans, upstream references, and both
+model-run audits. The verifier is model-aided screening, not proof: a human
+must review and publish the draft before it can appear in live endpoints.
+Fixture mode makes no provider call. One paid, unreviewed vLLM capture is
+recorded as historical scrubbed evidence from the previous hosted deployment;
+it is not broad live-release analysis or evidence that the new gate is hosted.
 
 ### Architecture Decision Records
 
-Nine decisions currently constrain the implementation. They are intentionally
+Ten decisions currently constrain the implementation. They are intentionally
 short; the architecture document explains how they compose.
 
 | ADR | Decision |
@@ -166,6 +175,7 @@ short; the architecture document explains how they compose.
 | [007](docs/adr/007-vercel-railway-deployment.md) | Vercel frontend + Railway API/database deployment shape |
 | [008](docs/adr/008-live-grounded-chat.md) | Live grounded chat over the cited fixture store |
 | [009](docs/adr/009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery |
+| [010](docs/adr/010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication |
 
 ---
 
@@ -182,7 +192,9 @@ Agent code must not hard-code provider model names. The intended tiers are:
 
 Every live insight must preserve:
 
-- at least one canonical primary-source citation;
+- one or more typed claims with frozen exact primary-source excerpts, offsets,
+  and source hashes;
+- direct facts distinct from inferences and recommended checks;
 - confidence in `[0, 1]`;
 - the exact model identifier or an explicit fixture audit label; and
 - a concrete, bounded `what_to_check` action.
@@ -190,6 +202,8 @@ Every live insight must preserve:
 Release text is untrusted data. It can be summarized and reasoned over, but it
 must never become model instructions or authorization to act on infrastructure.
 `breaking` and `security` are review priorities, not automation triggers.
+Upstream release type is separate from potential operator risk; neither is a
+compatibility verdict.
 
 The local [SpendGuard](backend/core/budget.py) is a development safeguard;
 provider-side limits remain required for a deployed service.
@@ -233,7 +247,9 @@ The Railway API and Vercel frontend are live. The Vercel project deploys from
 
 | | |
 | --- | --- |
-| **Last verified mode** | `live` — Railway PostgreSQL migrated; one unreviewed vLLM Insight served through `/briefing`; Vercel CORS verified |
+| **Current source release** | `v0.6.0` local source — application deployment and hosted smoke tests pending |
+| **Last verified mode** | Historical `v0.5.1` `live` — Railway PostgreSQL migrated; one unreviewed vLLM Insight served through `/briefing`; Vercel CORS verified |
+| **Database schema** | Railway PostgreSQL verified at `0003_claim_evidence_review_gate` through its public TCP proxy on 2026-07-16 |
 | **Frontend** | [https://dr1ftless.vercel.app](https://dr1ftless.vercel.app) |
 | **API** | [https://drift-api-prod.up.railway.app](https://drift-api-prod.up.railway.app) |
 | **Swagger** | [`/docs`](https://drift-api-prod.up.railway.app/docs) |
@@ -242,8 +258,10 @@ The Railway API and Vercel frontend are live. The Vercel project deploys from
 | **Demo Video** | [`https://youtu.be/TBD`](https://youtu.be/TBD) *(≤ 3 min, record before submission)* |
 | **Public demo** | Vercel frontend and Railway API are live; Vercel-to-Railway CORS was verified on 2026-07-15 |
 
-One unreviewed real-model vLLM capture is saved and hosted. The fixture path
-remains the reproducible no-key demo; further human-reviewed captures are
+One unreviewed real-model vLLM capture is saved as historical hosted evidence.
+The fixture path remains the reproducible no-key demo. The review-gated code
+in this branch has its Railway schema migration, but still needs application
+deployment and hosted verification; further human-reviewed captures are
 required before any broad live-analysis claim.
 
 The Swagger contract groups the backend into **System**, **Briefing**,
@@ -258,15 +276,18 @@ both SVG and PNG formats:
 
 The scrubbed hosted capture evidence is stored separately in
 [`assets/evidence/`](assets/evidence/), including the verified unreviewed vLLM
-briefing response and its explicit operational limitations.
+briefing response and its explicit operational limitations. After a human
+publishes a new notebook capture, its archive cell writes a new dated reviewed
+record and SHA-256 manifest there without including review notes or secrets.
 
 | Light | Dark |
 | --- | --- |
 | [![DRIFT architecture light](assets/architecture/architecture-diagram-light.png)](assets/architecture/architecture-diagram-light.svg) | [![DRIFT architecture dark](assets/architecture/architecture-diagram-dark.png)](assets/architecture/architecture-diagram-dark.svg) |
 
 The Next.js briefing view exposes each record's status label, confidence,
-model/audit label, rationale, bounded action, and source links. The current
-hosted UI remains a separately verified deployment boundary.
+model/audit label, rationale, bounded action, source links, and—when present—
+claim-type evidence. The current hosted UI remains a separately verified,
+pre-guardrail deployment boundary.
 
 ---
 
@@ -315,19 +336,31 @@ For the durable PostgreSQL path, start the configured database and run
 `make migrate` (or `uv run alembic upgrade head`) before connecting a live
 store. The fixture path does not require a database.
 
-To create a bounded capture after the migration, enable live mode and provide
-an API key, then select a deliberately small source set. Start with `dev` for
-prompt iteration. Use `final` only after reviewing the source material and add
-review notes only after checking the generated record:
+For a judge-ready all-source demonstration, use the **DRIFT Manual Run** in
+[`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb). It makes
+the proof chain visible—source roster, spend-gated capture, frozen evidence,
+human review, and immutable archive—while starting with one item per configured
+source (at most eight). It creates drafts only and has a separate
+empty-by-default human publication cell. It needs local
+PostgreSQL or an operator-provided public/tunneled database URL; Railway's
+private `postgres.railway.internal` hostname cannot be resolved from a local
+notebook. When Railway provides a public TCP proxy, retain its complete private
+`DATABASE_URL` and set `DRIFT_DATABASE_PUBLIC_HOST`/
+`DRIFT_DATABASE_PUBLIC_PORT`; DRIFT replaces only the host and port locally.
+Launch it with
+`uv run --with jupyterlab jupyter lab notebooks/drift_manual_run.ipynb`.
+
+The underlying capture command is also draft-only. Enable live mode, provide
+an API key, and select a deliberately small source set. Start with `dev` for
+prompt iteration and use `final` only for selected, already-reviewed sources:
 
 ```powershell
 $env:DRIFT_MODE='live'
 uv run python -m backend.pipeline --source vllm --source tensorrt --source pytorch --tier dev
-uv run python -m backend.pipeline --source vllm --tier final --review-notes "Verified against the linked primary release."
 ```
 
-This command makes paid provider calls and writes durable rows. It is not a
-scheduled feed service and does not, by itself, verify the hosted deployment.
+This command makes paid provider calls and writes quarantined draft rows. It is
+not a scheduled feed service and does not publish or verify the hosted deployment.
 
 ---
 
@@ -359,6 +392,7 @@ drift/
 │   ├── models/           # Pydantic domain and API contracts
 │   ├── main.py           # FastAPI app: health, briefing, search, chat
 │   ├── pipeline.py        # Bounded one-shot live capture CLI
+│   ├── review.py          # Explicit human publication gate
 │   ├── sources.yaml      # Primary release-feed configuration
 ├── frontend/             # Next.js + React + TypeScript briefing view
 │   ├── .nvmrc            # Node.js 24.x local/runtime selection
@@ -374,7 +408,8 @@ drift/
 │   ├── INITIATIVES.md      # Codex project initiative/session records
 │   ├── BUILD_SEQUENCE.md  # Implementation sequence and GitHub/Codecov setup
 │   ├── RUNBOOK.md         # Fixture/live demo procedure
-│   └── adr/               # Architecture Decision Records 001–009
+│   └── adr/               # Architecture Decision Records 001–010
+├── notebooks/             # Local bounded capture/review workflow
 ├── submission/            # Developer Tools handoff, checklist, and demo script
 ├── Dockerfile             # Railway image built from frozen uv.lock
 ├── docker-compose.yml     # Local API + PostgreSQL + frontend wiring
@@ -393,7 +428,7 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **118 tests passed and 100.00% backend coverage**.
+The current local result is **133 tests passed and 100.00% backend coverage**.
 The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline boundaries remain visible while
@@ -439,14 +474,16 @@ smoke tests and further human-reviewed captures remain pending.
 ## Future Roadmap
 
 **Working locally:** a bounded one-shot capture path from primary release feed
-to persisted raw evidence, structured Insight, pgvector embedding, model-run
-audit row, and live briefing/search/chat retrieval; the fixture demo, evidence
-UI, typed contracts, model-router boundary, architecture evidence, CI gates,
-and deployed Vercel frontend.
+to frozen claim evidence, separate verification, pgvector embedding, two
+model-run audit rows, and a human publication gate before live
+briefing/search/chat retrieval; the fixture demo, evidence UI, typed contracts,
+model-router boundary, architecture evidence, CI gates, and deployed Vercel
+frontend.
 
 **Next implementation slices:**
 
-- execute and human-review three to five bounded primary-source captures;
+- run the review-first manual notebook against a reachable database and
+  human-review three to five bounded primary-source captures;
 - exercise the Alembic migration and capture path against a clean PostgreSQL
   instance, then add a real integration run to delivery verification;
 - add scheduled Scout execution only after the reviewed capture path is proven;
@@ -466,8 +503,8 @@ Full decisions and sequencing live in [docs/adr/](docs/adr/),
 Fixture records are synthetic examples and are not live release analysis. DRIFT
 does not certify compatibility, replace upstream release notes, or authorize
 changes to production infrastructure. Any live insight must remain cited,
-confidence-labelled, model/audit-labelled, and paired with a bounded
-`what_to_check` action.
+claim-type-labelled, confidence-labelled, model/audit-labelled, reviewed by a
+human, and paired with a bounded `what_to_check` action.
 
 > Built for the [OpenAI Build Week 2026](https://openai.com/) Developer Tools
 > track. Human review remains required for source fidelity, prompt iteration,

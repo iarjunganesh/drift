@@ -7,10 +7,12 @@ development baseline while the live pipeline is being implemented.
 
 | Version | Supported |
 | --- | --- |
-| `0.1.x` | ✅ Current baseline |
+| `0.6.0` | ✅ Current local source release; hosted application deployment verification pending |
+| `0.5.1` | Historical hosted baseline |
 
-Fixture data is synthetic. Live ingestion and provider-backed generation are not
-enabled in this baseline.
+Fixture data is synthetic. Local live ingestion and provider-backed generation
+are explicitly operator-enabled and review-gated; the updated gate has not yet
+been deployed to the historical hosted baseline.
 
 ## Reporting a vulnerability
 
@@ -40,11 +42,14 @@ coordinated disclosure decision.
 - Release text is untrusted data and must not be treated as model instructions.
 - Model/provider calls stay behind the router so secrets and budgets have one
   controlled boundary.
+- Live release claims are frozen to exact source excerpts before persistence;
+  a separate verifier and human review gate prevent drafts from reaching public
+  live endpoints. The verifier is fallible and must not be treated as proof.
 - Chat is retrieve-first; no-match requests must not fall back to ungrounded
   model knowledge.
 - Fixture records are clearly labelled and are not represented as live analysis.
 - CORS origins are explicit; the frontend never receives `DATABASE_URL`.
 - Breaking or security-labelled insights increase review priority but never
   authorize automated infrastructure changes.
-- The first public deployment should use `DRIFT_MODE=fixture` until live-stage
-  security and provenance gates are complete.
+- Do not represent `v0.6.0` as hosted review-gated live analysis until its
+  application deployment and reviewed endpoint smoke tests are verified.

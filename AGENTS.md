@@ -6,17 +6,21 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.5.1` Railway database-URL compatibility release. The
-deterministic API and Next.js briefing view are usable. `DRIFT_MODE=live` can
-run the one-shot `backend.pipeline` capture job: persist/reload source evidence,
-generate structured Insights, embed them, preserve source/model-run/review
-provenance, and serve the captured store through briefing/search/chat. All
-provider calls in that job are budgeted and retry-bounded. On 2026-07-15, a
-Railway PostgreSQL instance was migrated and one bounded, unreviewed vLLM
-capture was served by hosted `/briefing` with Vercel CORS verified. Scheduled
-population, further human-reviewed captures, and hosted `/search`/`/chat`
-smoke tests remain operator gates; do not describe this single capture as broad
-live release analysis.
+**Current phase:** `v0.6.0` is the current local source release; `v0.5.1` is
+the last hosted Railway database-URL compatibility release. The new local
+guardrail work adds claim-level evidence, a separate verifier, and a human
+publication gate. `DRIFT_MODE=live`
+can make a bounded `backend.pipeline` **draft** capture: persist/reload source
+evidence, generate/verify structured claims, embed the result, and retain both
+model-run audits. Only `backend.review.publish_verified_insights()` can promote
+a draft, with meaningful human notes; live briefing/search/chat filter to
+reviewed verifier-passed records. All provider calls are budgeted and
+retry-bounded. On 2026-07-15, the currently hosted `v0.5.1` deployment served
+one bounded, unreviewed vLLM capture through `/briefing` with Vercel CORS
+verified. On 2026-07-16, Railway PostgreSQL was verified at migration `0003`
+through its public TCP proxy; the `v0.6.0` application is not deployed. Do not
+claim that hosted behavior has changed or that the historic record is broad live
+release analysis.
 
 ## Key commands
 
@@ -28,8 +32,9 @@ npm --prefix frontend ci
 npm --prefix frontend run dev
 ```
 
-The API exposes `/health`, `/briefing`, `/search`, `/chat`, `/docs`, and
-`/openapi.json`. The frontend reads `NEXT_PUBLIC_API_URL`; the API's CORS
+The API exposes `/health`, `/briefing`, `/search`, `/chat`, `/docs`,
+`/openapi.json`, and canonical banner routes at `/brand/dark.svg` and
+`/brand/light.svg`. The frontend reads `NEXT_PUBLIC_API_URL`; the API's CORS
 origin is configured with `FRONTEND_ORIGIN`.
 
 ## Architecture
@@ -39,10 +44,12 @@ The intended typed pipeline is:
 1. **Scout** — read configured primary release feeds and normalize raw items.
 2. **Synthesizer** — deduplicate, embed, cluster, and classify substantive
    changes.
-3. **Insight** — produce a cited explanation, confidence score, severity, and
-   bounded `what_to_check` action.
-4. **Briefing** — rank useful changes and ground search/chat in DRIFT evidence.
-5. **FastAPI** — expose the briefing, search, chat, health, and generated API
+3. **Insight** — extract typed direct facts, inferences, and recommended checks
+   with frozen source spans.
+4. **Verifier** — independently reject unsupported or misclassified claims.
+5. **Human review** — promote only verifier-passed drafts after recorded review.
+6. **Briefing** — rank useful reviewed changes and ground search/chat in DRIFT evidence.
+7. **FastAPI** — expose the briefing, search, chat, health, and generated API
    contract.
 
 The working no-key path is:
@@ -51,11 +58,12 @@ The working no-key path is:
 backend/fixtures/insights.json → InsightStore → FastAPI → briefing/search/chat
 ```
 
-The bounded local capture command is:
+The preferred local manual workflow is [`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb).
+The underlying draft-only command is:
 
 ```powershell
 $env:DRIFT_MODE='live'
-uv run python -m backend.pipeline --source vllm --tier final --review-notes "<human review notes>"
+uv run python -m backend.pipeline --source vllm --tier final
 ```
 
 Keep unfinished live stages explicit. Do not hide TODOs or describe fixture
@@ -63,9 +71,14 @@ records as fresh release analysis.
 
 ## Critical constraints
 
-- Every `Insight` preserves source citations, confidence in `[0, 1]`, the
-  exact model identifier or fixture audit label, severity, affected
-  libraries, and a concrete bounded `what_to_check` action.
+- Every live `Insight` preserves typed claims, a frozen exact source excerpt,
+  character offsets, a source-content hash, and upstream release/PR/commit
+  references where present, as well as confidence, model identifier, severity,
+  affected libraries, and a bounded `what_to_check` action.
+- `direct_fact`, `inference`, and `recommended_check` must never be conflated.
+  Upstream release type and potential operator risks are separate fields.
+- A verifier pass is model-aided screening, not proof. A draft never becomes
+  public without human review notes; no review step may be folded into capture.
 - Provider calls go through `backend/core/model_router.py`; do not hard-code
   provider model names in agents. Keep a `SpendGuard`, retry/circuit policy,
   and mocked provider calls around every live iteration.
@@ -146,16 +159,21 @@ The accepted deployment shape is a Vercel project rooted at `frontend/` and a
 Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
-`https://drift-api-prod.up.railway.app`. The last verified hosted deployment is
-`v0.5.1` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS.
-On 2026-07-15 it was migrated against Railway PostgreSQL and served one
-bounded, unreviewed vLLM Insight through `/briefing`. Further reviewed evidence
-and hosted `/search`/`/chat` smoke tests are still required before any broad
+`https://drift-api-prod.up.railway.app`. The last verified hosted application
+deployment is `v0.5.1` in `DRIFT_MODE=live`, with the Vercel origin advertised
+through CORS. On 2026-07-15 it served one bounded, unreviewed vLLM Insight
+through `/briefing`. On 2026-07-16 its Railway PostgreSQL schema was verified
+at migration `0003` through a public TCP proxy, but the `v0.6.0` application
+has not been deployed. Further reviewed evidence and hosted
+`/briefing`/`/search`/`/chat` smoke tests are still required before any broad
 live-analysis claim.
 
-A notebook is optional future evidence, not part of the current fixture
-baseline. Add one only when it can exercise a verified hosted workflow without
-making unsupported live-analysis claims.
+[`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb) is the
+local operator path for bounded capture and manual publication. It requires a
+reachable local/public/tunneled database URL and explicitly rejects Railway's
+private `postgres.railway.internal` hostname. A `DRIFT_DATABASE_PUBLIC_HOST` /
+`DRIFT_DATABASE_PUBLIC_PORT` pair may replace only the host/port of the private
+Railway URL for local TCP-proxy access; it is not evidence of a hosted run.
 
 ## Repository surfaces
 
@@ -167,4 +185,6 @@ making unsupported live-analysis claims.
 - `docs/adr/` — durable architectural decisions.
 - `docs/INITIATIVES.md` — Codex project initiative/session evidence.
 - `backend/fixtures/` — deterministic, citation-backed example insights.
+- `backend/fixtures/evals/` — claim-grounding calibration cases.
+- `notebooks/` — local manual capture/review workflow; contains no secrets.
 - `assets/architecture/` — Mermaid source and themed SVG/PNG renders.
