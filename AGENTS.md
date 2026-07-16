@@ -6,8 +6,8 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.6.0` is the current local source release; `v0.5.1` is
-the last hosted Railway database-URL compatibility release. The new local
+**Current phase:** `v0.6.0` is the current local source and hosted release;
+`v0.5.1` is historical pre-review-gate evidence. The new local
 guardrail work adds claim-level evidence, a separate verifier, and a human
 publication gate. `DRIFT_MODE=live`
 can make a bounded `backend.pipeline` **draft** capture: persist/reload source
@@ -15,12 +15,13 @@ evidence, generate/verify structured claims, embed the result, and retain both
 model-run audits. Only `backend.review.publish_verified_insights()` can promote
 a draft, with meaningful human notes; live briefing/search/chat filter to
 reviewed verifier-passed records. All provider calls are budgeted and
-retry-bounded. On 2026-07-15, the currently hosted `v0.5.1` deployment served
-one bounded, unreviewed vLLM capture through `/briefing` with Vercel CORS
-verified. On 2026-07-16, Railway PostgreSQL was verified at migration `0003`
-through its public TCP proxy; the `v0.6.0` application is not deployed. Do not
-claim that hosted behavior has changed or that the historic record is broad live
-release analysis.
+retry-bounded. On 2026-07-15, `v0.5.1` served one bounded, unreviewed vLLM
+capture through `/briefing` with Vercel CORS verified. On 2026-07-16, Railway
+PostgreSQL was verified at migration `0003` through its public TCP proxy, and
+the hosted `v0.6.0` app was verified through `/health`, `/briefing` (empty as
+intended without reviewed evidence), branded `/docs`, banner routes, and a
+Vercel-to-Railway CORS preflight. Do not claim broad live release analysis or
+hosted `/search`/`/chat` verification without a reviewed capture.
 
 ## Key commands
 
@@ -159,14 +160,14 @@ The accepted deployment shape is a Vercel project rooted at `frontend/` and a
 Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
-`https://drift-api-prod.up.railway.app`. The last verified hosted application
-deployment is `v0.5.1` in `DRIFT_MODE=live`, with the Vercel origin advertised
-through CORS. On 2026-07-15 it served one bounded, unreviewed vLLM Insight
-through `/briefing`. On 2026-07-16 its Railway PostgreSQL schema was verified
-at migration `0003` through a public TCP proxy, but the `v0.6.0` application
-has not been deployed. Further reviewed evidence and hosted
-`/briefing`/`/search`/`/chat` smoke tests are still required before any broad
-live-analysis claim.
+`https://drift-api-prod.up.railway.app`. The verified hosted application is
+`v0.6.0` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS.
+On 2026-07-16, `/health` reported `v0.6.0`, `/briefing` returned an intentional
+empty list because no capture is human-reviewed, branded `/docs` and banner
+routes returned `200`, and the Vercel frontend served the canonical banner.
+Railway PostgreSQL is verified at migration `0003` through a public TCP proxy.
+Further reviewed evidence and hosted `/search`/`/chat` smoke tests are still
+required before any broad live-analysis claim.
 
 [`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb) is the
 local operator path for bounded capture and manual publication. It requires a

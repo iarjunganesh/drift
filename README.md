@@ -108,10 +108,10 @@ only a human reviewer can publish them, and live read paths filter to reviewed,
 verifier-passed records. On 2026-07-15, the prior hosted `v0.5.1` deployment
 migrated Railway PostgreSQL and served one bounded, unreviewed vLLM capture
 through `/briefing`. On 2026-07-16, Railway PostgreSQL was verified through
-`0003_claim_evidence_review_gate` using its public TCP proxy. The `v0.6.0`
-application has not been deployed, so the historical response remains evidence
-of the old deployment, not a claim of review-gated hosting or broad live
-release analysis.
+`0003_claim_evidence_review_gate` using its public TCP proxy. Later that day,
+the hosted `v0.6.0` app passed `/health`, an empty fail-closed `/briefing`,
+branded `/docs`/banner routes, and Vercel-to-Railway CORS checks. It still has
+no human-reviewed capture, so this is not a broad live-release-analysis claim.
 
 > **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
@@ -241,14 +241,14 @@ that frozen lockfile. JavaScript dependencies are locked in
 ## Live & Interactive Demo
 
 The Railway API and Vercel frontend are live. The Vercel project deploys from
-`frontend/` using its checked-in build configuration. On 2026-07-15, the
-`v0.5.1` hosted API was migrated against Railway PostgreSQL; its populated
-`/briefing` response and Vercel CORS preflight were verified.
+`frontend/` using its checked-in build configuration. On 2026-07-16, the
+hosted `v0.6.0` API and frontend were verified after Railway PostgreSQL reached
+the review-gate migration.
 
 | | |
 | --- | --- |
-| **Current source release** | `v0.6.0` local source — application deployment and hosted smoke tests pending |
-| **Last verified mode** | Historical `v0.5.1` `live` — Railway PostgreSQL migrated; one unreviewed vLLM Insight served through `/briefing`; Vercel CORS verified |
+| **Current release** | `v0.6.0` hosted `live` — `/health`, empty fail-closed `/briefing`, branded Swagger/banner routes, Vercel frontend, and CORS verified on 2026-07-16 |
+| **Historical evidence** | `v0.5.1` `live` — one unreviewed vLLM Insight served through `/briefing` on 2026-07-15; retained as pre-gate evidence only |
 | **Database schema** | Railway PostgreSQL verified at `0003_claim_evidence_review_gate` through its public TCP proxy on 2026-07-16 |
 | **Frontend** | [https://dr1ftless.vercel.app](https://dr1ftless.vercel.app) |
 | **API** | [https://drift-api-prod.up.railway.app](https://drift-api-prod.up.railway.app) |
@@ -256,13 +256,14 @@ The Railway API and Vercel frontend are live. The Vercel project deploys from
 | **OpenAPI** | [`/openapi.json`](https://drift-api-prod.up.railway.app/openapi.json) |
 | **Briefing** | [`/briefing`](https://drift-api-prod.up.railway.app/briefing) |
 | **Demo Video** | [`https://youtu.be/TBD`](https://youtu.be/TBD) *(≤ 3 min, record before submission)* |
-| **Public demo** | Vercel frontend and Railway API are live; Vercel-to-Railway CORS was verified on 2026-07-15 |
+| **Public demo** | Vercel frontend and Railway API are live; Vercel-to-Railway CORS was reverified on 2026-07-16 |
 
 One unreviewed real-model vLLM capture is saved as historical hosted evidence.
 The fixture path remains the reproducible no-key demo. The review-gated code
-in this branch has its Railway schema migration, but still needs application
-deployment and hosted verification; further human-reviewed captures are
-required before any broad live-analysis claim.
+is now deployed with its Railway schema migration. `/briefing` remains empty
+until a human-reviewed capture is published; hosted `/search`/`/chat` smoke
+tests and further reviewed evidence are required before any broad live-analysis
+claim.
 
 The Swagger contract groups the backend into **System**, **Briefing**,
 **Search**, and **Chat** sections so reviewers can navigate the API by job.
@@ -450,9 +451,9 @@ the repository-specific [Codecov report](https://codecov.io/gh/iarjunganesh/drif
 ### Load & Resilience
 
 The live-chat boundary and synchronous capture calls have deterministic budget,
-retry, circuit, and provider-failure coverage. A real PostgreSQL migration/run,
-load testing, and a hosted capture-path smoke test remain future work before
-any production-readiness claim.
+retry, circuit, and provider-failure coverage. A reviewed real PostgreSQL
+capture, load testing, and provider-backed hosted `/search`/`/chat` smoke tests
+remain future work before any production-readiness claim.
 
 ---
 
@@ -465,9 +466,11 @@ The remaining hosted verification operations are documented in
 1. confirm the `pytest` upload in Codecov; and
 2. enable branch protection requiring the CI quality gate.
 
-Hosted health, Vercel CORS, Railway PostgreSQL migrations, and one populated
-`/briefing` response were verified on 2026-07-15. Hosted `/search`/`/chat`
-smoke tests and further human-reviewed captures remain pending.
+The earlier populated `v0.5.1` `/briefing` response was verified on 2026-07-15.
+On 2026-07-16, hosted `v0.6.0` health, empty fail-closed `/briefing`, branded
+docs/banner routes, Vercel frontend, CORS, and Railway PostgreSQL migration
+`0003` were verified. Hosted provider-backed `/search`/`/chat` smoke tests and
+human-reviewed captures remain pending.
 
 ---
 
@@ -488,8 +491,8 @@ frontend.
   instance, then add a real integration run to delivery verification;
 - add scheduled Scout execution only after the reviewed capture path is proven;
 - maintain 100% implemented-code coverage as each live stage becomes real;
-- deploy the database-backed capture path and run/record one hosted briefing,
-  search, and chat smoke test;
+- publish a reviewed database-backed capture, then run/record hosted
+  provider-backed search and chat smoke tests;
 - record and submit the public narrated demo.
 
 Full decisions and sequencing live in [docs/adr/](docs/adr/),

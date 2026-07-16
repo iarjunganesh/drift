@@ -82,9 +82,10 @@ This path uses committed example data and makes no external calls.
    Railway PostgreSQL migrations and one unreviewed vLLM capture were verified
    through the prior hosted `/briefing` and the Vercel CORS preflight. The new
    gate's `0003` schema was verified through Railway's public TCP proxy on
-   2026-07-16, but the `v0.6.0` application is not deployed there. Scheduled
-   population, reviewed evidence, and hosted `/briefing`/`/search`/`/chat`
-   smoke tests remain future work.
+   2026-07-16; hosted `v0.6.0` then passed `/health`, empty fail-closed
+   `/briefing`, branded docs/banner routes, and CORS checks. Scheduled
+   population, reviewed evidence, and provider-backed `/search`/`/chat` smoke
+   tests remain future work.
 
 ## Recording order
 

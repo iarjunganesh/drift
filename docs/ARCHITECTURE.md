@@ -14,8 +14,9 @@ eight [Codex project initiatives](INITIATIVES.md).
 > verifier-passed records. On 2026-07-15, the prior hosted `v0.5.1` deployment
 > migrated Railway PostgreSQL and served one unreviewed vLLM capture through
 > `/briefing`. On 2026-07-16, Railway PostgreSQL was verified at migration
-> `0003` through its public TCP proxy. The local `v0.6.0` application is not
-> yet deployed or hosted-verified.
+> `0003` through its public TCP proxy. Later that day, hosted `v0.6.0`
+> `/health`, empty fail-closed `/briefing`, branded docs/banner routes, Vercel
+> frontend, and CORS were verified; no reviewed capture exists yet.
 
 ## Visual source of truth
 
@@ -226,7 +227,9 @@ retrieved, citation-bearing evidence. In the current local code, live
 verifier-passed rows; search and chat use pgvector retrieval. Fixture mode
 remains the no-key path. The hosted deployment served one unreviewed captured
 vLLM Insight through `/briefing` on 2026-07-15 before this gate was implemented;
-hosted `/search` and `/chat` remain to be smoke-tested after redeployment.
+hosted `v0.6.0` now proves the gate fails closed with an empty `/briefing`.
+Provider-backed hosted `/search` and `/chat` remain to be smoke-tested after a
+reviewed capture exists.
 
 ## Model, budget, and safety boundaries
 
@@ -320,16 +323,16 @@ $5 plan is a small-demo budget constraint, not a production availability
 guarantee. The verified Railway API is
 [`https://drift-api-prod.up.railway.app`](https://drift-api-prod.up.railway.app),
 with `/health`, `/docs`, and `/openapi.json` exposed publicly. As of
-2026-07-15, its bounded live mode and Vercel CORS configuration are verified.
-See
+2026-07-16, its `v0.6.0` live mode, branded docs/banner routes, and Vercel CORS
+configuration are verified. See
 [ADR-007](adr/007-vercel-railway-deployment.md).
 
 The browser can consume the hosted API from Vercel. On 2026-07-15, Vercel CORS
 and a populated hosted `/briefing` response were verified against the migrated
-Railway store. That verification predates the local review gate. The `0003`
-schema is verified on Railway as of 2026-07-16; application redeployment and
-reviewed `/briefing`/`/search`/`/chat` smoke tests must occur before hosted
-review-gated behavior is claimed.
+pre-gate Railway store. On 2026-07-16, the `0003` schema and hosted `v0.6.0`
+application were verified; `/briefing` correctly returned no records because
+none are reviewed. A reviewed capture plus hosted `/search`/`/chat` smoke tests
+remain required before broad live-release analysis is claimed.
 
 The generated Swagger contract keeps route ownership visible through four
 groups: `system` for metadata and liveness, `briefing` for ranked insights,

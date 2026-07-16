@@ -23,18 +23,19 @@ deployment was switched to bounded `DRIFT_MODE=live` on 2026-07-15 after the
 live-chat provider-boundary tests and CORS verification were in place. This
 does not establish the current capture-path behavior. The local code now has
 migrations, provenance persistence, embeddings, and a one-shot capture job, but
-the hosted service must be redeployed and verified before `/briefing` can be
-described as live-store-backed. **2026-07-15 addendum:** `v0.5.1` was migrated
+the hosted service needed redeployment and verification before `/briefing` could
+be described as review-gated. **2026-07-15 addendum:** `v0.5.1` was migrated
 against Railway PostgreSQL and served one bounded, unreviewed vLLM Insight
-through `/briefing`; Vercel CORS was reverified. This is not yet broad live
-release analysis or hosted `/search`/`/chat` verification.
+through `/briefing`; Vercel CORS was reverified. This is not broad live release
+analysis or hosted `/search`/`/chat` verification.
 
 **2026-07-15 review-gate addendum:** the local code now requires migration
 `0003_claim_evidence_review_gate` and filters live reads to human-reviewed,
 verifier-passed records. Railway PostgreSQL was verified at that migration
-through its public TCP proxy on 2026-07-16, but the `v0.6.0` application has
-not been deployed to Railway. The prior hosted result remains historical
-evidence, not verification of the new gate.
+through its public TCP proxy on 2026-07-16. Later that day, the hosted `v0.6.0`
+application passed `/health`, empty fail-closed `/briefing`, branded docs/banner
+routes, and Vercel CORS checks. The prior populated hosted result remains
+historical evidence, not verification of the new gate with reviewed data.
 
 **2026-07-16 brand-assets addendum:**
 `assets/brand/drift-banner-dark.svg` and

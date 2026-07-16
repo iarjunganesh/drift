@@ -269,9 +269,11 @@ The planned guardrails are now implemented locally and covered by 142 tests at
   per configured source (at most eight).
 
 Railway PostgreSQL schema `0003_claim_evidence_review_gate` was verified
-through its public TCP proxy on 2026-07-16. `v0.6.0` deployment, a reviewed
-capture, and hosted smoke tests remain operator gates. The prior hosted vLLM
-capture is historical pre-gate evidence and is not retroactively reviewed.
+through its public TCP proxy on 2026-07-16. Later that day hosted `v0.6.0`
+health, empty fail-closed briefing, branded docs/banner routes, Vercel frontend,
+and CORS were verified. A reviewed capture and provider-backed hosted
+search/chat smoke tests remain operator gates. The prior hosted vLLM capture is
+historical pre-gate evidence and is not retroactively reviewed.
 
 ## Submission usage
 

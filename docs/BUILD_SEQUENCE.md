@@ -38,8 +38,10 @@ AI-infrastructure release intelligence.
       Insight rows and live `/briefing` reads that store
 - [x] Operator: Railway PostgreSQL schema verified through
       `0003_claim_evidence_review_gate` via its public TCP proxy (2026-07-16)
-- [ ] YOU: execute one reviewed capture and deploy/verify the `v0.6.0`
-      application and resulting live store
+- [x] Operator: hosted `v0.6.0` `/health`, empty fail-closed `/briefing`,
+      branded docs/banner routes, Vercel frontend, and CORS verified (2026-07-16)
+- [ ] YOU: execute one reviewed capture, then smoke-test provider-backed hosted
+      `/search` and `/chat` against the resulting live store
 - [x] Model tier: live (Terra) for bounded local grounded chat
 
 ## Day 6-7 — Frontend
@@ -91,9 +93,9 @@ to its repository-specific Codecov badge.
    `NEXT_PUBLIC_API_URL`. As of 2026-07-15, Railway is verified in bounded
    `DRIFT_MODE=live` with CORS allowing the Vercel origin. On 2026-07-15,
    Railway PostgreSQL migrations and one unreviewed vLLM capture were verified
-   through the prior hosted `/briefing`; the review-gate schema is now at
-   `0003`, while `v0.6.0` redeployment and hosted briefing/search/chat smoke
-   tests remain pending.
+   through the prior hosted `/briefing`; the review-gate schema and hosted
+   `v0.6.0` empty briefing are now verified. A reviewed capture plus
+   provider-backed hosted search/chat smoke tests remain pending.
 
 The checked-in `codecov.yml` defines the pytest project, report path, and a
 100% project/patch floor for implemented code. Explicit live-stage boundaries

@@ -7,12 +7,12 @@ development baseline while the live pipeline is being implemented.
 
 | Version | Supported |
 | --- | --- |
-| `0.6.0` | ✅ Current local source release; hosted application deployment verification pending |
+| `0.6.0` | ✅ Current source and hosted application; review-gated live evidence remains empty pending human review |
 | `0.5.1` | Historical hosted baseline |
 
 Fixture data is synthetic. Local live ingestion and provider-backed generation
-are explicitly operator-enabled and review-gated; the updated gate has not yet
-been deployed to the historical hosted baseline.
+are explicitly operator-enabled and review-gated; the hosted gate returns no
+live evidence until a human-reviewed capture exists.
 
 ## Reporting a vulnerability
 
@@ -51,5 +51,6 @@ coordinated disclosure decision.
 - CORS origins are explicit; the frontend never receives `DATABASE_URL`.
 - Breaking or security-labelled insights increase review priority but never
   authorize automated infrastructure changes.
-- Do not represent `v0.6.0` as hosted review-gated live analysis until its
-  application deployment and reviewed endpoint smoke tests are verified.
+- Do not represent hosted `v0.6.0` as broad live analysis: its application,
+  empty fail-closed briefing, docs/banner routes, and CORS are verified, but it
+  has no reviewed capture and hosted `/search`/`/chat` have not been smoke-tested.

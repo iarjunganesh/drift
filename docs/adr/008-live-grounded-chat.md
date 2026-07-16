@@ -39,5 +39,6 @@ model-run audits. Local live `/briefing`, `/search`, and `/chat` read only rows
 that were explicitly promoted by human review; search and chat retrieve that
 reviewed evidence before the model call. The verifier remains screening, not
 proof. Railway PostgreSQL was verified at migration `0003` on 2026-07-16. This
-is not a hosted live-release-analysis claim until `v0.6.0` is deployed and
-reviewed endpoint smoke tests are completed.
+is not a broad hosted live-release-analysis claim: hosted `v0.6.0` and its
+empty fail-closed briefing are verified, but reviewed evidence and provider-backed
+`/search`/`/chat` smoke tests are not.

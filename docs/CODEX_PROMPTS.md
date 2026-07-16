@@ -17,8 +17,9 @@ CI coverage-gate, provenance-manifest). Do NOT reuse its media stack
 > claim spans, separate verification, and review-first publication—do not use
 > these historical prompts to remove those guards. Railway PostgreSQL has been
 > migrated and one unreviewed vLLM capture was served through the prior hosted
-> `/briefing`; its `0003` schema was verified on 2026-07-16, while `v0.6.0`
-> deployment and hosted reviewed smoke tests remain open.
+> `/briefing`; its `0003` schema and hosted `v0.6.0` empty briefing were
+> verified on 2026-07-16, while a reviewed capture and hosted search/chat smoke
+> tests remain open.
 
 ---
 
@@ -252,8 +253,8 @@ rules/FAQ reference copy, not drift's submission draft.
 - Verify branch protection and the Codecov upload on the published GitHub
   repository.
 - Use `notebooks/drift_manual_run.ipynb` against a reachable database to create
-  and review a small draft store, then deploy `v0.6.0` and run hosted
-  `/briefing`, `/search`, and `/chat` smoke tests against reviewed, cited
-  stored evidence. Railway PostgreSQL schema `0003`, one unreviewed vLLM
-  capture, hosted `/briefing`, and Vercel CORS were verified on 2026-07-15/16;
-  this does not establish broad live-release analysis.
+  and review a small draft store, then smoke-test hosted `/search` and `/chat`
+  against that reviewed, cited evidence. Railway PostgreSQL schema `0003`,
+  hosted `v0.6.0` health/empty briefing/docs/banner routes, and Vercel CORS
+  were verified on 2026-07-15/16; this does not establish broad live-release
+  analysis.

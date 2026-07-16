@@ -10,11 +10,21 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
+### Hosted deployment verification — 2026-07-16
+
+- Verified the Git-connected `v0.6.0` Railway deployment in `DRIFT_MODE=live`:
+  `/health` reported `v0.6.0`, `/briefing` returned `[]` because no Insights are
+  human-reviewed, and branded `/docs`, `/brand/dark.svg`, and `/brand/light.svg`
+  returned `200`.
+- Verified the Vercel frontend serves the canonical banner and Railway accepts a
+  Vercel-origin CORS preflight. Hosted `/search` and `/chat` remain untested to
+  avoid provider-backed calls before a reviewed capture exists.
+
 ## [0.6.0] - 2026-07-16
 
-`v0.6.0` is the current local source release. The last hosted application
-deployment remains historical `v0.5.1`; this release has not been deployed or
-hosted-smoke-tested, so it makes no new hosted live-analysis claim.
+At release-tag creation, `v0.6.0` was the current local source release and its
+hosted verification had not yet occurred. The dated Unreleased addendum records
+the subsequent hosted deployment verification without rewriting that history.
 
 ### Added
 
@@ -78,14 +88,13 @@ hosted-smoke-tested, so it makes no new hosted live-analysis claim.
 ### Hosted verification
 
 - On 2026-07-16, Railway PostgreSQL was verified at
-  `0003_claim_evidence_review_gate` through its public TCP proxy. This verifies
-  the database schema only; the Railway application still needs a `v0.6.0`
-  redeployment and reviewed endpoint smoke tests.
+  `0003_claim_evidence_review_gate` through its public TCP proxy before the
+  subsequent `v0.6.0` application deployment verification recorded above.
 - On 2026-07-15, the previous hosted `v0.5.1` deployment applied migrations
   through `0002_capture_provenance` and served one unreviewed vLLM Insight from
   public `/briefing` with its primary citation; Vercel CORS preflight also
-  passed. This historical application verification predates `0003`; review-gated
-  redeployment and hosted briefing/search/chat smoke tests remain pending.
+  passed. This historical application verification predates `0003`; it is not
+  evidence of review-gated live analysis.
 - Added a scrubbed, committed hosted-evidence record under `assets/evidence/`;
   it preserves the verified response and boundaries without credentials or
   local spend-ledger data.

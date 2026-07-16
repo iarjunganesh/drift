@@ -23,9 +23,13 @@
       review-first publication with calibration tests and a manual-run notebook.
 - [ ] Run and human-review real, saved GPT-5.6 output examples through
       `notebooks/drift_manual_run.ipynb` against a reachable database, then cite
-      their primary release URLs, deploy `v0.6.0`, and verify hosted reviewed
-      endpoints. Railway PostgreSQL schema `0003` was verified on 2026-07-16.
-- [ ] Provide a judge path: hosted app, sandbox, or verified one-command local demo.
+      their primary release URLs and verify hosted provider-backed `/search` and
+      `/chat` against reviewed evidence. Railway PostgreSQL schema `0003` and
+      hosted `v0.6.0` health/empty briefing/docs/banner/CORS were verified on
+      2026-07-16.
+- [x] Provide a judge path: hosted app is available at
+      `https://dr1ftless.vercel.app` with a verified `v0.6.0` Railway API;
+      reviewed live evidence remains an explicit operator gate.
 - [ ] Upload a public YouTube video under three minutes with English narration.
 - [ ] Replace the placeholder with the final video URL:
       `https://youtu.be/TBD` (see [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md)).
