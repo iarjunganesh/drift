@@ -30,33 +30,55 @@
 
 ---
 
-## What Is This?
+## The Problem
+
+GPU and AI platforms depend on fast-moving projects such as PyTorch, TensorRT,
+Triton, vLLM, Transformers, CUTLASS, JAX, and NCCL. A small upstream change can
+alter an image, benchmark, CUDA assumption, or deployment template — but release
+review is usually a stream of links and scattered human memory. The signal that
+matters is buried: *what changed, whether it touches your workload, and what to
+check before rollout.*
+
+## What DRIFT Does
 
 DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 upstream release-note noise into a cited, engineer-ready answer:
 
 > **What changed? Why does it matter to my workload? What should I check?**
 
-The first vertical slice is fixture-first and deterministic. The target system
-will watch primary release feeds, rank meaningful changes, explain workload
-impact, and return a bounded next engineering check without presenting model
-output as a deployment verdict.
+Every answer keeps the useful middle layer visible: a frozen primary-source
+span, a plain-language summary, workload relevance, confidence, severity, and
+one bounded action to check. Direct facts stay separate from interpretation, and
+nothing reaches a live endpoint until a human reviews it.
 
 Built for **OpenAI Build Week 2026 · Developer Tools**.
 
----
+## Try DRIFT in 60 Seconds
 
-## The Problem
+**Hosted — nothing to install.** The live briefing now serves four
+human-reviewed Insights from one real bounded capture (Transformers v5.14.1,
+vLLM v0.25.1, NCCL v2.30.7-1, TensorRT 11.1):
 
-GPU and AI platforms depend on fast-moving projects such as PyTorch, TensorRT,
-Triton, vLLM, Transformers, CUTLASS, JAX, and NCCL. A small upstream change can
-alter an image, benchmark, CUDA assumption, or deployment template, but release
-review is usually a stream of links and scattered human memory.
+| Surface | Link |
+| --- | --- |
+| **Frontend** — briefing with inspectable claim evidence | <https://dr1ftless.vercel.app> |
+| **API docs** — `/health`, `/briefing`, `/search`, `/chat` | <https://drift-api-prod.up.railway.app/docs> |
+| **Grounded chat** — cited answer over reviewed evidence (verified provider-backed) | [`POST /chat` in the API docs](https://drift-api-prod.up.railway.app/docs) |
 
-DRIFT keeps the useful middle layer visible: source evidence, a plain-language
-summary, workload relevance, confidence, severity, and one concrete action to
-check. It does not certify compatibility, replace release notes, or authorize
-production changes.
+**Local — one command, no API key.** The deterministic fixture path brings up the
+API, PostgreSQL, and the frontend — including the in-app **Ask DRIFT**
+grounded-chat box — together:
+
+```bash
+git clone https://github.com/iarjunganesh/drift.git
+cd drift
+docker compose up
+```
+
+Open <http://localhost:3000> for the frontend and
+<http://localhost:8000/docs> for the API. No OpenAI key is required, and every
+record is clearly labelled example data. Full setup, cross-platform commands,
+and the live capture path are in [Quick Start](#quick-start).
 
 ---
 
@@ -283,18 +305,12 @@ The Swagger contract groups the backend into **System**, **Briefing**,
 
 ## Screenshots & Evidence
 
-The architecture assets are the current visual evidence and are available in
-both SVG and PNG formats:
+These are live-state captures of the hosted app after four human-reviewed
+Insights were published — not mockups. Click any image to open it full size.
 
-The scrubbed hosted capture evidence is stored separately in
-[`assets/evidence/`](assets/evidence/), including the verified unreviewed vLLM
-briefing response and its explicit operational limitations. After a human
-publishes a new notebook capture, its archive cell writes a new dated reviewed
-record and SHA-256 manifest there without including review notes or secrets.
-
-| Light | Dark |
+| Briefing — four reviewed Insights | Inspecting frozen claim evidence |
 | --- | --- |
-| [![DRIFT architecture light](assets/architecture/architecture-diagram-light.png)](assets/architecture/architecture-diagram-light.svg) | [![DRIFT architecture dark](assets/architecture/architecture-diagram-dark.png)](assets/architecture/architecture-diagram-dark.svg) |
+| [![DRIFT briefing showing four reviewed Insights](assets/screenshots/03-briefing.png)](assets/screenshots/03-briefing.png) | [![DRIFT briefing expanded to show each claim's primary-source excerpt](assets/screenshots/04-briefing-claim-evidence.png)](assets/screenshots/04-briefing-claim-evidence.png) |
 
 The Next.js briefing view exposes each record's status label, confidence,
 model/audit label, rationale, bounded action, source links, and—when present—
@@ -305,11 +321,61 @@ now serves four reviewed Insights instead of the intentional empty state.
 Railway, CORS, public-contract, and Vercel-bundle checks are recorded in the
 changelog. This did not re-run paid provider chat.
 
+The branded Swagger contract and the themed architecture assets are also
+available as visual evidence:
+
+| API documentation | Architecture (light / dark) |
+| --- | --- |
+| [![DRIFT branded Swagger API documentation](assets/screenshots/02-api-docs.png)](assets/screenshots/02-api-docs.png) | [![DRIFT architecture light](assets/architecture/architecture-diagram-light.png)](assets/architecture/architecture-diagram-light.svg)<br/>[![DRIFT architecture dark](assets/architecture/architecture-diagram-dark.png)](assets/architecture/architecture-diagram-dark.svg) |
+
+The scrubbed hosted capture evidence is stored separately in
+[`assets/evidence/`](assets/evidence/), including the verified unreviewed vLLM
+briefing response and its explicit operational limitations. After a human
+publishes a new notebook capture, its archive cell writes a new dated reviewed
+record and SHA-256 manifest there without including review notes or secrets.
+
 ---
 
 ## Quick Start
 
-Requirements: Python 3.14, `uv`, and Node.js 24.x for the frontend.
+### One command (recommended)
+
+The fastest judge path brings up the API, PostgreSQL, and the frontend together
+in fixture mode — no OpenAI key, identical on macOS, Linux, and Windows:
+
+```bash
+git clone https://github.com/iarjunganesh/drift.git
+cd drift
+docker compose up
+```
+
+Open <http://localhost:3000> for the frontend and <http://localhost:8000/docs>
+for the API. Every record is labelled example data.
+
+### Manual setup
+
+Requirements: Python 3.14, `uv`, and Node.js 24.x for the frontend. Every
+command below is shown for both shells; run whichever matches your platform.
+
+#### bash — macOS / Linux
+
+```bash
+# 1. Clone the public repository
+git clone https://github.com/iarjunganesh/drift.git
+cd drift
+
+# 2. Configure the no-key fixture path
+cp .env.example .env
+
+# 3. Install locked Python dependencies
+uv venv .venv
+uv sync --locked --group dev
+
+# 4. Start the API
+uv run uvicorn backend.main:app --reload
+```
+
+#### PowerShell — Windows
 
 ```powershell
 # 1. Clone the public repository
@@ -327,7 +393,20 @@ uv sync --locked --group dev
 uv run uvicorn backend.main:app --reload
 ```
 
-Open <http://127.0.0.1:8000/docs>, or try:
+Open <http://127.0.0.1:8000/docs>, or try the endpoints:
+
+#### bash / curl
+
+```bash
+curl http://127.0.0.1:8000/health
+curl http://127.0.0.1:8000/briefing
+curl "http://127.0.0.1:8000/search?q=vllm"
+curl -X POST http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"question":"What should I check for vLLM?"}'
+```
+
+#### PowerShell
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:8000/health
@@ -338,9 +417,10 @@ Invoke-RestMethod http://127.0.0.1:8000/chat `
   -Body '{"question":"What should I check for vLLM?"}'
 ```
 
-Run the frontend in another terminal:
+Run the frontend in another terminal (same command on every platform). This is
+also where the in-app **Ask DRIFT** box calls `/search` and `/chat`:
 
-```powershell
+```bash
 npm --prefix frontend ci
 npm --prefix frontend run dev
 ```
@@ -370,7 +450,14 @@ The underlying capture command is also draft-only. Enable live mode, provide
 an API key, and select a deliberately small source set. Start with `dev` for
 prompt iteration and use `final` only for selected, already-reviewed sources:
 
+```bash
+# bash — macOS / Linux
+export DRIFT_MODE=live
+uv run python -m backend.pipeline --source vllm --source tensorrt --source pytorch --tier dev
+```
+
 ```powershell
+# PowerShell — Windows
 $env:DRIFT_MODE='live'
 uv run python -m backend.pipeline --source vllm --source tensorrt --source pytorch --tier dev
 ```
@@ -517,13 +604,29 @@ Full decisions and sequencing live in [docs/adr/](docs/adr/),
 
 ---
 
-## Disclaimer
+## Trust Model
 
-Fixture records are synthetic examples and are not live release analysis. DRIFT
-does not certify compatibility, replace upstream release notes, or authorize
-changes to production infrastructure. Any live insight must remain cited,
-claim-type-labelled, confidence-labelled, model/audit-labelled, reviewed by a
-human, and paired with a bounded `what_to_check` action.
+Release notes are **untrusted input**, and DRIFT treats them that way. That
+constraint is the product: it is what makes every answer inspectable instead of
+a black-box verdict.
+
+- **Frozen source span.** Every factual claim carries an exact primary-source
+  excerpt with character offsets and a source SHA-256 hash, so reasoning is
+  always traceable back to what the release actually said.
+- **Separate verifier pass.** A second, independently routed model call rejects
+  unsupported or misclassified claims — model-aided screening, not proof.
+- **Human review gate.** Verifier-passed drafts stay private until a person
+  reviews the evidence and records notes; only then can a claim reach
+  `/briefing`, `/search`, or `/chat`.
+- **Facts kept separate from interpretation.** Direct facts, inferences, and
+  recommended checks are labelled distinctly, and confidence plus the
+  model/audit label are always visible.
+
+Because of that boundary, DRIFT deliberately does **not** certify compatibility,
+replace upstream release notes, or authorize changes to production
+infrastructure. Fixture records are synthetic, clearly labelled examples and are
+never presented as live release analysis. `breaking` and `security` are review
+priorities, not automation triggers.
 
 > Built for the [OpenAI Build Week 2026](https://openai.com/) Developer Tools
 > track. Human review remains required for source fidelity, prompt iteration,

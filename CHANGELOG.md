@@ -10,6 +10,34 @@ the annotated `v0.1.0` tag.
 
 ## [Unreleased]
 
+### Added
+
+- **Ask DRIFT** grounded-chat box in the frontend (`frontend/app/AskDrift.tsx`):
+  a single client component that posts a question to `/chat` and renders the
+  grounded answer, its source citations, the model/audit label, and the grounded
+  insight IDs, with explicit loading, no-match (HTTP 404), and error states. It
+  works in both fixture and live mode. The `/chat` contract was verified against
+  the fixture backend and the production frontend build passes.
+- Embedded the reviewed-briefing and claim-evidence screenshots in the README as
+  live-state visual evidence (`assets/screenshots/03-briefing.png` and
+  `04-briefing-claim-evidence.png`), alongside the branded Swagger and
+  architecture assets.
+
+### Changed
+
+- Restructured the README top for first impression: **The Problem → What DRIFT
+  Does → Try DRIFT in 60 Seconds**, leading with the hosted demo links and a
+  one-command `docker compose up` judge path. Reframed the closing **Disclaimer**
+  as a positive **Trust Model** (untrusted input → frozen source span → separate
+  verifier pass → human review gate) and kept the Codex/GPT-5.6 usage section
+  prominent.
+- Made the Quick Start cross-platform: promoted `docker compose up` as the
+  one-command local path and added bash/curl equivalents beside every PowerShell
+  command (setup, endpoint calls, and the live capture command).
+- Renamed the tracked UI screenshots to clean kebab-case filenames
+  (`01-landing`, `02-api-docs`, `03-briefing`, `04-briefing-claim-evidence`) so
+  they embed reliably in Markdown.
+
 ## [0.7.0] - 2026-07-16
 
 ### Hosted deployment verification — 2026-07-16
