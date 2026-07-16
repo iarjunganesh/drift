@@ -23,12 +23,13 @@
       Session ID if the Devpost form accepts only one.
 - [x] Implement local claim-level evidence, separate verification, and
       review-first publication with calibration tests and a manual-run notebook.
-- [ ] Run and human-review real, saved GPT-5.6 output examples through
-      `notebooks/drift_manual_run.ipynb` against a reachable database, then cite
-      their primary release URLs and verify hosted provider-backed `/search` and
-      `/chat` against reviewed evidence. Railway PostgreSQL schema `0003` and
-      hosted `v0.6.1` health/empty briefing/docs/CORS were verified on
-      2026-07-16; Vercel source references the canonical API-served banner pair.
+- [x] Ran and human-reviewed four saved GPT-5.6 output examples through
+      `notebooks/drift_manual_run.ipynb` against Railway PostgreSQL — Transformers
+      v5.14.1, vLLM v0.25.1, NCCL v2.30.7-1, TensorRT 11.1 — cited their primary
+      release URLs, and verified hosted provider-backed `/briefing`, `/search`,
+      and `/chat` against the reviewed evidence on 2026-07-16 (`/chat` grounded
+      via `gpt-5.6-terra` with source citations). Evidence + SHA-256 manifest
+      archived to `assets/evidence/2026-07-16-all-sources-reviewed.json`.
 - [x] Provide a judge path: hosted app is available at
       `https://dr1ftless.vercel.app` with a verified `v0.6.1` Railway API;
       reviewed live evidence remains an explicit operator gate.

@@ -98,8 +98,9 @@ to its repository-specific Codecov badge.
    `DRIFT_MODE=live` with CORS allowing the Vercel origin. On 2026-07-15,
    Railway PostgreSQL migrations and one unreviewed vLLM capture were verified
    through the prior hosted `/briefing`; the review-gate schema and hosted
-   `v0.6.0` empty briefing are now verified. A reviewed capture plus
-   provider-backed hosted search/chat smoke tests remain pending.
+   `v0.6.0` empty briefing are now verified. On 2026-07-16, four human-reviewed
+   Insights were published and hosted `/briefing`, `/search`, and `/chat` were
+   verified provider-backed.
 
 The checked-in `codecov.yml` defines the pytest project, report path, and a
 100% project/patch floor for implemented code. Explicit live-stage boundaries

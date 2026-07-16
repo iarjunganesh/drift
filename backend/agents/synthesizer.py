@@ -155,7 +155,10 @@ def classify_change(
             instructions=_CLASSIFICATION_INSTRUCTIONS,
             input_text=json.dumps(evidence, ensure_ascii=False),
             schema=_CLASSIFICATION_SCHEMA,
-            max_output_tokens=40,
+            # Reasoning tokens count against this budget; keep enough headroom
+            # for a low-effort reasoning trace plus the tiny severity JSON so the
+            # response is never truncated to an empty string.
+            max_output_tokens=256,
             spend_guard=spend_guard,
             resilience=resilience,
             operation_name="synthesizer.classify",

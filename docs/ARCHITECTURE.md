@@ -16,7 +16,9 @@ nine [Codex project initiatives](INITIATIVES.md).
 > `/briefing`. On 2026-07-16, Railway PostgreSQL was verified at migration
 > `0003` through its public TCP proxy. Later that day, hosted `v0.6.1`
 > `/health`, empty fail-closed `/briefing`, `/docs`, Vercel canonical-banner
-> source, and CORS were verified; no reviewed capture exists yet. The API-docs
+> source, and CORS were verified. Four human-reviewed Insights were then
+> published and hosted `/briefing`, `/search`, and `/chat` verified
+> provider-backed. The API-docs
 > banner frame follows the same system light/dark preference as the banners.
 
 ## Visual source of truth
@@ -324,7 +326,8 @@ $5 plan is a small-demo budget constraint, not a production availability
 guarantee. The verified Railway API is
 [`https://drift-api-prod.up.railway.app`](https://drift-api-prod.up.railway.app),
 with `/health`, `/docs`, and `/openapi.json` exposed publicly. As of
-2026-07-16, its `v0.6.1` live mode, `/docs`, empty briefing, and Vercel CORS
+2026-07-16, its `v0.6.1` live mode, `/docs`, provider-backed
+`/briefing`/`/search`/`/chat` over four reviewed Insights, and Vercel CORS
 configuration are verified. The Vercel HTML references the canonical API-served
 banner pair. See
 [ADR-007](adr/007-vercel-railway-deployment.md).

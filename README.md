@@ -111,7 +111,11 @@ through `/briefing`. On 2026-07-16, Railway PostgreSQL was verified through
 `0003_claim_evidence_review_gate` using its public TCP proxy. Later that day,
 the hosted `v0.6.1` app passed `/health`, an empty fail-closed `/briefing`,
 `/docs`, Vercel canonical-banner source, and Vercel-to-Railway CORS checks. It
-still has no human-reviewed capture, so this is not a broad live-release-analysis claim.
+then published four human-reviewed Insights (Transformers v5.14.1, vLLM v0.25.1,
+NCCL v2.30.7-1, TensorRT 11.1) through the review gate, and hosted `/briefing`,
+`/search`, and `/chat` were verified provider-backed — `/chat` returning a
+grounded `gpt-5.6-terra` answer with primary-source citations. This is a small,
+bounded reviewed set, not a broad live-release-analysis claim.
 
 > **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
@@ -189,9 +193,9 @@ Agent code must not hard-code provider model names. The intended tiers are:
 
 | Tier | Intended job | Status |
 | --- | --- | --- |
-| `dev` / Luna | Classification, clustering, and prompt iteration | Bounded local capture path; run only with an explicit live key |
-| `live` / Terra | Retrieve-first grounded chat | Bounded local live path over captured pgvector rows |
-| `final` / Sol | Three to five reviewed demo insights | Capture path ready; no reviewed real output saved yet |
+| `dev` / Luna | Classification, clustering, and prompt iteration | Produced the four reviewed Insights published 2026-07-16; run only with an explicit live key |
+| `live` / Terra | Retrieve-first grounded chat | Serves hosted grounded chat over reviewed pgvector rows; verified provider-backed 2026-07-16 |
+| `final` / Sol | Three to five reviewed demo insights | Reserved; the 2026-07-16 demo set was captured at the `dev`/Luna tier to bound cost |
 
 Every live insight must preserve:
 
@@ -294,9 +298,10 @@ record and SHA-256 manifest there without including review notes or secrets.
 The Next.js briefing view exposes each record's status label, confidence,
 model/audit label, rationale, bounded action, source links, and—when present—
 claim-type evidence. On 2026-07-16, the hosted UI was verified against the
-review-gated `v0.6.0` API; its empty briefing is intentional until reviewed
-evidence exists. The local `v0.6.1` theme and briefing-state corrections require
-a Vercel deployment before they become hosted verification facts.
+review-gated API; reviewed evidence has since been published, so `/briefing`
+now serves four reviewed Insights instead of the intentional empty state. The
+local `v0.6.1` theme and briefing-state corrections still require a Vercel
+deployment before they become hosted verification facts.
 
 ---
 

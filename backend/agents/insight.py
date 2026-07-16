@@ -410,7 +410,10 @@ def generate_insight_with_audit(
             instructions=INSIGHT_SYSTEM_PROMPT,
             input_text=evidence,
             schema=_INSIGHT_SCHEMA,
-            max_output_tokens=1_200,
+            # A grounded draft carries several claims plus verbatim excerpts and
+            # shares this budget with the low-effort reasoning trace, so keep
+            # ample headroom or the JSON is truncated mid-string.
+            max_output_tokens=4_000,
             spend_guard=spend_guard,
             resilience=resilience,
             operation_name="insight.generate",
@@ -425,17 +428,29 @@ def generate_insight_with_audit(
             instructions=VERIFIER_SYSTEM_PROMPT,
             input_text=verifier_evidence,
             schema=_VERIFIER_SCHEMA,
-            max_output_tokens=400,
+            # Room for the accepted-index list plus any rejection notes and the
+            # reasoning trace, so a verdict is never truncated to invalid JSON.
+            max_output_tokens=800,
             spend_guard=spend_guard,
             resilience=resilience,
             operation_name="insight.verify",
         )
         verdict = _parse_output(verification_result.response, _VerifierPayload, "claim verifier")
         assert isinstance(verdict, _VerifierPayload)
-        accepted_indexes = set(verdict.accepted_claim_indexes)
-        expected_indexes = set(range(len(claims)))
-        if accepted_indexes != expected_indexes or len(verdict.accepted_claim_indexes) != len(claims):
-            raise ValueError("Claim verifier rejected one or more drafted claims.")
+        accepted_indexes = sorted(
+            index for index in set(verdict.accepted_claim_indexes) if 0 <= index < len(claims)
+        )
+        # Publish only the claims the independent verifier accepted and drop the
+        # rest, rather than discarding an otherwise sound insight over a single
+        # rejected claim. The survivor must still stand on its own evidence: at
+        # least one verified direct fact and one bounded recommended check.
+        claims = [claims[index] for index in accepted_indexes]
+        if not claims:
+            raise ValueError("Claim verifier accepted none of the drafted claims.")
+        if not any(claim.kind is ClaimKind.DIRECT_FACT for claim in claims):
+            raise ValueError("Claim verifier left no accepted direct factual claim.")
+        if not any(claim.kind is ClaimKind.RECOMMENDED_CHECK for claim in claims):
+            raise ValueError("Claim verifier left no accepted recommended check.")
 
         direct_facts = _claim_text(claims, ClaimKind.DIRECT_FACT, "No direct fact was extracted.")
         title = cluster[0].title

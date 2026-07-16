@@ -6,23 +6,25 @@
 
 Audit verdict: hosted `v0.6.1` is verified (142 tests and 100% backend coverage
 at release), with its Railway health, empty fail-closed briefing, docs, CORS,
-and Vercel canonical-banner source checked on 2026-07-16. The submission still
-has two hard blockers—no demo video and no human-reviewed GPT-5.6 output visible
-to judges. The `v0.6.1` API-docs banner frame follows the selected system theme.
+and Vercel canonical-banner source checked on 2026-07-16. On 2026-07-16, four human-reviewed Insights were published and hosted
+`/briefing`, `/search`, and `/chat` were verified provider-backed, clearing the
+human-reviewed-output blocker; the one remaining hard blocker is the demo video.
+The `v0.6.1` API-docs banner frame follows the selected system theme.
 
 ---
 
 ## P0 — Blockers (Jul 16–18). Submission fails without these.
 
 ### 1. Publish 3–5 human-reviewed live captures  *(unblocks everything else)*
-- [ ] Run `notebooks/drift_manual_run.ipynb` against Railway PostgreSQL via the public
+- [x] Ran `notebooks/drift_manual_run.ipynb` against Railway PostgreSQL via the public
       TCP proxy (`DRIFT_DATABASE_PUBLIC_HOST` / `DRIFT_DATABASE_PUBLIC_PORT`).
-- [ ] Capture one item per source (≤ 8), tier `dev` first; use `final` only for the
-      3–5 records selected for the demo.
-- [ ] Human-review and publish via `backend.review.publish_verified_insights()`
-      with real review notes.
-- [ ] Archive the reviewed evidence records + SHA-256 manifests to `assets/evidence/`.
-- [ ] Verify hosted output afterwards:
+- [x] Captured one item per source (8 total), tier `dev` (`gpt-5.6-luna`); the demo
+      set stayed at `dev` to bound cost, with `final`/Sol reserved.
+- [x] Human-reviewed and published Insight IDs 3, 6, 7, 8 via
+      `backend.review.publish_verified_insights()` with real review notes.
+- [x] Archived the reviewed evidence records + SHA-256 manifest to
+      `assets/evidence/2026-07-16-all-sources-reviewed.json`.
+- [x] Verified hosted output afterwards (all provider-backed):
   ```
   curl https://drift-api-prod.up.railway.app/briefing        # non-empty
   curl "https://drift-api-prod.up.railway.app/search?q=vllm" # non-empty
@@ -30,8 +32,8 @@ to judges. The `v0.6.1` API-docs banner frame follows the selected system theme.
     -H "Content-Type: application/json" \
     -d '{"question":"What should I check for vLLM?"}'        # grounded answer + citations
   ```
-- [ ] Record reviewed-evidence hosted smoke-test results in CHANGELOG. Empty-store
-      responses are not evidence of provider-backed retrieval or grounded chat.
+- [x] Recorded reviewed-evidence hosted smoke-test results in CHANGELOG (Unreleased).
+      Empty-store responses are not evidence of provider-backed retrieval or grounded chat.
 
 ### 2. Fix the frontend empty state  *(judges currently see "Loading briefing…" forever)*
 - [x] `frontend/app/page.tsx`: separate **loading**, **empty**, and **error**

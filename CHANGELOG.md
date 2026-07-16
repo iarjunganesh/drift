@@ -8,6 +8,60 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning:
 The `0.1.0` entry is the initial repository baseline published on GitHub as
 the annotated `v0.1.0` tag.
 
+## [Unreleased]
+
+### Reviewed-evidence capture and hosted verification — 2026-07-16
+
+- Published four human-reviewed Insights through `publish_verified_insights`
+  after source-excerpt review: Transformers v5.14.1, vLLM v0.25.1,
+  NCCL v2.30.7-1, and TensorRT 11.1 (draft IDs 3, 6, 7, 8; drafted and verified
+  at the `dev` / `gpt-5.6-luna` tier to bound cost).
+- Verified the hosted Railway `v0.6.1` app in `DRIFT_MODE=live` now returns
+  provider-backed content: `/briefing` is non-empty, `/search?q=vllm` returns
+  the vLLM v0.25.1 Insight, and `/chat` returns a grounded `gpt-5.6-terra`
+  answer citing the vLLM/NCCL/Transformers releases
+  (`grounded_insight_ids` [6, 7, 3]). This supersedes the earlier empty
+  fail-closed briefing verification.
+- Archived the reviewed evidence and SHA-256 integrity manifest to
+  `assets/evidence/2026-07-16-all-sources-reviewed.json`
+  (sha256 `2e08896b3c1c9507b557fc84e5558ce05343f9202227bb3a1ff7e964002d2318`).
+
+### Fixed
+
+- Prevented empty or truncated structured-model responses from aborting a
+  capture. Reasoning tokens share the response budget, so the output-token
+  ceilings were raised for severity classification (40 → 256), Insight drafting
+  (1200 → 4000), and the claim verifier (400 → 800).
+- Raised the frontend briefing request from `top_n=3` to `top_n=10` so the home
+  page surfaces every reviewed Insight across sources, not just the top three
+  (the `/briefing` endpoint already accepts `top_n` up to 10). Requires a Vercel
+  redeploy to take effect on the hosted frontend.
+
+### Changed
+
+- The capture pipeline now generates each cluster's Insight independently and
+  skips — with a logged `insight.generate.skipped` warning — any cluster whose
+  draft fails grounding or verification, instead of discarding the whole run on
+  a single failed cluster.
+- The claim verifier now publishes only the verifier-accepted claims and drops
+  the rejected ones, still requiring at least one direct fact and one
+  recommended check, rather than rejecting an entire Insight when any single
+  claim is rejected.
+
+### Added
+
+- `scripts/check_openai_spend.py`: a read-only, admin-key OpenAI cost check that
+  reconciles real per-project spend against the local `.drift/spend-ledger.json`
+  guard, with `scripts/README.md`.
+
+### Testing
+
+- Added pipeline tests for per-cluster skip-on-failure and the all-skipped
+  guard, an Insight test for publishing only verifier-accepted claims, and
+  updated the claim-grounding calibration eval so an ambiguous inference is
+  dropped while the verified fact and check survive. Full suite: 145 tests at
+  100% backend coverage.
+
 ## [0.6.1] - 2026-07-16
 
 ### Fixed

@@ -51,6 +51,7 @@ coordinated disclosure decision.
 - CORS origins are explicit; the frontend never receives `DATABASE_URL`.
 - Breaking or security-labelled insights increase review priority but never
   authorize automated infrastructure changes.
-- Do not represent hosted `v0.6.0` as broad live analysis: its application,
-  empty fail-closed briefing, docs/banner routes, and CORS are verified, but it
-  has no reviewed capture and hosted `/search`/`/chat` have not been smoke-tested.
+- Do not represent the hosted app as broad live analysis. As of 2026-07-16 it
+  serves four human-reviewed Insights and hosted `/briefing`, `/search`, and
+  `/chat` are verified provider-backed, but that is a small, bounded reviewed
+  set — not continuous or comprehensive release monitoring.
