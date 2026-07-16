@@ -18,8 +18,11 @@ later prompts as DRIFT dependencies.
 > these historical prompts to remove those guards. Railway PostgreSQL has been
 > migrated and one unreviewed vLLM capture was served through the prior hosted
 > `/briefing`; its `0003` schema and hosted `v0.6.1` empty briefing were
-> verified on 2026-07-16, while a reviewed capture and hosted search/chat smoke
-> tests remain open.
+> verified on 2026-07-16; four human-reviewed Insights were then published and
+> hosted `/briefing`, `/search`, and `/chat` verified provider-backed.
+> The later `v0.7.0` source release hardens evidence-byte integrity, review-note
+> redaction, and the results-notebook boundary; deployment verification remains
+> a separate required fact.
 
 ---
 
@@ -241,6 +244,7 @@ rules/FAQ reference copy, not drift's submission draft.
 - Use `notebooks/drift_manual_run.ipynb` against a reachable database to create
   and review a small draft store, then smoke-test hosted `/search` and `/chat`
   against that reviewed, cited evidence. Railway PostgreSQL schema `0003`,
-  hosted `v0.6.1` health/empty briefing/docs routes, Vercel canonical-banner
-  source, and CORS were verified on 2026-07-15/16; this does not establish broad live-release
-  analysis.
+  hosted `v0.6.1` health/docs routes, Vercel canonical-banner source, and CORS
+  were verified on 2026-07-15/16; on 2026-07-16 four human-reviewed Insights were
+  published and hosted `/briefing`/`/search`/`/chat` verified provider-backed.
+  This bounded reviewed set does not establish broad live-release analysis.

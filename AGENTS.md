@@ -6,9 +6,11 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.6.1` is the current hosted Railway release, including
-the documentation-banner-frame correction. `v0.5.1` is historical pre-review-
-gate evidence. The new local
+**Current phase:** `v0.7.0` is the current source release; it hardens evidence
+byte integrity, makes human review notes database-only, and raises the frontend
+briefing limit to ten. Its Railway/Vercel deployment must be verified before it
+is described as the current hosted release. `v0.6.1` is the previously verified
+hosted Railway revision, and `v0.5.1` is historical pre-review-gate evidence. The new local
 guardrail work adds claim-level evidence, a separate verifier, and a human
 publication gate. `DRIFT_MODE=live`
 can make a bounded `backend.pipeline` **draft** capture: persist/reload source
@@ -18,12 +20,15 @@ a draft, with meaningful human notes; live briefing/search/chat filter to
 reviewed verifier-passed records. All provider calls are budgeted and
 retry-bounded. On 2026-07-15, `v0.5.1` served one bounded, unreviewed vLLM
 capture through `/briefing` with Vercel CORS verified. On 2026-07-16, Railway
-PostgreSQL was verified at migration `0003` through its public TCP proxy, and
-the hosted `v0.6.1` app was verified through `/health`, `/briefing` (empty as
-intended without reviewed evidence), branded `/docs`, and a Vercel-to-Railway
-CORS preflight. The Vercel HTML also references the canonical API-served
-banner pair. Do not claim broad live release analysis or
-hosted `/search`/`/chat` verification without a reviewed capture.
+PostgreSQL was verified at migration `0003` through its public TCP proxy; an
+eight-source capture produced six verifier-passed drafts, and four were
+published after human review (Transformers v5.14.1, vLLM v0.25.1, NCCL
+v2.30.7-1, TensorRT 11.1). The hosted `v0.6.1` app was then verified through
+`/health`, `/briefing` (now returning the four reviewed Insights), branded
+`/docs`, a Vercel-to-Railway CORS preflight, and provider-backed `/search` and
+`/chat` over that reviewed set. The Vercel HTML also references the canonical
+API-served banner pair. This is a small, bounded reviewed set — not broad or
+continuous live-release analysis.
 
 ## Key commands
 
@@ -168,13 +173,15 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The verified hosted application is
 `v0.6.1` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS.
-On 2026-07-16, `/health` reported `v0.6.1`, `/briefing` returned an intentional
-empty list because no capture is human-reviewed, `/docs` returned `200`, and
+On 2026-07-16, `/health` reported `v0.6.1`, `/briefing` returned the four
+human-reviewed Insights published that day, `/docs` returned `200`, and
 the Vercel HTML referenced the canonical API-served banner pair. The Swagger
 banner frame follows the same light/dark preference as the canonical banners.
 Railway PostgreSQL is verified at migration `0003` through a public TCP proxy.
-Further reviewed evidence and hosted `/search`/`/chat` smoke tests are still
-required before any broad live-analysis claim.
+Hosted `/search` and `/chat` were verified provider-backed the same day; this
+is a small, bounded reviewed set, not broad live-release analysis. Deploy and
+verify `v0.7.0` before claiming its review-note redaction or ten-item frontend
+view is hosted.
 
 [`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb) is the
 local operator path for bounded capture and manual publication. It requires a

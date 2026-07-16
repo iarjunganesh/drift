@@ -35,7 +35,8 @@ def _row_to_insight(row: InsightRow) -> Insight:
             "applicability_conditions": row.applicability_conditions,
             "publication_status": row.publication_status,
             "verification_status": row.verification_status,
-            "human_review_notes": row.human_review_notes,
+            # human_review_notes is intentionally not carried into the public
+            # contract; it is database-only audit data (see Insight.human_review_notes).
             "reviewed_at": row.reviewed_at,
             "verified_at": row.verified_at,
             "created_at": row.created_at,

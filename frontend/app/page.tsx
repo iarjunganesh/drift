@@ -39,7 +39,7 @@ export default function Home() {
       try {
         const [healthResponse, briefingResponse] = await Promise.all([
           fetch(`${API_URL}/health`),
-          fetch(`${API_URL}/briefing?top_n=3`),
+          fetch(`${API_URL}/briefing?top_n=10`),
         ]);
         if (!healthResponse.ok || !briefingResponse.ok) {
           throw new Error("The DRIFT API returned an unsuccessful response.");

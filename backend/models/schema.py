@@ -272,7 +272,10 @@ class Insight(BaseModel):
     applicability_conditions: list[str] = Field(default_factory=list)
     publication_status: PublicationStatus = PublicationStatus.REVIEWED
     verification_status: VerificationStatus = VerificationStatus.PASSED
-    human_review_notes: str | None = None
+    # Internal reviewer audit trail. Persisted on InsightRow for the publication
+    # gate, but never part of the public contract: exclude=True keeps it out of
+    # every serialized response (/briefing, /search, and any future endpoint).
+    human_review_notes: str | None = Field(default=None, exclude=True)
     reviewed_at: datetime | None = None
     verified_at: datetime | None = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))

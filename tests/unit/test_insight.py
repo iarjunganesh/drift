@@ -190,19 +190,54 @@ def test_generate_insight_rejects_invalid_and_schema_invalid_json() -> None:
         )
 
 
-def test_generate_insight_rejects_non_exact_evidence_and_verifier_rejection() -> None:
+def test_generate_insight_rejects_non_exact_evidence_and_unusable_verdicts() -> None:
     with pytest.raises(ValueError, match="not an exact source substring"):
         insight.generate_insight(
             [make_item(1)],
             ChangeSeverity.MINOR,
             client=FakeClient(outputs=[draft_output(excerpt="invented evidence")]),
         )
-    with pytest.raises(ValueError, match="verifier rejected"):
+    # Verifier accepts nothing: no insight can be published.
+    with pytest.raises(ValueError, match="accepted none of the drafted"):
+        insight.generate_insight(
+            [make_item(1)],
+            ChangeSeverity.MINOR,
+            client=FakeClient(outputs=[draft_output(), json.dumps({"accepted_claim_indexes": [], "notes": ["all unsupported"]})]),
+        )
+    # Verifier drops the only recommended check: the survivor is not inspectable.
+    with pytest.raises(ValueError, match="no accepted recommended check"):
         insight.generate_insight(
             [make_item(1)],
             ChangeSeverity.MINOR,
             client=FakeClient(outputs=[draft_output(), json.dumps({"accepted_claim_indexes": [0, 1], "notes": ["action too broad"]})]),
         )
+    # Verifier drops the only direct fact: the survivor has no upstream anchor.
+    with pytest.raises(ValueError, match="no accepted direct factual"):
+        insight.generate_insight(
+            [make_item(1)],
+            ChangeSeverity.MINOR,
+            client=FakeClient(outputs=[draft_output(), json.dumps({"accepted_claim_indexes": [1, 2], "notes": []})]),
+        )
+
+
+def test_generate_insight_publishes_only_verifier_accepted_claims() -> None:
+    # Verifier accepts the direct fact (0) and recommended check (2) but rejects
+    # the inference (1); the insight publishes with only the two accepted claims.
+    client = FakeClient(
+        outputs=[
+            draft_output(),
+            json.dumps({"accepted_claim_indexes": [0, 2], "notes": ["inference unsupported"]}),
+        ]
+    )
+
+    result = insight.generate_insight([make_item(1)], ChangeSeverity.MINOR, client=client)
+
+    assert result.verification_status is VerificationStatus.PASSED
+    assert [claim.kind for claim in result.claims] == [
+        ClaimKind.DIRECT_FACT,
+        ClaimKind.RECOMMENDED_CHECK,
+    ]
+    assert result.why_it_matters == "No additional operator interpretation was accepted from this evidence."
 
 
 def test_claim_grounding_rejects_unknown_items_and_missing_required_claim_kinds() -> None:

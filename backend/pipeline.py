@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
+import structlog
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.agents.insight import GeneratedInsight, generate_insight_with_audit
@@ -27,6 +28,8 @@ from backend.models.schema import (
     VerificationStatus,
     session_factory,
 )
+
+log = structlog.get_logger(__name__)
 
 
 @dataclass(frozen=True)
@@ -176,17 +179,36 @@ async def run_capture(
             spend_guard=spend_guard,
             resilience=resilience,
         )
-        generated = [
-            generate_insight_with_audit(
-                cluster,
-                severity,
-                tier,
-                client=active_client,
-                spend_guard=spend_guard,
-                resilience=resilience,
+        generated: list[GeneratedInsight] = []
+        skipped_clusters = 0
+        for cluster, severity in clusters:
+            try:
+                generated.append(
+                    generate_insight_with_audit(
+                        cluster,
+                        severity,
+                        tier,
+                        client=active_client,
+                        spend_guard=spend_guard,
+                        resilience=resilience,
+                    )
+                )
+            except ValueError as exc:
+                # One cluster whose draft fails grounding or is rejected by the
+                # separate verifier must not discard the whole capture. Log it
+                # and keep the drafts that passed; a budget error (not a
+                # ValueError) still stops the run.
+                skipped_clusters += 1
+                log.warning(
+                    "insight.generate.skipped",
+                    error=str(exc),
+                    source_urls=[item.url for item in cluster],
+                )
+        if not generated:
+            raise RuntimeError(
+                "No insight drafts survived generation and verification; "
+                f"{skipped_clusters} cluster(s) were skipped."
             )
-            for cluster, severity in clusters
-        ]
         embeddings = embed_texts(
             [
                 "\n".join(

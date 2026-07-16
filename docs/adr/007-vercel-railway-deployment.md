@@ -33,9 +33,10 @@ analysis or hosted `/search`/`/chat` verification.
 `0003_claim_evidence_review_gate` and filters live reads to human-reviewed,
 verifier-passed records. Railway PostgreSQL was verified at that migration
 through its public TCP proxy on 2026-07-16. Later that day, the hosted `v0.6.1`
-application passed `/health`, empty fail-closed `/briefing`, `/docs`, and Vercel
-CORS checks. The prior populated hosted result remains
-historical evidence, not verification of the new gate with reviewed data.
+application passed `/health`, `/briefing`, `/docs`, and Vercel CORS checks; after
+four human-reviewed Insights were published, hosted `/briefing`, `/search`, and
+`/chat` were verified provider-backed over that reviewed set. The prior populated
+pre-gate hosted result remains historical evidence only.
 
 **2026-07-16 brand-assets addendum:**
 `assets/brand/drift-banner-dark.svg` and

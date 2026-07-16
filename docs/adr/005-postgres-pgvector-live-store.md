@@ -2,8 +2,8 @@
 
 **Status:** Accepted; historical Railway PostgreSQL migration and one
 unreviewed hosted capture verified; Railway schema verified at `0003`;
-review-gated application/empty briefing verified; hosted `/search`/`/chat`
-verification after reviewed evidence pending
+review-gated application verified; on 2026-07-16, four human-reviewed Insights
+were published and hosted `/briefing`/`/search`/`/chat` verified provider-backed
 **Date:** 2026-07-14
 
 ## Decision
@@ -43,5 +43,6 @@ verifier-passed records. On 2026-07-15, the earlier Railway migration and one
 unreviewed vLLM capture served through hosted `/briefing` were verified; that
 predates `0003`. Railway PostgreSQL was verified through `0003` on 2026-07-16
 using its public TCP proxy; later that day hosted `v0.6.1` `/health` and its
-empty fail-closed `/briefing` were verified. A reviewed capture corpus and
-review-gated hosted `/search`/`/chat` smoke tests remain pending.
+empty fail-closed `/briefing` were verified. On 2026-07-16, four human-reviewed
+Insights were published and hosted `/briefing`/`/search`/`/chat` verified
+provider-backed.
