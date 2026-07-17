@@ -1,6 +1,6 @@
 # DRIFT project initiatives
 
-These are the nine Codex project initiatives associated with the DRIFT baseline,
+These are the ten Codex project initiatives associated with the DRIFT baseline,
 publication follow-up, `0.2.0` release candidate, and the current build-sequence
 implementation work. They are submission evidence pointers for the build work;
 they are not model-run provenance and do not turn fixture records into live
@@ -250,7 +250,7 @@ capture; this initiative does not turn it into a broad live-analysis claim.
 
 ### Implementation addendum — 2026-07-15
 
-The planned guardrails are now implemented locally and covered by 149 tests at
+The planned guardrails are now implemented locally and covered by 150 tests at
 100.00% backend coverage:
 
 - each live claim has a type, frozen exact primary-source excerpt, character
@@ -297,27 +297,37 @@ health, docs, CORS, and Vercel banner source were verified, and a later
 `/briefing`, `/search`, and `/chat` verified provider-backed. The amended
 `v0.6.1` release also makes the API-docs banner frame system-theme-aware.
 
+## Initiative 10 — Reviewed-evidence hardening, hosted verification, and v0.8.0 source release
+
+**Codex Session ID:** `019f6a78-6fa2-7121-9059-85ac8ceb9904`
+
+**Dates:** 2026-07-16–17
+
+This initiative audited and completed the reviewed-evidence release boundary:
+
+- fixed the Windows evidence-manifest newline mismatch and preserved byte-exact
+  SHA-256 verification;
+- made human review notes database-only in public API serialization and OpenAPI;
+- made the saved results notebook Markdown-only and added a regression test;
+- verified Railway `v0.7.0`, public redaction, Vercel CORS, and the deployed
+  ten-item briefing request; and
+- synchronized release, architecture, ADR, runbook, and submission records;
+- carried the same work through the `v0.8.0` source release: corrected no-key
+  fixture claims to use explicitly synthetic, checked-in source text with
+  byte-exact hashes/spans, aligned the Ask DRIFT UI with the `/chat` contract,
+  added the regression test, and performed the final status/version sweep.
+
 ## Submission usage
 
-Devpost requires one primary `/feedback` session, use Initiative 04. All nine
+Devpost requires one primary `/feedback` session, use Initiative 04. All ten
 IDs should be retained in the project README, changelog, and submission notes.
 If Devpost requires one primary `/feedback` session, use Initiative 04:
 `019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
 2 implementation and synchronization record, Initiative 06 is the additive
 Day 3/Day 4 Insight implementation record, and Initiative 07 is the bounded
 capture/provenance and cleanup record. Initiative 08 is the additive grounding
-guardrail and capture-readiness record, and Initiative 09 is the additive
-submission-audit/frontend-presentation record; the earlier sessions remain the
-foundation, publication, and hosted-demo follow-up initiatives.
-
-### Release-hardening addendum — 2026-07-16
-
-The `v0.7.0` source release fixes the Windows evidence-manifest newline mismatch,
-makes review notes database-only in the public API contract, requests up to ten
-reviewed briefing records in the frontend, and replaces the recorded notebook
-with a Markdown-only results artifact. It is covered by 149 tests at 100%
-backend coverage. The Git-connected deployment was then verified through
-`/health` (`0.7.0`), `/docs`, Vercel CORS, a four-record `/briefing` without
-review notes, `/openapi.json` without the field, and the Vercel bundle's
-`top_n=10` request. Paid chat was not re-invoked for this privacy/frontend-only
-release.
+guardrail and capture-readiness record, Initiative 09 is the additive
+submission-audit/frontend-presentation record, and Initiative 10 is the
+reviewed-evidence hardening, hosted-verification, and `v0.8.0` source-release
+record; the earlier sessions remain the foundation, publication, and hosted-demo
+follow-up initiatives.

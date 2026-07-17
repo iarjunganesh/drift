@@ -5,3 +5,7 @@
 # (without this, core.autocrlf=true smudges the LF blob to CRLF on Windows and
 # breaks the hash locally).
 assets/evidence/*.json -text
+
+# No-key fixture source text is referenced by immutable SHA-256 values in the
+# checked-in claim records. Preserve its source bytes across Windows/macOS/Linux.
+backend/fixtures/source_evidence/*.txt -text

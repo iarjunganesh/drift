@@ -6,10 +6,13 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.7.0` is the current hosted Railway/Vercel release. It
-hardens evidence byte integrity, makes human review notes database-only, and
-raises the frontend briefing limit to ten. `v0.6.1` is the previously verified
-hosted Railway revision, and `v0.5.1` is historical pre-review-gate evidence. The new local
+**Current phase:** `v0.8.0` is the current source release. It adds a grounded
+frontend chat box and makes the no-key fixture evidence inspectable against
+checked-in synthetic source files; hosted deployment verification is pending.
+`v0.7.0` is the current verified Railway/Vercel release: it hardens evidence
+byte integrity, makes human review notes database-only, and raises the frontend
+briefing limit to ten. `v0.6.1` is the previously verified hosted Railway
+revision, and `v0.5.1` is historical pre-review-gate evidence. The new local
 guardrail work adds claim-level evidence, a separate verifier, and a human
 publication gate. `DRIFT_MODE=live`
 can make a bounded `backend.pipeline` **draft** capture: persist/reload source
@@ -28,6 +31,12 @@ v2.30.7-1, TensorRT 11.1). The hosted `v0.6.1` app was then verified through
 `/chat` over that reviewed set. The Vercel HTML also references the canonical
 API-served banner pair. This is a small, bounded reviewed set — not broad or
 continuous live-release analysis.
+
+The fixture demo now ships typed claim evidence backed by explicit synthetic
+source files, so the inspect-claim-evidence panel renders without an API key.
+The suite is 150 tests at 100% backend
+coverage; `main` branch protection requires the CI quality gate and the Codecov
+`pytest` upload is confirmed (both verified 2026-07-17).
 
 ## Key commands
 
@@ -170,9 +179,10 @@ The accepted deployment shape is a Vercel project rooted at `frontend/` and a
 Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
-`https://drift-api-prod.up.railway.app`. The verified hosted application is
-`v0.6.1` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS.
-On 2026-07-16, `/health` reported `v0.6.1`, `/briefing` returned the four
+`https://drift-api-prod.up.railway.app`. The current verified hosted application
+is `v0.7.0` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS;
+`v0.6.1` was the prior verified revision. On 2026-07-16, `/health` reported
+`v0.6.1`, `/briefing` returned the four
 human-reviewed Insights published that day, `/docs` returned `200`, and
 the Vercel HTML referenced the canonical API-served banner pair. The Swagger
 banner frame follows the same light/dark preference as the canonical banners.
@@ -200,7 +210,8 @@ Railway URL for local TCP-proxy access; it is not evidence of a hosted run.
 - `docs/BUILD_SEQUENCE.md` — implementation sequence and publication setup.
 - `docs/adr/` — durable architectural decisions.
 - `docs/INITIATIVES.md` — Codex project initiative/session evidence.
-- `backend/fixtures/` — deterministic, citation-backed example insights.
+- `backend/fixtures/` — deterministic, citation-backed example insights, each
+  carrying typed claim evidence.
 - `backend/fixtures/evals/` — claim-grounding calibration cases.
 - `notebooks/` — local manual capture/review workflow; contains no secrets.
 - `assets/architecture/` — Mermaid source and themed SVG/PNG renders.

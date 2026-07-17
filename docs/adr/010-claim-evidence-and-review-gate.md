@@ -68,3 +68,10 @@ database-only in the serialized Insight contract and prevents the live-store
 reader from copying them into public records. It also tests the public API and
 OpenAPI boundary. The Git-connected `v0.7.0` deployment was verified to omit
 the field from `/briefing` and `/openapi.json`.
+
+**2026-07-17 fixture addendum:** `v0.8.0` makes no-key example claims conform
+to the same evidence contract without representing synthetic text as an
+upstream release. Each fixture evidence reference resolves to a checked-in,
+explicitly synthetic source file; the full-file SHA-256, exact excerpt, offsets,
+source URL, and raw-item relationship are asserted by a regression test. This
+is source-release behavior only until a hosted deployment is observed.

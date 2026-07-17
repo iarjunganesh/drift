@@ -12,7 +12,7 @@ model behavior.
 
 | Time | Screen | Narration / action |
 | --- | --- | --- |
-| 0:00–0:10 | DRIFT hero banner | “DRIFT turns GPU and AI-infrastructure release noise into a cited engineering check.” |
+| 0:00–0:10 | DRIFT brand banner | “DRIFT turns GPU and AI-infrastructure release noise into a cited engineering check.” |
 | 0:10–0:28 | README problem section or architecture | “Teams depend on fast-moving projects such as vLLM, PyTorch, Triton, and CUDA. DRIFT answers what changed, why it matters, and what to check next.” |
 | 0:28–0:42 | Terminal: start API | Run `uv run uvicorn backend.main:app --reload`; show the no-key fixture mode. |
 | 0:42–1:00 | `/health` and `/briefing` | Show the live reviewed briefing after confirming the deployed version. Point out severity, confidence, citations, and that this is a small bounded four-Insight set—not broad live analysis. |

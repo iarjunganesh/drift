@@ -1,0 +1,54 @@
+flowchart LR
+    classDef source fill:#0f766e,stroke:#14b8a6,color:#ffffff
+    classDef agent fill:#312e81,stroke:#818cf8,color:#ffffff
+    classDef data fill:#164e63,stroke:#22d3ee,color:#ffffff
+    classDef model fill:#7c2d12,stroke:#fb923c,color:#ffffff
+    classDef api fill:#166534,stroke:#4ade80,color:#ffffff
+    classDef user fill:#7e22ce,stroke:#c084fc,color:#ffffff
+    classDef note fill:#475569,stroke:#94a3b8,color:#ffffff
+    classDef gate fill:#0f3f2f,stroke:#fbbf24,color:#fef9c3,stroke-width:3px
+
+    U(["Engineer"]):::user
+    FIX["Fixture mode<br/>no-key · deterministic"]:::note
+
+    subgraph UNTRUSTED["🔴 UNTRUSTED INPUT — primary release feeds"]
+        direction TB
+        FEEDS["GitHub Atom<br/>release feeds"]:::source
+        SCOUT["① Scout<br/>normalize + dedupe"]:::agent
+        RAW[("raw_items<br/>Postgres")]:::data
+        SYNTH["② Synthesizer<br/>embed · cluster · classify"]:::agent
+        EMB["text-embedding-3-small"]:::model
+        FEEDS --> SCOUT --> RAW --> SYNTH
+        SYNTH -.->|embed| EMB
+    end
+
+    subgraph QUARANTINE["🟠 QUARANTINE — machine drafts, nobody trusts yet"]
+        direction TB
+        INSIGHT["③ Claim extractor<br/>facts · inferences · checks"]:::agent
+        VERIFY["④ Separate verifier<br/>reject unsupported claims"]:::agent
+        DRAFT[("draft insights + frozen spans<br/>offsets · SHA-256 · pgvector")]:::data
+        LLM["GPT-5.6 tiers<br/>Luna · Terra · Sol"]:::model
+        INSIGHT --> VERIFY --> DRAFT
+        INSIGHT -.-> LLM
+        VERIFY -.-> LLM
+    end
+
+    GATE{{"⑤ HUMAN REVIEW GATE<br/>notes required · verifier-passed only"}}:::gate
+
+    subgraph TRUSTED["🟢 TRUSTED — reviewed, published"]
+        direction TB
+        DB[("reviewed insights + vectors<br/>Postgres / pgvector")]:::data
+        BRIEF["⑥ Briefing<br/>rank + retrieve"]:::agent
+        API["FastAPI<br/>briefing · search · chat"]:::api
+        DB --> BRIEF --> API
+    end
+
+    SYNTH ==>|substantive changes| INSIGHT
+    DRAFT ==>|submit| GATE
+    GATE ==>|published| DB
+    API ==>|cited answer| U
+    FIX -.->|no-key lane| API
+
+    style UNTRUSTED fill:transparent,stroke:#f43f5e,stroke-width:2px,stroke-dasharray:6 4
+    style QUARANTINE fill:transparent,stroke:#f59e0b,stroke-width:2px,stroke-dasharray:6 4
+    style TRUSTED fill:transparent,stroke:#10b981,stroke-width:2px,stroke-dasharray:6 4

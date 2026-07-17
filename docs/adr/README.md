@@ -15,7 +15,7 @@ decisions compose.
 | [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted `v0.7.0` health/docs/CORS, review-note redaction, and Vercel `top_n=10` bundle verified; reviewed `/briefing`/`/search`/`/chat` were provider-backed verified on 2026-07-16 |
 | [008](008-live-grounded-chat.md) | Live grounded chat over the fixture store | Accepted |
 | [009](009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery | Accepted |
-| [010](010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication | Accepted locally and deployed; four human-reviewed Insights published 2026-07-16 with hosted retrieval/chat verified provider-backed |
+| [010](010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication | Accepted; `v0.8.0` source makes synthetic fixture evidence verifiable without implying upstream provenance, while four human-reviewed Insights remain the bounded hosted set verified 2026-07-16 |
 
 When implementation invalidates a decision, amend the original record or add a
 new ADR. Do not silently rewrite the decision history in code comments or

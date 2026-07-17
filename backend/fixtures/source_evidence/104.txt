@@ -1,0 +1,2 @@
+Synthetic DRIFT fixture source — not an upstream release note.
+Extensions built against the previous toolchain should be recompiled.

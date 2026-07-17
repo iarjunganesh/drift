@@ -10,6 +10,8 @@ type ChatAnswer = {
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const MIN_QUESTION_LENGTH = 3;
+const MAX_QUESTION_LENGTH = 2_000;
 
 const SUGGESTIONS = [
   "What should I check for vLLM?",
@@ -23,13 +25,15 @@ export default function AskDrift() {
   const [question, setQuestion] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [result, setResult] = useState<ChatAnswer | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function ask(pending: string) {
     const trimmed = pending.trim();
-    if (trimmed.length < 2 || status === "loading") return;
+    if (trimmed.length < MIN_QUESTION_LENGTH || status === "loading") return;
 
     setStatus("loading");
     setResult(null);
+    setErrorMessage("");
     try {
       const response = await fetch(`${API_URL}/chat`, {
         method: "POST",
@@ -48,7 +52,10 @@ export default function AskDrift() {
       const answer = (await response.json()) as ChatAnswer;
       setResult(answer);
       setStatus("answered");
-    } catch {
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "The DRIFT API could not complete the request."
+      );
       setStatus("error");
     }
   }
@@ -80,13 +87,15 @@ export default function AskDrift() {
           type="text"
           value={question}
           placeholder="What should I check for vLLM?"
+          minLength={MIN_QUESTION_LENGTH}
+          maxLength={MAX_QUESTION_LENGTH}
           onChange={(event) => setQuestion(event.target.value)}
           autoComplete="off"
         />
         <button
           className="button primary"
           type="submit"
-          disabled={status === "loading" || question.trim().length < 2}
+          disabled={status === "loading" || question.trim().length < MIN_QUESTION_LENGTH}
         >
           {status === "loading" ? "Asking…" : "Ask"}
         </button>
@@ -109,13 +118,13 @@ export default function AskDrift() {
       </div>
 
       {status === "loading" && (
-        <div className="card ask-answer">
+        <div className="card ask-answer" role="status" aria-live="polite">
           <p>Retrieving cited evidence…</p>
         </div>
       )}
 
       {status === "empty" && (
-        <div className="card ask-answer">
+        <div className="card ask-answer" role="status" aria-live="polite">
           <h3>No matching insights</h3>
           <p>
             No reviewed DRIFT insight matched that question. Try a specific
@@ -125,14 +134,14 @@ export default function AskDrift() {
       )}
 
       {status === "error" && (
-        <div className="card ask-answer">
-          <h3>The DRIFT API is not reachable</h3>
-          <p>Start the backend and ask again.</p>
+        <div className="card ask-answer" role="alert">
+          <h3>The DRIFT API could not complete the request</h3>
+          <p>{errorMessage}</p>
         </div>
       )}
 
       {status === "answered" && result && (
-        <div className="card ask-answer">
+        <div className="card ask-answer" role="status" aria-live="polite">
           <div className="ask-answer-label">Grounded answer</div>
           <p className="ask-answer-body">{result.answer}</p>
           {result.source_citations.length > 0 && (

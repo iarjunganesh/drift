@@ -13,7 +13,9 @@ truth boundary in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 4. Open `/docs` and point out the same paired, system-theme-aware DRIFT banners
    used in the README and frontend, then inspect `/briefing`, search `vllm`, and
    send a chat question.
-5. Point out the source links, confidence, and `fixture-curated` audit label.
+5. Point out the source links, confidence, and `fixture-curated` audit label;
+   each link opens checked-in synthetic source text rather than an upstream
+   release note.
 6. If showing the frontend, run `npm --prefix frontend ci` and
    `npm --prefix frontend run dev` in a second terminal.
 
@@ -106,7 +108,7 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The nine Codex initiatives associated with this baseline, deployment follow-up,
+The ten Codex initiatives associated with this baseline, deployment follow-up,
 the v0.4.0 baseline, v0.5.0 capture-path release, and implementation follow-ups
 are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
@@ -123,3 +125,5 @@ are listed in
   `019f6773-0e96-7363-9657-0e0531c3d594`
 - Submission audit and frontend evidence presentation:
   `019f6a46-e3eb-7de2-81b1-91515ae80043`
+- Reviewed-evidence hardening, hosted verification, and `v0.8.0` source release:
+  `019f6a78-6fa2-7121-9059-85ac8ceb9904`

@@ -40,7 +40,7 @@ pre-gate hosted result remains historical evidence only.
 
 **2026-07-16 brand-assets addendum:**
 `assets/brand/drift-banner-dark.svg` and
-`assets/brand/drift-banner-light.svg` are the canonical theme-aware hero
+`assets/brand/drift-banner-light.svg` are the canonical theme-aware brand
 banners. The Railway Docker image copies the source pair and FastAPI serves
 them at `/brand/dark.svg` and `/brand/light.svg`. **2026-07-16 frontend theme
 addendum:** the Vercel frontend renders those API-served canonical files through
