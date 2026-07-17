@@ -261,16 +261,24 @@ async def create_text_response(
     input_text: str,
     max_output_tokens: int,
     resilience: ModelCallResilience | None = None,
+    text_format: dict[str, Any] | None = None,
 ) -> TextResponse:
-    """Generate text through the Responses API with a router-resolved model."""
+    """Generate text through the Responses API with a router-resolved model.
+
+    Pass ``text_format`` to constrain the reply to a strict JSON schema; the
+    provider then returns the structured payload as the response ``output_text``.
+    """
     async def operation() -> Any:
-        return await client.responses.create(
+        request: dict[str, Any] = dict(
             model=get_model(tier),
             instructions=instructions,
             input=input_text,
             max_output_tokens=max_output_tokens,
             reasoning={"effort": "low"},
         )
+        if text_format is not None:
+            request["text"] = {"format": text_format}
+        return await client.responses.create(**request)
 
     if resilience is None:
         return TextResponse(response=await operation(), attempts=1)

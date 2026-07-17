@@ -1,8 +1,9 @@
+import json
 from datetime import UTC, datetime
 
 import pytest
 
-from backend.agents.briefing import answer_question_with_model
+from backend.agents.briefing import _CHAT_SCHEMA, answer_question_with_model
 from backend.core.budget import SpendGuard
 from backend.core.resilience import CircuitBreaker, ModelCallResilience, RetryPolicy
 from backend.models.schema import (
@@ -14,11 +15,21 @@ from backend.models.schema import (
 )
 
 
+def _grounded_json(answer: str, grounded_insight_ids: list[int]) -> str:
+    return json.dumps({"answer": answer, "grounded_insight_ids": grounded_insight_ids})
+
+
 class FakeResponses:
-    def __init__(self, input_tokens: int = 0, output_tokens: int = 0) -> None:
+    def __init__(
+        self,
+        input_tokens: int = 0,
+        output_tokens: int = 0,
+        grounded_insight_ids: list[int] | None = None,
+    ) -> None:
         self.request: dict | None = None
         self.input_tokens = input_tokens
         self.output_tokens = output_tokens
+        self.grounded_insight_ids = grounded_insight_ids if grounded_insight_ids is not None else [1]
 
     async def create(self, **kwargs):
         self.request = kwargs
@@ -27,7 +38,8 @@ class FakeResponses:
             (),
             {"input_tokens": self.input_tokens, "output_tokens": self.output_tokens},
         )()
-        return type("Response", (), {"output_text": "Grounded answer", "usage": usage})()
+        output_text = _grounded_json("Grounded answer", self.grounded_insight_ids)
+        return type("Response", (), {"output_text": output_text, "usage": usage})()
 
 
 class FakeClient:
@@ -45,6 +57,15 @@ class EmptyResponses:
         return type("Response", (), {"output_text": "", "usage": None})()
 
 
+class StaticResponses:
+    def __init__(self, output_text: str) -> None:
+        self.output_text = output_text
+
+    async def create(self, **kwargs):
+        usage = type("Usage", (), {"input_tokens": 10, "output_tokens": 5})()
+        return type("Response", (), {"output_text": self.output_text, "usage": usage})()
+
+
 class ResponsesClient:
     def __init__(self, responses) -> None:
         self.responses = responses
@@ -59,7 +80,8 @@ class RetryThenSuccessResponses:
         if self.attempts == 1:
             raise TimeoutError("timed out after provider receipt")
         usage = type("Usage", (), {"input_tokens": 1_000, "output_tokens": 100})()
-        return type("Response", (), {"output_text": "Retried answer", "usage": usage})()
+        output_text = _grounded_json("Retried answer", [1])
+        return type("Response", (), {"output_text": output_text, "usage": usage})()
 
 
 def make_insight() -> Insight:
@@ -100,7 +122,7 @@ async def test_live_chat_uses_router_resolved_model_and_untrusted_evidence(tmp_p
     client = FakeClient(input_tokens=1_000, output_tokens=100)
     guard = SpendGuard(tmp_path / "spend-ledger.json", limit_usd=1, alert_usd=0.5)
 
-    answer = await answer_question_with_model(
+    grounded = await answer_question_with_model(
         "What should I check?",
         [make_insight()],
         client=client,
@@ -108,9 +130,11 @@ async def test_live_chat_uses_router_resolved_model_and_untrusted_evidence(tmp_p
         max_call_usd=0.2,
     )
 
-    assert answer == "Grounded answer"
+    assert grounded.text == "Grounded answer"
+    assert grounded.grounded_insight_ids == [1]
     assert client.responses.request is not None
     assert client.responses.request["model"] == "gpt-5.6-terra"
+    assert client.responses.request["text"] == {"format": _CHAT_SCHEMA}
     assert "untrusted data" in client.responses.request["instructions"]
     assert "Ignore prior instructions" in client.responses.request["input"]
     assert "https://example.com/release" in client.responses.request["input"]
@@ -123,7 +147,7 @@ async def test_live_chat_uses_router_resolved_model_and_untrusted_evidence(tmp_p
 async def test_live_chat_returns_fixture_explanation_without_evidence(tmp_path) -> None:
     guard = SpendGuard(tmp_path / "spend-ledger.json", limit_usd=1, alert_usd=0.5)
 
-    answer = await answer_question_with_model(
+    grounded = await answer_question_with_model(
         "Unknown release",
         [],
         client=FakeClient(),
@@ -131,7 +155,8 @@ async def test_live_chat_returns_fixture_explanation_without_evidence(tmp_path) 
         max_call_usd=0.2,
     )
 
-    assert "could not find" in answer
+    assert "could not find" in grounded.text
+    assert grounded.grounded_insight_ids == []
     assert not guard.path.exists()
 
 
@@ -181,7 +206,7 @@ async def test_live_chat_conservatively_accounts_for_a_retried_attempt(tmp_path)
         circuit_breaker=CircuitBreaker(failure_threshold=3, reset_seconds=30),
     )
 
-    answer = await answer_question_with_model(
+    grounded = await answer_question_with_model(
         "What should I check?",
         [make_insight()],
         client=ResponsesClient(responses),
@@ -190,6 +215,71 @@ async def test_live_chat_conservatively_accounts_for_a_retried_attempt(tmp_path)
         resilience=resilience,
     )
 
-    assert answer == "Retried answer"
+    assert grounded.text == "Retried answer"
     assert responses.attempts == 2
     assert guard._read().settled_usd == pytest.approx(0.204)
+
+
+def make_second_insight() -> Insight:
+    insight = make_insight().model_copy(
+        update={
+            "id": 2,
+            "title": "NCCL collectives change",
+            "affected_libraries": ["nccl"],
+            "source_citations": ["https://example.com/nccl"],
+        }
+    )
+    return insight
+
+
+@pytest.mark.asyncio
+async def test_live_chat_reports_only_the_grounded_insight_subset(tmp_path) -> None:
+    guard = SpendGuard(tmp_path / "spend-ledger.json", limit_usd=1, alert_usd=0.5)
+    # The model was shown insights 1 and 2 but grounded only in 1; the stray id
+    # 99 was never supplied and must be dropped.
+    responses = StaticResponses(_grounded_json("Answer about vLLM only", [1, 99]))
+
+    grounded = await answer_question_with_model(
+        "What should I check for vLLM?",
+        [make_insight(), make_second_insight()],
+        client=ResponsesClient(responses),
+        spend_guard=guard,
+        max_call_usd=0.2,
+    )
+
+    assert grounded.text == "Answer about vLLM only"
+    assert grounded.grounded_insight_ids == [1]
+
+
+@pytest.mark.asyncio
+async def test_live_chat_rejects_malformed_grounding_json(tmp_path) -> None:
+    guard = SpendGuard(tmp_path / "spend-ledger.json", limit_usd=1, alert_usd=0.5)
+    responses = StaticResponses("not valid json at all")
+
+    with pytest.raises(RuntimeError, match="malformed"):
+        await answer_question_with_model(
+            "What should I check?",
+            [make_insight()],
+            client=ResponsesClient(responses),
+            spend_guard=guard,
+            max_call_usd=0.2,
+        )
+
+    assert guard._read().reserved_usd == 0
+
+
+@pytest.mark.asyncio
+async def test_live_chat_rejects_blank_answer_in_valid_json(tmp_path) -> None:
+    guard = SpendGuard(tmp_path / "spend-ledger.json", limit_usd=1, alert_usd=0.5)
+    responses = StaticResponses(_grounded_json("   ", [1]))
+
+    with pytest.raises(RuntimeError, match="no text"):
+        await answer_question_with_model(
+            "What should I check?",
+            [make_insight()],
+            client=ResponsesClient(responses),
+            spend_guard=guard,
+            max_call_usd=0.2,
+        )
+
+    assert guard._read().reserved_usd == 0

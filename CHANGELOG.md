@@ -8,7 +8,69 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning:
 The `0.1.0` entry is the initial repository baseline published on GitHub as
 the annotated `v0.1.0` tag.
 
+## [0.8.1] - 2026-07-17
+
+### Fixed
+
+- Made live Ask DRIFT responses structured and grounding-aware. The model now
+  reports the Insight IDs it actually used, the API filters citations and
+  `grounded_insight_ids` to that subset, and stray or malformed model IDs can
+  no longer cause unrelated source links to be presented for a question.
+- Added regression coverage for subset citation behavior, malformed structured
+  responses, blank answers, router schema forwarding, and lifespan integration.
+
+### Release boundary
+
+- This is a source patch release for the Ask DRIFT grounding fix, tagged from
+  `feature/v0.9.0-final-evidence`. Hosted Railway/Vercel verification remains
+  at `v0.8.0` until a deployment is independently checked.
+
+## Targeted releases — planned, not released
+
+These targets are planning records only. They do not change the current
+verified release (`v0.8.0`) or claim that the paid Tier.FINAL rerun has run.
+
+### `v0.9.0` — final-tier evidence and selected polish
+
+Targeted scope:
+
+- rerun selected reviewed examples through Tier.FINAL (Sol), initially the
+  four currently published sources: Transformers, vLLM, NCCL, and TensorRT;
+- preserve source bytes, exact claim spans/hashes, upstream references, model
+  identifiers, verifier results, model-run audits, and meaningful human review
+  notes for every accepted result;
+- publish only verifier-passed results after human review, retaining the
+  existing bounded-evidence and spend/retry guardrails; and
+- optionally include narrowly scoped polish that improves judge clarity or the
+  demo path, provided it does not delay or blur the evidence boundary.
+
+The Tier.FINAL run is still pending operator execution and budget validation.
+The reported remaining account balance is planning context, not release
+evidence; the configured spend guard remains authoritative.
+
+### `v1.0.0` — final submission release
+
+Targeted scope:
+
+- final product and documentation polish after the evidence decision;
+- final local/hosted verification of the judge path and bounded claims;
+- a public English YouTube demo under three minutes showing the working
+  workflow, citations, verification, Codex contribution, and GPT-5.6 role; and
+- final README, submission notes, Devpost metadata, and video-link replacement.
+
+`v1.0.0` is the submission-final target, not permission to add new feature
+surfaces such as MCP, tool calling, IDE integration, or a release timeline.
+
 ## [0.8.0] - 2026-07-17
+
+### Documentation audit — 2026-07-17
+
+- Recorded Codex session `019f7190-912d-70e3-be6d-fcc81bf8e203` as the additive
+  freeze-plan audit and documentation-synchronization initiative.
+- Corrected `submission/DRIFT_FREEZE_PLAN.md` so unimplemented release-timeline,
+  MCP, tool-calling, and IDE features are not marked as shipped; aligned the
+  video requirement with the under-three-minute submission rule and recorded
+  the verified screenshot/GIF boundary.
 
 ### Codex session record
 
@@ -585,6 +647,7 @@ with explicit live-path architecture and publication-ready quality gates.
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
+[0.8.1]: #081---2026-07-17
 [0.8.0]: #080---2026-07-17
 [0.7.0]: #070---2026-07-16
 [0.6.1]: #061---2026-07-16

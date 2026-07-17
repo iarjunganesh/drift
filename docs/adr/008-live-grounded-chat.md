@@ -42,3 +42,12 @@ proof. Railway PostgreSQL was verified at migration `0003` on 2026-07-16. This
 is not a broad hosted live-release-analysis claim: after four human-reviewed
 Insights were published on 2026-07-16, hosted `v0.6.1` `/briefing`, `/search`,
 and `/chat` were verified provider-backed over that bounded reviewed set.
+
+## Implementation addendum — 2026-07-17 (`v0.8.1`)
+
+Live chat now requests a strict structured response containing the answer and
+the Insight IDs actually used. The API filters citations to those returned IDs
+and rejects malformed or blank structured responses, preserving the
+retrieve-first and evidence-only boundary while avoiding unrelated citations.
+The source patch is tagged on `feature/v0.9.0-final-evidence`; hosted state is
+still independently verified only at `v0.8.0`.

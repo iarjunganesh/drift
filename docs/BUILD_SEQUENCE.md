@@ -60,12 +60,21 @@ AI-infrastructure release intelligence.
       source text with verified offsets and hashes; Railway `/health` reported
       `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT,
       and Vercel CORS passed (paid `/search` and `/chat` were not re-invoked)
+- [x] Source patch `v0.8.1`: structured live-chat grounding IDs now restrict
+      question citations to the Insights actually used; tests cover subset,
+      malformed-response, blank-answer, and router-schema behavior. This patch
+      is tagged on `feature/v0.9.0-final-evidence`; hosted verification remains
+      pending.
 - [x] No new model calls — the current UI remains presentation-only
 
 ## Day 8 — Final content + docs
-- [ ] Optional: rerun selected reviewed examples on Tier.FINAL (Sol) only if
-      additional budget is available; the `dev`/Luna reviewed set is the saved
-      submission evidence.
+- [ ] Targeted `v0.9.0` evidence pass: rerun selected reviewed examples on
+      Tier.FINAL (Sol), initially Transformers, vLLM, NCCL, and TensorRT, only
+      after confirming the spend guard and available budget. The `dev`/Luna
+      reviewed set remains the current saved submission evidence until the new
+      run is verified and human-reviewed.
+- [ ] Optional `v0.9.0` polish: include only focused changes that improve judge
+      clarity or the demo path without expanding the frozen feature surface.
 - [x] Fill in README's "How Codex and GPT-5.6 were used" section —
       required for submission, judged under Technological Implementation
 - [x] Record the primary `/feedback` Codex Session ID:
@@ -85,6 +94,19 @@ AI-infrastructure release intelligence.
 - [ ] Repo public (with license) OR shared with testing@devpost.com
       and build-week-event@openai.com
 - [ ] Submit early
+
+## Targeted release path — after the current `v0.8.0`
+
+- [ ] `v0.9.0`: publish verified Tier.FINAL evidence and any selected,
+      independently verified polish; do not call this released until the
+      evidence archive, review gate, tests, and intended hosted/local path are
+      checked.
+- [ ] `v1.0.0`: freeze the final judge path, complete the under-three-minute
+      public demo video, replace the video placeholder everywhere, and finish
+      the Devpost submission records.
+
+See the planned-release record in [`CHANGELOG.md`](../CHANGELOG.md). These are
+targets, not current version claims.
 
 ## GitHub and Codecov setup
 
@@ -124,7 +146,7 @@ Insight stage now has structured-output coverage.
 
 The baseline, hosted-deployment follow-up, bounded v0.4.0 baseline, v0.5.0
 capture-path release, and
-implementation follow-ups are supported by ten project initiatives:
+implementation follow-ups are supported by eleven project initiatives:
 
 - Foundation and inspectable vertical slice —
   `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -146,5 +168,7 @@ implementation follow-ups are supported by ten project initiatives:
   `019f6a46-e3eb-7de2-81b1-91515ae80043`
 - Reviewed-evidence hardening and `v0.8.0` hosted verification —
   `019f6a78-6fa2-7121-9059-85ac8ceb9904`
+- Freeze-plan audit and documentation synchronization —
+  `019f7190-912d-70e3-be6d-fcc81bf8e203`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.
