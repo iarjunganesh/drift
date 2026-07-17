@@ -1,3 +1,4 @@
+import json
 from dataclasses import replace
 
 import pytest
@@ -71,7 +72,10 @@ def test_live_chat_returns_the_live_model_audit_label(monkeypatch, tmp_path) -> 
     class FakeResponses:
         async def create(self, **kwargs):
             assert kwargs["model"] == "gpt-5.6-terra"
-            return type("Response", (), {"output_text": "Grounded response", "usage": None})()
+            output_text = json.dumps(
+                {"answer": "Grounded response", "grounded_insight_ids": [1]}
+            )
+            return type("Response", (), {"output_text": output_text, "usage": None})()
 
     class FakeClient:
         responses = FakeResponses()

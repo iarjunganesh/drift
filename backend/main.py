@@ -267,7 +267,7 @@ async def chat(request: ChatRequest) -> ChatResponse:
         raise HTTPException(status_code=404, detail="No matching DRIFT insights.")
     if settings.mode == "live":
         try:
-            answer = await answer_question_with_model(
+            grounded = await answer_question_with_model(
                 request.question,
                 insights,
                 client=app.state.openai_client,
@@ -286,14 +286,24 @@ async def chat(request: ChatRequest) -> ChatResponse:
                 status_code=502,
                 detail="The grounded model response could not be completed.",
             ) from exc
+        answer = grounded.text
         model_used = get_model(Tier.LIVE)
+        # The model answers over only the insights it reports grounding in, so
+        # cite that subset rather than the whole retrieval window. Fall back to
+        # every retrieved insight if it named none, so an answer never loses its
+        # sources.
+        grounded_ids = set(grounded.grounded_insight_ids)
+        cited = [item for item in insights if item.id in grounded_ids] or insights
     else:
         answer = answer_question(request.question, insights)
         model_used = "fixture-curated"
+        # The fixture answer concatenates every retrieved insight, so all of
+        # them genuinely back it.
+        cited = insights
 
     return ChatResponse(
         answer=answer,
-        source_citations=sorted({url for item in insights for url in item.source_citations}),
+        source_citations=sorted({url for item in cited for url in item.source_citations}),
         model_used=model_used,
-        grounded_insight_ids=[item.id for item in insights if item.id is not None],
+        grounded_insight_ids=[item.id for item in cited if item.id is not None],
     )

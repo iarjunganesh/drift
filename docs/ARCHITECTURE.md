@@ -364,6 +364,13 @@ The generated Swagger contract keeps route ownership visible through four
 groups: `system` for metadata and liveness, `briefing` for ranked insights,
 `search` for cited retrieval, and `chat` for grounded questions.
 
+The `v0.8.1` source patch makes live chat responses structured: the model
+returns the Insight IDs it actually used, and the API cites only that subset
+(falling back to the retrieved window only when no IDs are returned). This
+prevents a question-specific answer from presenting unrelated source links.
+The patch is tagged on `feature/v0.9.0-final-evidence`; hosted verification
+remains at `v0.8.0` until deployment is independently checked.
+
 ## Verification and readiness
 
 The repository quality sequence is:

@@ -39,6 +39,11 @@ source files, so the inspect-claim-evidence panel renders without an API key.
 The suite is 150 tests at 100% backend
 coverage; `main` branch protection requires the CI quality gate and the Codecov
 `pytest` upload is confirmed (both verified 2026-07-17).
+The 2026-07-17 freeze-plan audit and documentation synchronization is recorded
+under Codex session `019f7190-912d-70e3-be6d-fcc81bf8e203`.
+The source patch `v0.8.1` contains the Ask DRIFT grounding/citation fix and is
+tagged from `feature/v0.9.0-final-evidence`; hosted verification remains
+`v0.8.0` until a deployment is independently checked.
 
 ## Key commands
 

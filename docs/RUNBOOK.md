@@ -96,6 +96,11 @@ This path uses committed example data and makes no external calls.
    Paid `/search` and `/chat` were not re-invoked for this rollout.
    Scheduled population and a larger reviewed capture remain future work.
 
+   The source-only `v0.8.1` patch adds structured model grounding IDs so live
+   Ask DRIFT citations are limited to the Insights used for the answer. It is
+   tagged on `feature/v0.9.0-final-evidence`; do not describe it as hosted until
+   Railway/Vercel deployment and `/health` verification are complete.
+
 ## Recording order
 
 1. State the operational problem: release drift reaches production teams late.
@@ -111,7 +116,7 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The ten Codex initiatives associated with this baseline, deployment follow-up,
+The eleven Codex initiatives associated with this baseline, deployment follow-up,
 the v0.4.0 baseline, v0.5.0 capture-path release, and implementation follow-ups
 are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
@@ -130,3 +135,5 @@ are listed in
   `019f6a46-e3eb-7de2-81b1-91515ae80043`
 - Reviewed-evidence hardening and `v0.8.0` hosted verification:
   `019f6a78-6fa2-7121-9059-85ac8ceb9904`
+- Freeze-plan audit and documentation synchronization:
+  `019f7190-912d-70e3-be6d-fcc81bf8e203`

@@ -184,7 +184,7 @@ bounded reviewed set, not a broad live-release-analysis claim.
 ### Codex project initiatives
 
 The baseline, publication follow-up, bounded release milestones, and
-documentation follow-up are tied to ten project initiatives. The grounded
+documentation follow-up are tied to eleven project initiatives. The grounded
 live-chat row remains the primary v0.4.0 implementation session; v0.5.0 adds
 the bounded local capture path.
 
@@ -200,6 +200,7 @@ the bounded local capture path.
 | Grounding guardrails and capture readiness | `019f6773-0e96-7363-9657-0e0531c3d594` | Claim spans/hashes, separate verifier, review-gated publication, cross-references, calibration cases, manual notebook, and all-source capture preflight |
 | Submission audit and frontend evidence presentation | `019f6a46-e3eb-7de2-81b1-91515ae80043` | Handwritten-next-step audit, explicit briefing states, system-theme presentation, canonical API-served banners, and status synchronization |
 | Reviewed-evidence release hardening and hosted verification | `019f6a78-6fa2-7121-9059-85ac8ceb9904` | Evidence-byte integrity, database-only review notes, display-only results artifact, `v0.7.0` hosted verification, and the `v0.8.0` grounded-chat / verifiable-fixture hosted release |
+| Freeze-plan audit and documentation synchronization | `019f7190-912d-70e3-be6d-fcc81bf8e203` | Audited the frozen scope against tracked implementation, corrected unshipped MCP/timeline/IDE claims, aligned demo requirements, and synchronized records |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -218,6 +219,8 @@ submission-audit/frontend-presentation follow-up is
 `019f6a46-e3eb-7de2-81b1-91515ae80043`; the reviewed-evidence hardening,
 hosted-verification, and `v0.8.0` release session is
 `019f6a78-6fa2-7121-9059-85ac8ceb9904`.
+The freeze-plan audit and documentation-synchronization session is
+`019f7190-912d-70e3-be6d-fcc81bf8e203`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
 provides an API key. The local capture job routes embeddings, classification,
@@ -258,7 +261,7 @@ Agent code must not hard-code provider model names. The intended tiers are:
 | --- | --- | --- |
 | `dev` / Luna | Classification, clustering, and prompt iteration | Produced the four reviewed Insights published 2026-07-16; run only with an explicit live key |
 | `live` / Terra | Retrieve-first grounded chat | Serves hosted grounded chat over reviewed pgvector rows; verified provider-backed 2026-07-16 |
-| `final` / Sol | Three to five reviewed demo insights | Reserved; the 2026-07-16 demo set was captured at the `dev`/Luna tier to bound cost |
+| `final` / Sol | Three to five reviewed demo insights | Targeted for the planned `v0.9.0` evidence pass; the 2026-07-16 demo set remains the saved `dev`/Luna evidence until rerun and review |
 
 Every live insight must preserve:
 
@@ -316,6 +319,7 @@ in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
 | Surface | Status |
 | --- | --- |
 | **Current hosted release** | `v0.8.0` `live` — `/health` reports `0.8.0`, `/docs` returns `200`, the public Vercel page renders Ask DRIFT, and Vercel-origin CORS allows `GET, POST` |
+| **Current source patch** | `v0.8.1` — structured Ask DRIFT grounding IDs restrict question citations to the Insights actually used; tagged on `feature/v0.9.0-final-evidence`, not yet hosted-verified |
 | **Prior hosted release** | `v0.7.0` `live` — `/briefing` (four reviewed Insights, review notes redacted), `/openapi.json`, and the deployed Vercel bundle's `top_n=10` request were verified |
 | **Grounded retrieval** | `/briefing`, `/search`, and `/chat` verified provider-backed from an eight-source capture — six verifier-passed drafts, four published after human review |
 | **Database schema** | Railway PostgreSQL at `0003_claim_evidence_review_gate`, verified through its public TCP proxy |
