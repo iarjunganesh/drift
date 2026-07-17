@@ -1,15 +1,33 @@
 import json
 from pathlib import Path
 
+import pytest
+
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
+_RESULTS_NOTEBOOKS = sorted(
+    (REPOSITORY_ROOT / "notebooks").glob("drift_manual_run.*.results.ipynb")
+)
 
-def test_results_notebook_is_display_only_and_has_no_operator_config() -> None:
-    notebook = json.loads(
-        (REPOSITORY_ROOT / "notebooks" / "drift_manual_run.luna.results.ipynb").read_text(
-            encoding="utf-8"
-        )
-    )
+
+def test_results_notebooks_exist() -> None:
+    # Guard against the glob silently matching nothing (e.g. a rename), which
+    # would make the parametrized boundary test vacuously pass.
+    names = {path.name for path in _RESULTS_NOTEBOOKS}
+    assert {
+        "drift_manual_run.luna.results.ipynb",
+        "drift_manual_run.sol.results.ipynb",
+        "drift_manual_run.terra.results.ipynb",
+    } <= names
+
+
+@pytest.mark.parametrize(
+    "notebook_path", _RESULTS_NOTEBOOKS, ids=lambda path: path.name
+)
+def test_results_notebook_is_display_only_and_has_no_operator_config(
+    notebook_path: Path,
+) -> None:
+    notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
 
     assert notebook["cells"]
     assert all(cell["cell_type"] == "markdown" for cell in notebook["cells"])

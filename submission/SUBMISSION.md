@@ -35,7 +35,7 @@
       release URLs, and verified hosted provider-backed `/briefing`, `/search`,
       and `/chat` against the reviewed evidence on 2026-07-16 (`/chat` grounded
       via `gpt-5.6-terra` with source citations). Evidence + SHA-256 manifest
-      archived to `assets/evidence/2026-07-16-all-sources-reviewed.json`.
+      archived to `assets/evidence/2026-07-16-all-sources-luna.json`.
 - [x] Provide a judge path: hosted app is available at
       `https://dr1ftless.vercel.app` with a verified `v0.8.0` Railway API.
       On 2026-07-17, Railway `/health` reported `0.8.0`, `/docs` returned

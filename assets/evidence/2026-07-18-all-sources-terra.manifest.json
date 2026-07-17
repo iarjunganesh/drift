@@ -1,0 +1,6 @@
+{
+  "record_type": "evidence_integrity_manifest",
+  "evidence_file": "2026-07-18-all-sources-terra.json",
+  "sha256": "b606fe31f22449de0d404446a9249ddd4c2397dc7d258c7c204a177539dec00d",
+  "preservation_policy": "Do not overwrite this record; create a new dated archive for every capture."
+}

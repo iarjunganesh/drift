@@ -27,22 +27,23 @@ class EvidenceArchive:
     sha256: str
 
 
+def _json_only(label: str, value: Any) -> Any:
+    """Round-trip a value through JSON, rejecting non-JSON contents."""
+    try:
+        serialized = json.dumps(value, ensure_ascii=False, sort_keys=True, allow_nan=False)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{label} must contain only JSON values.") from exc
+    return json.loads(serialized)
+
+
 def _public_capture_metadata(capture_metadata: dict[str, Any]) -> dict[str, Any]:
     """Validate JSON metadata and reject common credential/review-note markers."""
     if not isinstance(capture_metadata, dict):
         raise ValueError("Capture metadata must be a JSON object.")
-    try:
-        serialized = json.dumps(
-            capture_metadata,
-            ensure_ascii=False,
-            sort_keys=True,
-            allow_nan=False,
-        )
-    except (TypeError, ValueError) as exc:
-        raise ValueError("Capture metadata must contain only JSON values.") from exc
-    if _SENSITIVE_METADATA.search(serialized):
+    public = _json_only("Capture metadata", capture_metadata)
+    if _SENSITIVE_METADATA.search(json.dumps(public, ensure_ascii=False, sort_keys=True)):
         raise ValueError("Capture metadata must not contain credentials or review notes.")
-    return json.loads(serialized)
+    return public
 
 
 def archive_reviewed_capture(
@@ -64,11 +65,6 @@ def archive_reviewed_capture(
             raise ValueError("Only verifier-passed Insights may be archived as evidence.")
     public_metadata = _public_capture_metadata(capture_metadata)
 
-    evidence_path = evidence_directory / f"{archive_name}.json"
-    manifest_path = evidence_directory / f"{archive_name}.manifest.json"
-    if evidence_path.exists() or manifest_path.exists():
-        raise FileExistsError("Evidence archive already exists; choose a new dated archive name.")
-
     payload = {
         "record_type": "reviewed_manual_capture",
         "archived_at": datetime.now(UTC).isoformat(),
@@ -81,6 +77,58 @@ def archive_reviewed_capture(
             "Operator risks and recommended checks are labelled interpretations, not upstream facts.",
         ],
     }
+    return _write_archive(payload, archive_name=archive_name, evidence_directory=evidence_directory)
+
+
+def archive_chat_capture(
+    chat_results: list[dict[str, Any]],
+    *,
+    archive_name: str,
+    run_metadata: dict[str, Any],
+    evidence_directory: Path = Path("assets/evidence"),
+) -> EvidenceArchive:
+    """Create a dated, scrubbed grounded-chat evidence JSON and checksum manifest.
+
+    Unlike the reviewed-capture archive, this records a bounded Tier.LIVE / Terra
+    retrieve-and-answer interaction over the already-reviewed store. It writes no
+    Insight rows; it preserves each question, the retrieved and grounded Insight
+    ids, citations, the structured answer, provider metadata, and spend deltas as
+    inspectable evidence without overwriting an existing dated record.
+    """
+    if not isinstance(chat_results, list):
+        raise ValueError("Chat results must be a list of JSON objects.")
+    if not chat_results:
+        raise ValueError("Archive at least one chat result.")
+    if not _ARCHIVE_NAME.fullmatch(archive_name):
+        raise ValueError("Archive names must be lowercase letters, numbers, and hyphens.")
+    public_metadata = _public_capture_metadata(run_metadata)
+    public_results = _json_only("Chat results", chat_results)
+
+    payload = {
+        "record_type": "grounded_chat_capture",
+        "archived_at": datetime.now(UTC).isoformat(),
+        "run": public_metadata,
+        "results": public_results,
+        "limitations": [
+            "This record contains a bounded grounded-chat interaction over the reviewed store, not a guarantee of compatibility or release completeness.",
+            "Answers are model output grounded in reviewed evidence; recommended checks are labelled interpretations, not upstream facts.",
+        ],
+    }
+    return _write_archive(payload, archive_name=archive_name, evidence_directory=evidence_directory)
+
+
+def _write_archive(
+    payload: dict[str, Any],
+    *,
+    archive_name: str,
+    evidence_directory: Path,
+) -> EvidenceArchive:
+    """Serialize a payload to a scrubbed evidence file and its checksum manifest."""
+    evidence_path = evidence_directory / f"{archive_name}.json"
+    manifest_path = evidence_directory / f"{archive_name}.manifest.json"
+    if evidence_path.exists() or manifest_path.exists():
+        raise FileExistsError("Evidence archive already exists; choose a new dated archive name.")
+
     serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
     evidence_bytes = serialized.encode("utf-8")
     content_sha256 = sha256(evidence_bytes).hexdigest()

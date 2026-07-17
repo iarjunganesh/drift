@@ -15,17 +15,6 @@ verified app deployment (`v0.8.0`) or claim that the `v0.9.0` app build has
 been redeployed. The `v0.9.0` Tier.FINAL evidence pass and live-store update
 are recorded in the `[0.9.0]` entry below.
 
-### `v0.9.1` — Terra grounded-run evidence
-
-Planned, not released. After the Tier.FINAL Sol evidence is complete, run a
-small, explicitly bounded Tier.LIVE / `gpt-5.6-terra` capture against the
-reviewed store. Preserve retrieved Insight IDs, structured answer audits,
-citations, provider metadata, spend/retry records, and updated screenshots as
-inspectable evidence. Verify that Terra answers remain retrieve-first and cite
-only the evidence used; do not expand the product surface or imply broad
-continuous monitoring. Publish this release only after the run, artifacts,
-tests, documentation, and intended deployment path are independently checked.
-
 ### `v1.0.0` — final submission release
 
 Targeted scope:
@@ -38,6 +27,67 @@ Targeted scope:
 
 `v1.0.0` is the submission-final target, not permission to add new feature
 surfaces such as MCP, tool calling, IDE integration, or a release timeline.
+
+## [0.9.1] - 2026-07-18
+
+### Tier.LIVE grounded-chat evidence pass — 2026-07-18
+
+- Executed a small, explicitly bounded Tier.LIVE (`gpt-5.6-terra`) grounded-chat
+  capture against the reviewed store through the DRIFT Manual Run notebook
+  (Section 7). One question was asked per configured primary source (eight
+  total), each running the same `retrieve_live_insights` and
+  `answer_question_with_model` code paths the live `/chat` endpoint uses. The
+  run read the five reviewed Tier.FINAL Insights (IDs 10, 11, 13, 15, 16) and
+  wrote nothing to the database.
+- Seven of eight questions were answered with a grounded citation; the eighth
+  (PyTorch) was declined outright. Terra grounded each answer only in the
+  Insights that actually supported it — TensorRT 11.1 → 16, vLLM v0.25.1 → 13,
+  Transformers v5.14.1 → 11, JAX v0.11.0 → 10, NCCL v2.30.7-1 → 15 — and cited
+  exactly IDs 10, 11, 13, 15, and 16 across the run, never an ID outside the
+  reviewed store and never a fabricated release.
+- Verified the retrieve-first boundary directly. Retrieval ranks by vector
+  distance with no cutoff, so it surfaces the nearest reviewed Insights even for
+  sources with no reviewed Insight (PyTorch, Triton, CUTLASS). For PyTorch,
+  Terra cited nothing; for Triton and CUTLASS it answered that no such Insight
+  exists and grounded that negative answer only in the specific reviewed
+  Insights it had inspected. The notebook records Terra's true grounding rather
+  than the `/chat` UX fallback to the whole retrieval window, so "cite only the
+  evidence used" is inspectable.
+- Local spend for the eight-question run was approximately $0.076, within the
+  configured spend guard (settled ledger $1.50 → $1.58 against the $5 cap); no
+  per-attempt reservation exceeded the per-call cap and none was left reserved.
+
+### Added
+
+- `backend.evidence_archive.archive_chat_capture()` and a Section 7c archive
+  cell in `notebooks/drift_manual_run.ipynb`, the retrieve-first analogue of the
+  reviewed-capture archive. It preserves each question, the retrieved and
+  grounded Insight IDs, citations, structured answers, provider metadata, and
+  per-question spend deltas as a scrubbed JSON record with a SHA-256 manifest
+  and no-overwrite protection, refusing credential- or review-note-shaped
+  metadata. The shared serialize/hash/manifest path is factored out so both
+  archivers guarantee byte-exact LF hashing.
+- A frozen, Markdown-only `notebooks/drift_manual_run.terra.results.ipynb`
+  results record (no executable cells, operator configuration, provider/budget
+  logs, or review notes), a companion to the `gpt-5.6-luna` and `gpt-5.6-sol`
+  reviewed-capture records covering the retrieve-and-answer path. The
+  display-only regression guard now covers all three results notebooks.
+- Section 7 of the Manual Run notebook: a preflight-safe, spend-gated Terra
+  grounded-chat capture over the reviewed store, documented in
+  `notebooks/README.md`.
+- Archived the bounded run's inspectable evidence and SHA-256 integrity manifest
+  to `assets/evidence/2026-07-18-all-sources-terra.json`
+  (sha256 `b606fe31f22449de0d404446a9249ddd4c2397dc7d258c7c204a177539dec00d`).
+
+### Release boundary
+
+- This is a source and grounded-chat-evidence release. It does not draft,
+  publish, or retract any Insight: the live Railway store continues to serve the
+  same five reviewed Tier.FINAL Insights (IDs 10, 11, 13, 15, 16). Updated UI
+  screenshots are not part of this pass and remain outstanding. Hosted app
+  verification remains at `v0.8.0` pending redeploy; the deployed Railway
+  `/health` and Vercel frontend are not being described as `v0.9.1`. The
+  configured spend guard remains authoritative over any reported balance.
 
 ## [0.9.0] - 2026-07-17
 
@@ -59,7 +109,7 @@ surfaces such as MCP, tool calling, IDE integration, or a release timeline.
   (thin evidence with an interpretive expansion of an upstream typo), and an
   out-of-tree Triton `gfx950` tutorial pin (not a mainline release).
 - Archived the reviewed evidence and SHA-256 integrity manifest to
-  `assets/evidence/2026-07-17-all-sources-reviewed.json`
+  `assets/evidence/2026-07-17-all-sources-sol.json`
   (sha256 `df32b3d4315b09fb4a6dbd508d381ca2c8095e25e16f88c4741ce7bc3055a337`).
 - Recorded a display-only results notebook at
   `notebooks/drift_manual_run.sol.results.ipynb` (Markdown-only; no executable
@@ -257,7 +307,7 @@ surfaces such as MCP, tool calling, IDE integration, or a release timeline.
   (`grounded_insight_ids` [6, 7, 3]). This supersedes the earlier empty
   fail-closed briefing verification.
 - Archived the reviewed evidence and SHA-256 integrity manifest to
-  `assets/evidence/2026-07-16-all-sources-reviewed.json`
+  `assets/evidence/2026-07-16-all-sources-luna.json`
   (sha256 `2e08896b3c1c9507b557fc84e5558ce05343f9202227bb3a1ff7e964002d2318`).
 
 ### Fixed
@@ -706,6 +756,7 @@ with explicit live-path architecture and publication-ready quality gates.
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
+[0.9.1]: #091---2026-07-18
 [0.9.0]: #090---2026-07-17
 [0.8.1]: #081---2026-07-17
 [0.8.0]: #080---2026-07-17

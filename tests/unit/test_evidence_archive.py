@@ -4,13 +4,27 @@ from hashlib import sha256
 
 import pytest
 
-from backend.evidence_archive import archive_reviewed_capture
+from backend.evidence_archive import archive_chat_capture, archive_reviewed_capture
 from backend.models.schema import (
     ChangeSeverity,
     Insight,
     PublicationStatus,
     VerificationStatus,
 )
+
+
+def make_chat_result(*, grounded: bool = True) -> dict:
+    return {
+        "source_id": "vllm",
+        "question": "What are the operator risks in the latest reviewed vLLM release?",
+        "retrieved_insight_ids": [13, 15, 11],
+        "grounded_insight_ids": [13] if grounded else [],
+        "grounded": grounded,
+        "citations": ["https://github.com/vllm-project/vllm/releases/tag/v0.25.1"] if grounded else [],
+        "answer": "The latest reviewed vLLM release is v0.25.1, a patch release.",
+        "model_used": "gpt-5.6-terra",
+        "spend_delta_usd": 0.0109,
+    }
 
 
 def make_insight(
@@ -126,5 +140,72 @@ def test_archive_reviewed_capture_rejects_unsafe_inputs_and_overwrite(tmp_path) 
             [make_insight()],
             archive_name="2026-07-15-existing",
             capture_metadata={},
+            evidence_directory=tmp_path,
+        )
+
+
+def test_archive_chat_capture_writes_scrubbed_evidence_and_manifest(tmp_path) -> None:
+    result = archive_chat_capture(
+        [make_chat_result(), make_chat_result(grounded=False)],
+        archive_name="2026-07-18-all-sources-terra",
+        run_metadata={"tier": "live", "model": "gpt-5.6-terra", "run_spend_usd": 0.0759},
+        evidence_directory=tmp_path,
+    )
+
+    payload = json.loads(result.evidence_path.read_text(encoding="utf-8"))
+    manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
+    assert payload["record_type"] == "grounded_chat_capture"
+    assert payload["run"]["model"] == "gpt-5.6-terra"
+    assert payload["results"][0]["grounded_insight_ids"] == [13]
+    assert payload["results"][1]["grounded"] is False
+    assert manifest["evidence_file"] == result.evidence_path.name
+    assert manifest["sha256"] == result.sha256
+    # Byte-exact hash over LF bytes, matching the reviewed-capture invariant.
+    assert sha256(result.evidence_path.read_bytes()).hexdigest() == result.sha256
+    assert b"\r\n" not in result.evidence_path.read_bytes()
+
+
+def test_archive_chat_capture_rejects_unsafe_inputs_and_overwrite(tmp_path) -> None:
+    with pytest.raises(ValueError, match="list of JSON objects"):
+        archive_chat_capture(
+            {},  # type: ignore[arg-type]
+            archive_name="2026-07-18-not-a-list",
+            run_metadata={},
+            evidence_directory=tmp_path,
+        )
+    with pytest.raises(ValueError, match="at least one"):
+        archive_chat_capture(
+            [], archive_name="2026-07-18-empty", run_metadata={}, evidence_directory=tmp_path
+        )
+    with pytest.raises(ValueError, match="lowercase"):
+        archive_chat_capture(
+            [make_chat_result()], archive_name="Bad Name", run_metadata={}, evidence_directory=tmp_path
+        )
+    with pytest.raises(ValueError, match="credentials or review notes"):
+        archive_chat_capture(
+            [make_chat_result()],
+            archive_name="2026-07-18-secret-run",
+            run_metadata={"database_url": "postgresql://user:password@example.test/drift"},
+            evidence_directory=tmp_path,
+        )
+    with pytest.raises(ValueError, match="JSON values"):
+        archive_chat_capture(
+            [{"source_id": {"vllm"}}],  # a set is not JSON-serializable
+            archive_name="2026-07-18-non-json",
+            run_metadata={},
+            evidence_directory=tmp_path,
+        )
+
+    archive_chat_capture(
+        [make_chat_result()],
+        archive_name="2026-07-18-existing-chat",
+        run_metadata={},
+        evidence_directory=tmp_path,
+    )
+    with pytest.raises(FileExistsError, match="already exists"):
+        archive_chat_capture(
+            [make_chat_result()],
+            archive_name="2026-07-18-existing-chat",
+            run_metadata={},
             evidence_directory=tmp_path,
         )
