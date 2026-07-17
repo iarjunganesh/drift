@@ -35,7 +35,7 @@ to overwrite an existing record.
 
 ## Rendered snapshot
 
-[`drift_manual_run.results.ipynb`](drift_manual_run.results.ipynb) is a frozen,
+[`drift_manual_run.luna.results.ipynb`](drift_manual_run.luna.results.ipynb) is a frozen,
 Markdown-only record of a completed run. It has no executable cells, operator
 database host, provider/budget logs, or internal review notes. The executable
 notebook above is the clean template; keep it output-free when committing, and

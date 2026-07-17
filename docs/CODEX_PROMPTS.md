@@ -223,6 +223,10 @@ changes:
      evidence presentation
    - `019f6a78-6fa2-7121-9059-85ac8ceb9904` — reviewed-evidence hardening,
      hosted verification, and `v0.8.0` hosted release
+   - `019f7190-912d-70e3-be6d-fcc81bf8e203` — freeze-plan audit and
+     documentation synchronization
+   - `019f7213-be19-7e50-92ac-a48bd5ecaacb` — v0.9.0 evidence cleanup,
+     audited Luna retraction, Sol briefing verification, and session sync
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.
@@ -239,7 +243,7 @@ rules/FAQ reference copy, not drift's submission draft.
 
 - Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
 - Confirm which supplied initiative is the primary `/feedback` session for the
-  Devpost form; retain all ten IDs in the README, changelog, and submission
+  Devpost form; retain all twelve IDs in the README, changelog, and submission
    notes.
 - Branch protection and the Codecov upload are verified on the published GitHub
   repository (2026-07-17): `main` requires the five CI quality-gate checks, and

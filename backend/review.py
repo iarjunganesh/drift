@@ -45,3 +45,40 @@ async def publish_verified_insights(
         row.reviewed_at = reviewed_at
     await session.commit()
     return normalized_ids
+
+
+async def retract_reviewed_insights(
+    session: AsyncSession,
+    insight_ids: list[int],
+    *,
+    reason: str,
+) -> list[int]:
+    """Return reviewed Insights to draft status with an auditable reason."""
+    normalized_ids = sorted(set(insight_ids))
+    normalized_reason = reason.strip()
+    if not normalized_ids:
+        raise ValueError("Select at least one reviewed Insight to retract.")
+    if not normalized_reason:
+        raise ValueError("A retraction reason is required.")
+
+    rows = (
+        await session.scalars(
+            select(InsightRow).where(InsightRow.id.in_(normalized_ids)).with_for_update()
+        )
+    ).all()
+    rows_by_id = {row.id: row for row in rows}
+    missing_ids = [identifier for identifier in normalized_ids if identifier not in rows_by_id]
+    if missing_ids:
+        raise ValueError(f"Insight IDs were not found: {missing_ids}.")
+
+    for row in rows:
+        if row.publication_status != PublicationStatus.REVIEWED.value:
+            raise ValueError(f"Insight {row.id} is not a reviewed Insight.")
+
+    for row in rows:
+        prior_notes = (row.human_review_notes or "").strip()
+        audit_note = f"Retraction: {normalized_reason}"
+        row.human_review_notes = f"{prior_notes}\n{audit_note}".strip()
+        row.publication_status = PublicationStatus.DRAFT.value
+    await session.commit()
+    return normalized_ids

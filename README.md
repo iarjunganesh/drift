@@ -72,10 +72,10 @@ Built for **OpenAI Build Week 2026 · Developer Tools**.
 
 ## Try DRIFT in 60 Seconds
 
-**Hosted — nothing to install.** The live briefing serves four human-reviewed
-Insights from one real bounded capture (Transformers v5.14.1, vLLM v0.25.1,
-NCCL v2.30.7-1, TensorRT 11.1); `/briefing`, `/search`, and `/chat` were verified
-provider-backed on 2026-07-16.
+**Hosted — nothing to install.** The live Railway store serves five human-reviewed
+Tier.FINAL Insights (JAX v0.11.0, Transformers v5.14.1, vLLM v0.25.1, NCCL
+v2.30.7-1, TensorRT 11.1); `/briefing?top_n=10` was verified on 2026-07-17.
+The deployed app build remains `v0.8.0` pending redeploy.
 
 | Surface | Link |
 | --- | --- |
@@ -201,6 +201,7 @@ the bounded local capture path.
 | Submission audit and frontend evidence presentation | `019f6a46-e3eb-7de2-81b1-91515ae80043` | Handwritten-next-step audit, explicit briefing states, system-theme presentation, canonical API-served banners, and status synchronization |
 | Reviewed-evidence release hardening and hosted verification | `019f6a78-6fa2-7121-9059-85ac8ceb9904` | Evidence-byte integrity, database-only review notes, display-only results artifact, `v0.7.0` hosted verification, and the `v0.8.0` grounded-chat / verifiable-fixture hosted release |
 | Freeze-plan audit and documentation synchronization | `019f7190-912d-70e3-be6d-fcc81bf8e203` | Audited the frozen scope against tracked implementation, corrected unshipped MCP/timeline/IDE claims, aligned demo requirements, and synchronized records |
+| v0.9.0 evidence cleanup and session synchronization | `019f7213-be19-7e50-92ac-a48bd5ecaacb` | Retracted superseded Luna Insights through the audited review helper, verified the five-record Sol briefing, synchronized release status, and made the Luna results artifact explicit |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -220,7 +221,9 @@ submission-audit/frontend-presentation follow-up is
 hosted-verification, and `v0.8.0` release session is
 `019f6a78-6fa2-7121-9059-85ac8ceb9904`.
 The freeze-plan audit and documentation-synchronization session is
-`019f7190-912d-70e3-be6d-fcc81bf8e203`.
+`019f7190-912d-70e3-be6d-fcc81bf8e203`; the v0.9.0 evidence-cleanup and
+session-synchronization follow-up is
+`019f7213-be19-7e50-92ac-a48bd5ecaacb`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
 provides an API key. The local capture job routes embeddings, classification,
@@ -261,7 +264,7 @@ Agent code must not hard-code provider model names. The intended tiers are:
 | --- | --- | --- |
 | `dev` / Luna | Classification, clustering, and prompt iteration | Produced the four reviewed Insights published 2026-07-16; run only with an explicit live key |
 | `live` / Terra | Retrieve-first grounded chat | Serves hosted grounded chat over reviewed pgvector rows; verified provider-backed 2026-07-16 |
-| `final` / Sol | Three to five reviewed demo insights | Targeted for the planned `v0.9.0` evidence pass; the 2026-07-16 demo set remains the saved `dev`/Luna evidence until rerun and review |
+| `final` / Sol | Three to five reviewed demo insights | Produced the five reviewed Tier.FINAL Insights now served by the live Railway store; app redeploy remains pending |
 
 Every live insight must preserve:
 
@@ -319,9 +322,9 @@ in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
 | Surface | Status |
 | --- | --- |
 | **Current hosted release** | `v0.8.0` `live` — `/health` reports `0.8.0`, `/docs` returns `200`, the public Vercel page renders Ask DRIFT, and Vercel-origin CORS allows `GET, POST` |
-| **Current source patch** | `v0.8.1` — structured Ask DRIFT grounding IDs restrict question citations to the Insights actually used; tagged on `feature/v0.9.0-final-evidence`, not yet hosted-verified |
+| **Current source release** | `v0.9.0` — Tier.FINAL reviewed evidence, audited retraction helper, and structured Ask DRIFT grounding; app redeploy remains pending |
 | **Prior hosted release** | `v0.7.0` `live` — `/briefing` (four reviewed Insights, review notes redacted), `/openapi.json`, and the deployed Vercel bundle's `top_n=10` request were verified |
-| **Grounded retrieval** | `/briefing`, `/search`, and `/chat` verified provider-backed from an eight-source capture — six verifier-passed drafts, four published after human review |
+| **Live reviewed store** | `/briefing?top_n=10` verified 2026-07-17 with exactly five reviewed, verifier-passed Tier.FINAL Insights: 10, 11, 13, 15, and 16 |
 | **Database schema** | Railway PostgreSQL at `0003_claim_evidence_review_gate`, verified through its public TCP proxy |
 | **Branding** | Swagger banner frame and canonical API-served banner pair follow the same system light/dark preference |
 | **Historical** | `v0.5.1` served one unreviewed vLLM Insight through `/briefing` on 2026-07-15 — retained as pre-gate evidence only |
@@ -334,30 +337,34 @@ and **Chat** sections so reviewers can navigate the API by job.
 
 ## Screenshots & Evidence
 
-These are live-state captures of the hosted app after four human-reviewed
-Insights were published — not mockups. Click any image to open it full size.
+These are live-state captures of the hosted app and reviewed Tier.FINAL evidence
+— not mockups. Click any image to open it full size.
 
-| Briefing — four reviewed Insights | Inspecting frozen claim evidence |
+| Briefing — five reviewed Insights | Inspecting frozen claim evidence |
 | --- | --- |
-| [![DRIFT briefing showing four reviewed Insights](assets/screenshots/03-briefing.png)](assets/screenshots/03-briefing.png) | [![DRIFT briefing expanded to show each claim's primary-source excerpt](assets/screenshots/04-briefing-claim-evidence.png)](assets/screenshots/04-briefing-claim-evidence.png) |
+| [![DRIFT briefing showing five reviewed Insights](assets/screenshots/01-briefing.png)](assets/screenshots/01-briefing.png) | [![DRIFT briefing expanded to show each claim's primary-source excerpt](assets/screenshots/02-briefing-claim-evidence.png)](assets/screenshots/02-briefing-claim-evidence.png) |
 
 The Next.js briefing view exposes each record's status label, confidence,
 model/audit label, rationale, bounded action, source links, and—when present—
 claim-type evidence. On 2026-07-16, the hosted UI was verified against the
 review-gated API; reviewed evidence has since been published, so `/briefing`
-now serves four reviewed Insights instead of the intentional empty state.
+now serves the five reviewed Tier.FINAL Insights in the live store; the public
+app UI remains the deployed `v0.8.0` build pending redeploy.
 `v0.7.0` deployed the review-note redaction and ten-item briefing request;
 Railway, CORS, public-contract, and Vercel-bundle checks are recorded in the
 changelog. `v0.8.0` deployed the grounded Ask DRIFT UI and tag-pinned synthetic
 fixture evidence; Railway health/docs, the public UI, and CORS were verified.
 Neither rollout re-ran paid provider chat.
 
-The branded Swagger contract and the themed architecture assets are also
-available as visual evidence:
-
-| API documentation | Architecture (light / dark) |
+| Ask DRIFT — grounded answer | Ask DRIFT — cited example |
 | --- | --- |
-| [![DRIFT branded Swagger API documentation](assets/screenshots/02-api-docs.png)](assets/screenshots/02-api-docs.png) | [![DRIFT architecture light](assets/architecture/arch-pipeline-light.png)](assets/architecture/arch-pipeline-light.svg)<br/>[![DRIFT architecture dark](assets/architecture/arch-pipeline-dark.png)](assets/architecture/arch-pipeline-dark.svg) |
+| [![DRIFT Ask DRIFT grounded chat box](assets/screenshots/03-ask-drift.png)](assets/screenshots/03-ask-drift.png) | [![DRIFT Ask DRIFT grounded NCCL answer](assets/screenshots/04.1-ask-drift-grounded-answer-nccl-example.png)](assets/screenshots/04.1-ask-drift-grounded-answer-nccl-example.png) |
+
+The branded Swagger contract is also available as visual evidence:
+
+| API documentation |
+| --- |
+| [![DRIFT branded Swagger API documentation](assets/screenshots/05-api-docs.png)](assets/screenshots/05-api-docs.png) |
 
 The scrubbed hosted capture evidence is stored separately in
 [`assets/evidence/`](assets/evidence/), including the verified unreviewed vLLM

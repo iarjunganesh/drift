@@ -1,6 +1,6 @@
 # DRIFT project initiatives
 
-These are the ten Codex project initiatives associated with the DRIFT baseline,
+These are the twelve Codex project initiatives associated with the DRIFT baseline,
 publication follow-up, `0.2.0` release candidate, and the current build-sequence
 implementation work. They are submission evidence pointers for the build work;
 they are not model-run provenance and do not turn fixture records into live
@@ -321,9 +321,37 @@ This initiative audited and completed the reviewed-evidence release boundary:
   Vercel CORS passed, and a tag-pinned fixture source resolved. Paid `/search`
   and `/chat` were not re-invoked.
 
+## Initiative 11 — Freeze-plan audit and documentation synchronization
+
+**Codex Session ID:** `019f7190-912d-70e3-be6d-fcc81bf8e203`
+
+**Date:** 2026-07-17
+
+This session performed a deep audit of `submission/DRIFT_FREEZE_PLAN.md`
+against tracked implementation, assets, tests, deployment records, and
+submission requirements. It corrected the plan's false shipped-status marks
+for release timeline, MCP, tool calling, and IDE integration; aligned the
+demo duration with the under-three-minute requirement; recorded the available
+screenshots and missing GIFs; and synchronized the project session registries.
+It did not add product features, alter hosted state, or replace the primary
+Devpost `/feedback` session.
+
+## Initiative 12 — v0.9.0 evidence cleanup and session synchronization
+
+**Codex Session ID:** `019f7213-be19-7e50-92ac-a48bd5ecaacb`
+
+**Date:** 2026-07-18
+
+This follow-up retracted superseded Luna Insights 3, 6, 7, and 8 through the
+audited `REVIEWED → DRAFT` helper, verified the hosted five-record Sol
+briefing, synchronized the v0.9.0 release boundary, and made the Luna results
+notebook name explicit for future Terra results.
+
+It did not commit, push, or redeploy the application.
+
 ## Submission usage
 
-Devpost requires one primary `/feedback` session, use Initiative 04. All ten
+Devpost requires one primary `/feedback` session, use Initiative 04. All twelve
 IDs should be retained in the project README, changelog, and submission notes.
 If Devpost requires one primary `/feedback` session, use Initiative 04:
 `019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
@@ -334,4 +362,6 @@ guardrail and capture-readiness record, Initiative 09 is the additive
 submission-audit/frontend-presentation record, and Initiative 10 is the
 reviewed-evidence hardening and `v0.8.0` hosted-verification
 record; the earlier sessions remain the foundation, publication, and hosted-demo
-follow-up initiatives.
+follow-up initiatives, Initiative 11 is the additive freeze-plan audit and
+documentation-synchronization record, and Initiative 12 is the v0.9.0 evidence
+cleanup and session-synchronization follow-up.

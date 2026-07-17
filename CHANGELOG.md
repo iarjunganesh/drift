@@ -8,6 +8,100 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning:
 The `0.1.0` entry is the initial repository baseline published on GitHub as
 the annotated `v0.1.0` tag.
 
+## Targeted releases — planned, not released
+
+These targets are planning records only. They do not change the current
+verified app deployment (`v0.8.0`) or claim that the `v0.9.0` app build has
+been redeployed. The `v0.9.0` Tier.FINAL evidence pass and live-store update
+are recorded in the `[0.9.0]` entry below.
+
+### `v0.9.1` — Terra grounded-run evidence
+
+Planned, not released. After the Tier.FINAL Sol evidence is complete, run a
+small, explicitly bounded Tier.LIVE / `gpt-5.6-terra` capture against the
+reviewed store. Preserve retrieved Insight IDs, structured answer audits,
+citations, provider metadata, spend/retry records, and updated screenshots as
+inspectable evidence. Verify that Terra answers remain retrieve-first and cite
+only the evidence used; do not expand the product surface or imply broad
+continuous monitoring. Publish this release only after the run, artifacts,
+tests, documentation, and intended deployment path are independently checked.
+
+### `v1.0.0` — final submission release
+
+Targeted scope:
+
+- final product and documentation polish after the evidence decision;
+- final local/hosted verification of the judge path and bounded claims;
+- a public English YouTube demo under three minutes showing the working
+  workflow, citations, verification, Codex contribution, and GPT-5.6 role; and
+- final README, submission notes, Devpost metadata, and video-link replacement.
+
+`v1.0.0` is the submission-final target, not permission to add new feature
+surfaces such as MCP, tool calling, IDE integration, or a release timeline.
+
+## [0.9.0] - 2026-07-17
+
+### Tier.FINAL evidence pass — 2026-07-17
+
+- Follow-up Codex session `019f7213-be19-7e50-92ac-a48bd5ecaacb` completed the
+  evidence cleanup and release-boundary synchronization on 2026-07-18.
+- Executed the paid Tier.FINAL capture (`gpt-5.6-sol`) through the DRIFT Manual
+  Run notebook. All eight configured primary sources were sampled (one item
+  each); eight clusters produced verifier-passed drafts (IDs 9–16), each drafted
+  and separately verified at `gpt-5.6-sol`.
+- After source-excerpt human review, published five Insights: JAX v0.11.0 (10),
+  Transformers v5.14.1 (11), vLLM v0.25.1 (13), NCCL v2.30.7-1 (15), and
+  TensorRT 11.1 (16). This grows the reviewed corpus to five sources, adding
+  JAX v0.11.0 — a substantive release with real breaking changes — alongside the
+  four sources first published at the dev / `gpt-5.6-luna` tier.
+- Held three verifier-passed drafts at the human-review gate rather than
+  publishing them: a single PyTorch trunk commit (not a release), CUTLASS 4.6.1
+  (thin evidence with an interpretive expansion of an upstream typo), and an
+  out-of-tree Triton `gfx950` tutorial pin (not a mainline release).
+- Archived the reviewed evidence and SHA-256 integrity manifest to
+  `assets/evidence/2026-07-17-all-sources-reviewed.json`
+  (sha256 `df32b3d4315b09fb4a6dbd508d381ca2c8095e25e16f88c4741ce7bc3055a337`).
+- Recorded a display-only results notebook at
+  `notebooks/drift_manual_run.sol.results.ipynb` (Markdown-only; no executable
+  cells, operator configuration, provider/budget logs, or review notes), kept as
+  a companion to the earlier `gpt-5.6-luna` results record rather than replacing
+  it.
+
+### Operational note
+
+- A Tier.FINAL (`gpt-5.6-sol`) capture needs a higher per-attempt model timeout
+  than the 20-second default; the heavier draft stage otherwise exceeds the
+  timeout, exhausts its retries, and aborts the run (a non-`ValueError` stops the
+  capture rather than skipping one cluster). Raising `DRIFT_MODEL_TIMEOUT_SECONDS`
+  to the 120-second maximum let the eight-source capture complete. Local spend for
+  the reviewed Sol run stayed within the configured spend guard.
+
+### Changed
+
+- Rewrote the `submission/DRIFT_FREEZE_PLAN.md` score matrix as an honest
+  current-vs-target readiness view and added a dated audit addendum; reclassified
+  MCP, tool-calling, and IDE items as optional future work that is not shipped.
+  Updated `docs/INITIATIVES.md`, `docs/CODEX_PROMPTS.md`, and
+  `submission/SUBMISSION.md`, and removed the superseded
+  `submission/NEXT_STEPS.md`.
+- Renamed the tracked UI screenshots to a kebab-case set led by the reviewed
+  briefing (`01-briefing`), claim evidence (`02-briefing-claim-evidence`), the
+  Ask DRIFT box (`03-ask-drift`), two grounded-answer examples
+  (`04.1-ask-drift-grounded-answer-nccl-example`,
+  `04.2-ask-drift-grounded-answer-tensorRT-example`), and the branded API docs
+  (`05-api-docs`); updated the README gallery image paths to match.
+
+### Release boundary
+
+- This is a source and reviewed-evidence release. The live Railway store now
+  serves exactly five reviewed, verifier-passed Tier.FINAL Insights (IDs 10,
+  11, 13, 15, and 16), all produced at `gpt-5.6-sol`; the four Luna Insights
+  (IDs 3, 6, 7, and 8) were retracted to draft on 2026-07-17. Hosted app
+  verification remains at `v0.8.0` pending redeploy: the deployed Railway
+  `/health` and Vercel frontend are not being described as `v0.9.0`. The
+  reported remaining account balance is planning context, not release
+  evidence; the configured spend guard remains authoritative.
+
 ## [0.8.1] - 2026-07-17
 
 ### Fixed
@@ -25,47 +119,12 @@ the annotated `v0.1.0` tag.
   `feature/v0.9.0-final-evidence`. Hosted Railway/Vercel verification remains
   at `v0.8.0` until a deployment is independently checked.
 
-## Targeted releases — planned, not released
-
-These targets are planning records only. They do not change the current
-verified release (`v0.8.0`) or claim that the paid Tier.FINAL rerun has run.
-
-### `v0.9.0` — final-tier evidence and selected polish
-
-Targeted scope:
-
-- rerun selected reviewed examples through Tier.FINAL (Sol), initially the
-  four currently published sources: Transformers, vLLM, NCCL, and TensorRT;
-- preserve source bytes, exact claim spans/hashes, upstream references, model
-  identifiers, verifier results, model-run audits, and meaningful human review
-  notes for every accepted result;
-- publish only verifier-passed results after human review, retaining the
-  existing bounded-evidence and spend/retry guardrails; and
-- optionally include narrowly scoped polish that improves judge clarity or the
-  demo path, provided it does not delay or blur the evidence boundary.
-
-The Tier.FINAL run is still pending operator execution and budget validation.
-The reported remaining account balance is planning context, not release
-evidence; the configured spend guard remains authoritative.
-
-### `v1.0.0` — final submission release
-
-Targeted scope:
-
-- final product and documentation polish after the evidence decision;
-- final local/hosted verification of the judge path and bounded claims;
-- a public English YouTube demo under three minutes showing the working
-  workflow, citations, verification, Codex contribution, and GPT-5.6 role; and
-- final README, submission notes, Devpost metadata, and video-link replacement.
-
-`v1.0.0` is the submission-final target, not permission to add new feature
-surfaces such as MCP, tool calling, IDE integration, or a release timeline.
-
 ## [0.8.0] - 2026-07-17
 
 ### Documentation audit — 2026-07-17
 
-- Recorded Codex session `019f7190-912d-70e3-be6d-fcc81bf8e203` as the additive
+- Recorded Codex sessions `019f7190-912d-70e3-be6d-fcc81bf8e203` and
+  `019f7213-be19-7e50-92ac-a48bd5ecaacb` as additive
   freeze-plan audit and documentation-synchronization initiative.
 - Corrected `submission/DRIFT_FREEZE_PLAN.md` so unimplemented release-timeline,
   MCP, tool-calling, and IDE features are not marked as shipped; aligned the
@@ -253,7 +312,7 @@ surfaces such as MCP, tool calling, IDE integration, or a release timeline.
   endpoint-level regression tests.
 - Sanitized `notebooks/drift_manual_run.ipynb` to a clean, output-free template
   (reset capture trigger, publish/archive IDs, and review notes), and made
-  `notebooks/drift_manual_run.results.ipynb` a Markdown-only display record;
+  `notebooks/drift_manual_run.luna.results.ipynb` a Markdown-only display record;
   it contains no runnable cells, operator configuration, provider/budget logs,
   or review notes. A regression test protects that boundary.
 - Full suite: 149 tests at 100% backend coverage.
@@ -647,6 +706,7 @@ with explicit live-path architecture and publication-ready quality gates.
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
+[0.9.0]: #090---2026-07-17
 [0.8.1]: #081---2026-07-17
 [0.8.0]: #080---2026-07-17
 [0.7.0]: #070---2026-07-16

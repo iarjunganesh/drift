@@ -98,3 +98,39 @@ async def test_publish_verified_insights_rejects_non_draft_or_unverified_rows() 
             [1],
             review_notes="Reviewed",
         )
+
+
+@pytest.mark.asyncio
+async def test_retract_reviewed_insights_records_reason_and_returns_to_draft() -> None:
+    row = make_row(7, publication_status=PublicationStatus.REVIEWED)
+    row.human_review_notes = "Original publication review."
+    session = FakeSession([row])
+
+    retracted = await review.retract_reviewed_insights(
+        session,
+        [7, 7],
+        reason="Replace Luna evidence with the reviewed Tier.FINAL Sol result.",
+    )
+
+    assert retracted == [7]
+    assert row.publication_status == PublicationStatus.DRAFT.value
+    assert row.human_review_notes == (
+        "Original publication review.\n"
+        "Retraction: Replace Luna evidence with the reviewed Tier.FINAL Sol result."
+    )
+    assert session.committed is True
+
+
+@pytest.mark.asyncio
+async def test_retract_reviewed_insights_rejects_invalid_selection_or_rows() -> None:
+    session = FakeSession([])
+    with pytest.raises(ValueError, match="at least one"):
+        await review.retract_reviewed_insights(session, [], reason="Replace")
+    with pytest.raises(ValueError, match="reason is required"):
+        await review.retract_reviewed_insights(session, [1], reason="  ")
+    with pytest.raises(ValueError, match="not found"):
+        await review.retract_reviewed_insights(session, [1], reason="Replace")
+    with pytest.raises(ValueError, match="not a reviewed"):
+        await review.retract_reviewed_insights(
+            FakeSession([make_row(1)]), [1], reason="Replace"
+        )
