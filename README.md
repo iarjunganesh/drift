@@ -199,7 +199,7 @@ the bounded local capture path.
 | Bounded capture, provenance, and status cleanup | `019f66b4-78b8-7943-a41d-91e836d28f00` | One-shot persisted capture, all-call budget/retry controls, live briefing adapter, evidence UI, and documentation synchronization |
 | Grounding guardrails and capture readiness | `019f6773-0e96-7363-9657-0e0531c3d594` | Claim spans/hashes, separate verifier, review-gated publication, cross-references, calibration cases, manual notebook, and all-source capture preflight |
 | Submission audit and frontend evidence presentation | `019f6a46-e3eb-7de2-81b1-91515ae80043` | Handwritten-next-step audit, explicit briefing states, system-theme presentation, canonical API-served banners, and status synchronization |
-| Reviewed-evidence release hardening, hosted verification, and v0.8.0 source release | `019f6a78-6fa2-7121-9059-85ac8ceb9904` | Evidence-byte integrity, database-only review notes, display-only results artifact, `v0.7.0` hosted verification, and the `v0.8.0` grounded-chat / verifiable-fixture source release |
+| Reviewed-evidence release hardening and hosted verification | `019f6a78-6fa2-7121-9059-85ac8ceb9904` | Evidence-byte integrity, database-only review notes, display-only results artifact, `v0.7.0` hosted verification, and the `v0.8.0` grounded-chat / verifiable-fixture hosted release |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -216,7 +216,7 @@ the Day 3/Day 4 Insight implementation session is
 capture-readiness follow-up is `019f6773-0e96-7363-9657-0e0531c3d594`; and the
 submission-audit/frontend-presentation follow-up is
 `019f6a46-e3eb-7de2-81b1-91515ae80043`; the reviewed-evidence hardening,
-hosted-verification, and `v0.8.0` source-release session is
+hosted-verification, and `v0.8.0` release session is
 `019f6a78-6fa2-7121-9059-85ac8ceb9904`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
@@ -310,13 +310,13 @@ that frozen lockfile. JavaScript dependencies are locked in
 
 ## Deployment status
 
-Both tiers are live and were verified on 2026-07-16 — the live links live up top
+Both tiers are live and `v0.8.0` was verified on 2026-07-17 — the live links live up top
 in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
 
 | Surface | Status |
 | --- | --- |
-| **Current source release** | `v0.8.0` — grounded Ask DRIFT UI and verifiable synthetic fixture evidence; source tag published, hosted deployment verification pending |
-| **Hosted API** | `v0.7.0` `live` — `/health`, `/briefing` (four reviewed Insights, review notes redacted), `/docs`, `/openapi.json`, and Vercel-origin CORS verified; the deployed Vercel bundle requests `top_n=10` |
+| **Current hosted release** | `v0.8.0` `live` — `/health` reports `0.8.0`, `/docs` returns `200`, the public Vercel page renders Ask DRIFT, and Vercel-origin CORS allows `GET, POST` |
+| **Prior hosted release** | `v0.7.0` `live` — `/briefing` (four reviewed Insights, review notes redacted), `/openapi.json`, and the deployed Vercel bundle's `top_n=10` request were verified |
 | **Grounded retrieval** | `/briefing`, `/search`, and `/chat` verified provider-backed from an eight-source capture — six verifier-passed drafts, four published after human review |
 | **Database schema** | Railway PostgreSQL at `0003_claim_evidence_review_gate`, verified through its public TCP proxy |
 | **Branding** | Swagger banner frame and canonical API-served banner pair follow the same system light/dark preference |
@@ -344,7 +344,9 @@ review-gated API; reviewed evidence has since been published, so `/briefing`
 now serves four reviewed Insights instead of the intentional empty state.
 `v0.7.0` deployed the review-note redaction and ten-item briefing request;
 Railway, CORS, public-contract, and Vercel-bundle checks are recorded in the
-changelog. This did not re-run paid provider chat.
+changelog. `v0.8.0` deployed the grounded Ask DRIFT UI and tag-pinned synthetic
+fixture evidence; Railway health/docs, the public UI, and CORS were verified.
+Neither rollout re-ran paid provider chat.
 
 The branded Swagger contract and the themed architecture assets are also
 available as visual evidence:

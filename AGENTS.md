@@ -6,13 +6,15 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.8.0` is the current source release. It adds a grounded
-frontend chat box and makes the no-key fixture evidence inspectable against
-checked-in synthetic source files; hosted deployment verification is pending.
-`v0.7.0` is the current verified Railway/Vercel release: it hardens evidence
-byte integrity, makes human review notes database-only, and raises the frontend
-briefing limit to ten. `v0.6.1` is the previously verified hosted Railway
-revision, and `v0.5.1` is historical pre-review-gate evidence. The new local
+**Current phase:** `v0.8.0` is the current verified Railway/Vercel release. It
+adds a grounded frontend chat box and makes the no-key fixture evidence
+inspectable against checked-in synthetic source files. On 2026-07-17, Railway
+`/health` reported live `0.8.0`, `/docs` returned `200`, the public Vercel page
+rendered **Ask DRIFT**, and Vercel-origin CORS passed. `v0.7.0` is the prior
+verified release: it hardens evidence byte integrity, makes human review notes
+database-only, and raises the frontend briefing limit to ten. `v0.6.1` is the
+previously verified hosted Railway revision, and `v0.5.1` is historical
+pre-review-gate evidence. The new local
 guardrail work adds claim-level evidence, a separate verifier, and a human
 publication gate. `DRIFT_MODE=live`
 can make a bounded `backend.pipeline` **draft** capture: persist/reload source
@@ -180,8 +182,10 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The current verified hosted application
-is `v0.7.0` in `DRIFT_MODE=live`, with the Vercel origin advertised through CORS;
-`v0.6.1` was the prior verified revision. On 2026-07-16, `/health` reported
+is `v0.8.0` in `DRIFT_MODE=live`. On 2026-07-17, Railway `/health` reported
+`0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and
+a Vercel-origin CORS preflight allowed `GET, POST`. `v0.7.0` is the prior
+verified release; `v0.6.1` was the revision before that. On 2026-07-16, `/health` reported
 `v0.6.1`, `/briefing` returned the four
 human-reviewed Insights published that day, `/docs` returned `200`, and
 the Vercel HTML referenced the canonical API-served banner pair. The Swagger
@@ -192,7 +196,9 @@ is a small, bounded reviewed set, not broad live-release analysis. The
 Git-connected `v0.7.0` deployment was verified through `/health`, `/docs`,
 Vercel CORS, a four-record `/briefing` with no review notes, and the Vercel
 bundle's `top_n=10` request; `/search` and `/chat` were not re-invoked for this
-privacy/frontend-only release.
+privacy/frontend-only release. The Git-connected `v0.8.0` rollout was verified
+through `/health`, `/docs`, the public Ask DRIFT UI, Vercel CORS, and a
+tag-pinned fixture-source link; paid `/search` and `/chat` were not re-invoked.
 
 [`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb) is the
 local operator path for bounded capture and manual publication. It requires a

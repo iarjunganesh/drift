@@ -19,7 +19,7 @@
         `019f6773-0e96-7363-9657-0e0531c3d594`
       - Submission audit and frontend evidence presentation:
         `019f6a46-e3eb-7de2-81b1-91515ae80043`
-      - Reviewed-evidence hardening, hosted verification, and `v0.8.0` source release:
+      - Reviewed-evidence hardening and `v0.8.0` hosted verification:
         `019f6a78-6fa2-7121-9059-85ac8ceb9904`
 - [x] Use `019f62b9-10b7-7d82-a463-e6eb1192141c` as the primary `/feedback`
       Session ID if the Devpost form accepts only one.
@@ -33,7 +33,9 @@
       via `gpt-5.6-terra` with source citations). Evidence + SHA-256 manifest
       archived to `assets/evidence/2026-07-16-all-sources-reviewed.json`.
 - [x] Provide a judge path: hosted app is available at
-      `https://dr1ftless.vercel.app` with a verified `v0.7.0` Railway API;
+      `https://dr1ftless.vercel.app` with a verified `v0.8.0` Railway API.
+      On 2026-07-17, Railway `/health` reported `0.8.0`, `/docs` returned
+      `200`, the public page rendered Ask DRIFT, and Vercel CORS passed;
       reviewed live evidence remains an explicit operator gate. Its public
       `/briefing` and OpenAPI contract omit private human review notes.
 - [ ] Upload a public YouTube video under three minutes with English narration.

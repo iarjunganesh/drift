@@ -297,7 +297,7 @@ health, docs, CORS, and Vercel banner source were verified, and a later
 `/briefing`, `/search`, and `/chat` verified provider-backed. The amended
 `v0.6.1` release also makes the API-docs banner frame system-theme-aware.
 
-## Initiative 10 — Reviewed-evidence hardening, hosted verification, and v0.8.0 source release
+## Initiative 10 — Reviewed-evidence hardening and v0.8.0 hosted verification
 
 **Codex Session ID:** `019f6a78-6fa2-7121-9059-85ac8ceb9904`
 
@@ -312,10 +312,14 @@ This initiative audited and completed the reviewed-evidence release boundary:
 - verified Railway `v0.7.0`, public redaction, Vercel CORS, and the deployed
   ten-item briefing request; and
 - synchronized release, architecture, ADR, runbook, and submission records;
-- carried the same work through the `v0.8.0` source release: corrected no-key
+- carried the same work through the `v0.8.0` release: corrected no-key
   fixture claims to use explicitly synthetic, checked-in source text with
   byte-exact hashes/spans, aligned the Ask DRIFT UI with the `/chat` contract,
-  added the regression test, and performed the final status/version sweep.
+  added the regression test, and performed the final status/version sweep; and
+- verified the Git-connected `v0.8.0` rollout: Railway `/health` reported
+  `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT,
+  Vercel CORS passed, and a tag-pinned fixture source resolved. Paid `/search`
+  and `/chat` were not re-invoked.
 
 ## Submission usage
 
@@ -328,6 +332,6 @@ Day 3/Day 4 Insight implementation record, and Initiative 07 is the bounded
 capture/provenance and cleanup record. Initiative 08 is the additive grounding
 guardrail and capture-readiness record, Initiative 09 is the additive
 submission-audit/frontend-presentation record, and Initiative 10 is the
-reviewed-evidence hardening, hosted-verification, and `v0.8.0` source-release
+reviewed-evidence hardening and `v0.8.0` hosted-verification
 record; the earlier sessions remain the foundation, publication, and hosted-demo
 follow-up initiatives.

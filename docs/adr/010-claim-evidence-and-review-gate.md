@@ -73,5 +73,8 @@ the field from `/briefing` and `/openapi.json`.
 to the same evidence contract without representing synthetic text as an
 upstream release. Each fixture evidence reference resolves to a checked-in,
 explicitly synthetic source file; the full-file SHA-256, exact excerpt, offsets,
-source URL, and raw-item relationship are asserted by a regression test. This
-is source-release behavior only until a hosted deployment is observed.
+source URL, and raw-item relationship are asserted by a regression test. The
+Git-connected hosted deployment was observed later that day: `/health` reported
+`0.8.0`, a tag-pinned fixture-source link resolved, and the public Vercel page
+rendered Ask DRIFT. This observation does not imply an additional paid
+`/search` or `/chat` invocation.

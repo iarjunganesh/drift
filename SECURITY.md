@@ -7,8 +7,8 @@ development baseline while the live pipeline is being implemented.
 
 | Version | Supported |
 | --- | --- |
-| `0.8.0` | ✅ Current source release; grounded frontend chat and verifiable synthetic fixture evidence, awaiting hosted deployment verification |
-| `0.7.0` | Current verified hosted application; public review notes are redacted and the frontend requests up to ten briefing records |
+| `0.8.0` | ✅ Current hosted application; Railway `/health` reports `0.8.0`, `/docs` returns `200`, the public Vercel page renders Ask DRIFT, and Vercel CORS is verified |
+| `0.7.0` | Prior verified hosted application; public review notes are redacted and the frontend requests up to ten briefing records |
 | `0.6.1` | Previously verified hosted application |
 | `0.5.1` | Historical hosted baseline |
 
