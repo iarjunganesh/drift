@@ -1,44 +1,176 @@
 [
   {
     "id": 1,
-    "raw_item_ids": [101],
-    "title": "Example: review an inference-runtime release before rollout",
-    "summary": "This fixture demonstrates how DRIFT presents a release item that warrants a deployment review.",
-    "why_it_matters": "An inference-runtime upgrade can change kernel selection, memory use, or supported hardware. Treat this as an example workflow, not a claim about a specific version.",
+    "raw_item_ids": [
+      101
+    ],
+    "title": "Example: inference-runtime release changes default attention backend",
+    "summary": "This labelled example shows how DRIFT presents an inference-runtime release that alters kernel selection and warrants a deployment review.",
+    "why_it_matters": "An inference-runtime upgrade can change kernel selection, memory use, or supported hardware. Treat this as an example workflow, not a claim about a specific shipped version.",
     "what_to_check": "Compare the release notes with your pinned runtime, GPU architecture, serving flags, and latency baseline before promoting the upgrade.",
     "severity": "breaking",
-    "affected_libraries": ["vllm"],
-    "source_citations": ["https://github.com/vllm-project/vllm/releases"],
+    "affected_libraries": [
+      "vllm"
+    ],
+    "source_citations": [
+      "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/101.txt"
+    ],
     "confidence": 0.86,
     "model_used": "fixture-curated",
-    "created_at": "2026-07-14T09:00:00Z"
+    "created_at": "2026-07-14T09:00:00Z",
+    "claims": [
+      {
+        "text": "The default attention backend is now selected automatically from GPU capability, and a flag is added to pin it.",
+        "kind": "direct_fact",
+        "evidence": [
+          {
+            "raw_item_id": 101,
+            "source_url": "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/101.txt",
+            "source_sha256": "13565676f03156171d31f37403d47bba64779d5de79c5488fdb572f77f8fa03b",
+            "excerpt": "Default attention backend is now chosen automatically based on GPU capability; pass --attention-backend to override the selection.",
+            "start_char": 63,
+            "end_char": 193,
+            "cross_references": []
+          }
+        ]
+      },
+      {
+        "text": "Automatic backend selection can change latency and memory profiles for operators who previously relied on the implicit default.",
+        "kind": "inference",
+        "evidence": [
+          {
+            "raw_item_id": 101,
+            "source_url": "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/101.txt",
+            "source_sha256": "13565676f03156171d31f37403d47bba64779d5de79c5488fdb572f77f8fa03b",
+            "excerpt": "automatically based on GPU capability",
+            "start_char": 103,
+            "end_char": 140,
+            "cross_references": []
+          }
+        ]
+      },
+      {
+        "text": "Re-run your latency and throughput baseline with the attention backend pinned before promoting the upgrade.",
+        "kind": "recommended_check",
+        "evidence": [
+          {
+            "raw_item_id": 101,
+            "source_url": "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/101.txt",
+            "source_sha256": "13565676f03156171d31f37403d47bba64779d5de79c5488fdb572f77f8fa03b",
+            "excerpt": "pass --attention-backend to override the selection",
+            "start_char": 142,
+            "end_char": 192,
+            "cross_references": []
+          }
+        ]
+      }
+    ]
   },
   {
     "id": 2,
-    "raw_item_ids": [102],
-    "title": "Example: validate framework and compiler compatibility",
-    "summary": "This fixture shows a compatibility-oriented briefing item for a framework release.",
+    "raw_item_ids": [
+      102,
+      104
+    ],
+    "title": "Example: framework release surfaces compiler and extension compatibility",
+    "summary": "This labelled example shows a compatibility-oriented briefing item for a framework release that touches the compiler path.",
     "why_it_matters": "Framework releases can expose compiler or extension incompatibilities that only appear in a production build or a less common model path.",
     "what_to_check": "Run the affected training or inference smoke test with your pinned compiler and custom extensions before changing the production image.",
     "severity": "minor",
-    "affected_libraries": ["pytorch", "triton"],
-    "source_citations": ["https://github.com/pytorch/pytorch/releases", "https://github.com/triton-lang/triton/releases"],
+    "affected_libraries": [
+      "pytorch",
+      "triton"
+    ],
+    "source_citations": [
+      "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/102.txt",
+      "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/104.txt"
+    ],
     "confidence": 0.78,
     "model_used": "fixture-curated",
-    "created_at": "2026-07-13T09:00:00Z"
+    "created_at": "2026-07-13T09:00:00Z",
+    "claims": [
+      {
+        "text": "The release raises the minimum supported compiler toolchain used to build custom extensions.",
+        "kind": "direct_fact",
+        "evidence": [
+          {
+            "raw_item_id": 102,
+            "source_url": "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/102.txt",
+            "source_sha256": "c8ee76c0ebdd69c18701b3e5f82c700c036ff1b1981ed862a48fd308d6ac22f5",
+            "excerpt": "Custom C++/CUDA extensions now require the updated minimum compiler toolchain to build against this release.",
+            "start_char": 63,
+            "end_char": 171,
+            "cross_references": []
+          }
+        ]
+      },
+      {
+        "text": "Rebuild your custom C++/CUDA extensions against this release with your pinned compiler before updating the production image.",
+        "kind": "recommended_check",
+        "evidence": [
+          {
+            "raw_item_id": 104,
+            "source_url": "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/104.txt",
+            "source_sha256": "267669aa883213415ff8e76cb8ee1eab58a2eca9e5cbd5ef584e95fbd99e2614",
+            "excerpt": "Extensions built against the previous toolchain should be recompiled.",
+            "start_char": 63,
+            "end_char": 132,
+            "cross_references": []
+          }
+        ]
+      }
+    ]
   },
   {
     "id": 3,
-    "raw_item_ids": [103],
-    "title": "Example: assess a distributed-communication update",
-    "summary": "This fixture demonstrates a lower-priority item with an explicit confidence signal.",
-    "why_it_matters": "Distributed communication changes can affect multi-node behavior without altering single-node development results.",
+    "raw_item_ids": [
+      103
+    ],
+    "title": "Example: distributed-communication update affects multi-node collectives",
+    "summary": "This labelled example shows a lower-priority item, with an explicit confidence signal, for a distributed-communication release.",
+    "why_it_matters": "Distributed-communication changes can affect multi-node behavior without altering single-node development results.",
     "what_to_check": "If you use multi-node training, run a representative collective-communication test before scheduling an upgrade.",
     "severity": "minor",
-    "affected_libraries": ["nccl"],
-    "source_citations": ["https://github.com/NVIDIA/nccl/releases"],
+    "affected_libraries": [
+      "nccl"
+    ],
+    "source_citations": [
+      "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/103.txt"
+    ],
     "confidence": 0.69,
     "model_used": "fixture-curated",
-    "created_at": "2026-07-12T09:00:00Z"
+    "created_at": "2026-07-12T09:00:00Z",
+    "claims": [
+      {
+        "text": "The release adjusts the default algorithm used for a common collective operation on multi-node topologies.",
+        "kind": "direct_fact",
+        "evidence": [
+          {
+            "raw_item_id": 103,
+            "source_url": "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/103.txt",
+            "source_sha256": "751e1c443fb130dcfe93b84ff160cb14c5a745306a91ac9f37d31605028eec19",
+            "excerpt": "The default all-reduce algorithm selection has changed for multi-node configurations in this release.",
+            "start_char": 63,
+            "end_char": 164,
+            "cross_references": []
+          }
+        ]
+      },
+      {
+        "text": "Run a representative multi-node collective-communication test before scheduling the upgrade.",
+        "kind": "recommended_check",
+        "evidence": [
+          {
+            "raw_item_id": 103,
+            "source_url": "https://github.com/iarjunganesh/drift/blob/v0.8.0/backend/fixtures/source_evidence/103.txt",
+            "source_sha256": "751e1c443fb130dcfe93b84ff160cb14c5a745306a91ac9f37d31605028eec19",
+            "excerpt": "multi-node configurations",
+            "start_char": 122,
+            "end_char": 147,
+            "cross_references": []
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -1,0 +1,2 @@
+Synthetic DRIFT fixture source — not an upstream release note.
+Custom C++/CUDA extensions now require the updated minimum compiler toolchain to build against this release.

@@ -85,11 +85,12 @@ audit label.
 
 ## Documentation and architecture assets
 
-The source of truth for the main architecture visual is
-`assets/architecture/architecture-diagram.mmd`. Regenerate its SVG/PNG renders
-with the instructions in `assets/architecture/README.md`; do not hand-edit a
-rendered diagram. Architecture decisions belong in `docs/adr/`.
+The source of truth for the main architecture visual is the pipeline Mermaid
+`assets/architecture/arch-pipeline.mmd` and the hand-authored presentation-diagram generator
+`assets/architecture/build_arch.py`. Regenerate the SVG/PNG renders with the
+instructions in `assets/architecture/README.md`; do not hand-edit a rendered
+diagram. Architecture decisions belong in `docs/adr/`.
 
-The nine project initiatives and their Codex Session IDs are recorded in
+The ten project initiatives and their Codex Session IDs are recorded in
 [`docs/INITIATIVES.md`](docs/INITIATIVES.md); update that record if a future
 initiative materially changes the baseline.

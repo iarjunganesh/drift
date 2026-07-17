@@ -7,7 +7,8 @@ development baseline while the live pipeline is being implemented.
 
 | Version | Supported |
 | --- | --- |
-| `0.7.0` | ✅ Current source and hosted application; public review notes are redacted and the frontend requests up to ten briefing records |
+| `0.8.0` | ✅ Current source release; grounded frontend chat and verifiable synthetic fixture evidence, awaiting hosted deployment verification |
+| `0.7.0` | Current verified hosted application; public review notes are redacted and the frontend requests up to ten briefing records |
 | `0.6.1` | Previously verified hosted application |
 | `0.5.1` | Historical hosted baseline |
 
@@ -16,7 +17,9 @@ are explicitly operator-enabled and review-gated; the hosted gate returned no
 live evidence until the first human-reviewed capture. As of 2026-07-16 it serves
 four human-reviewed Insights from an eight-source capture (six verifier-passed
 drafts). Version `0.7.0` keeps human review notes database-only; its deployed
-`/briefing` and `/openapi.json` boundaries were verified to omit them.
+`/briefing` and `/openapi.json` boundaries were verified to omit them. Version
+`0.8.0` keeps fixture evidence explicitly synthetic and locally verifiable; it
+does not add an unverified hosted claim.
 
 ## Reporting a vulnerability
 

@@ -108,7 +108,7 @@ export default function Home() {
             <source media="(prefers-color-scheme: light)" srcSet={`${API_URL}/brand/light.svg`} />
             <img
               src={`${API_URL}/brand/light.svg`}
-              alt="DRIFT evidence path: a primary release flows through a GPU compute lattice into cited evidence, human review, and a bounded engineering check"
+              alt="DRIFT evidence path: an untrusted primary release crosses a human review gate to become a cited, bounded briefing"
             />
           </picture>
           <div className="signal-label">Current operating mode</div>

@@ -221,6 +221,8 @@ changes:
      readiness
    - `019f6a46-e3eb-7de2-81b1-91515ae80043` — submission audit and frontend
      evidence presentation
+   - `019f6a78-6fa2-7121-9059-85ac8ceb9904` — reviewed-evidence hardening,
+     hosted verification, and `v0.8.0` source release
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.
@@ -237,10 +239,11 @@ rules/FAQ reference copy, not drift's submission draft.
 
 - Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
 - Confirm which supplied initiative is the primary `/feedback` session for the
-  Devpost form; retain all nine IDs in the README, changelog, and submission
+  Devpost form; retain all ten IDs in the README, changelog, and submission
    notes.
-- Verify branch protection and the Codecov upload on the published GitHub
-  repository.
+- Branch protection and the Codecov upload are verified on the published GitHub
+  repository (2026-07-17): `main` requires the five CI quality-gate checks, and
+  the `pytest` coverage upload resolves to 100% on Codecov.
 - Use `notebooks/drift_manual_run.ipynb` against a reachable database to create
   and review a small draft store, then smoke-test hosted `/search` and `/chat`
   against that reviewed, cited evidence. Railway PostgreSQL schema `0003`,

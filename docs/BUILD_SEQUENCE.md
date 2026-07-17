@@ -55,6 +55,10 @@ AI-infrastructure release intelligence.
 - [x] Operator: deployed `v0.7.0`; Railway `/health`/`/docs`, Vercel CORS,
       review-note redaction in `/briefing` and `/openapi.json`, and the deployed
       frontend's `top_n=10` request were verified
+- [x] Codex: released `v0.8.0` source changes — Ask DRIFT validates the public
+      `/chat` boundary, and no-key fixture claims point to checked-in synthetic
+      source text with verified offsets and hashes; hosted verification remains
+      a separate required observation
 - [x] No new model calls — the current UI remains presentation-only
 
 ## Day 8 — Final content + docs
@@ -87,14 +91,18 @@ The public repository is `iarjunganesh/drift`, and the README already points
 to its repository-specific Codecov badge.
 
 1. GitHub `main` is published; continue verifying `.github/workflows/ci.yml`.
-2. Confirm the `pytest` upload appears in Codecov.
-3. Confirm the README badge resolves to the project report:
+2. The `pytest` upload is confirmed on Codecov (2026-07-17) — the repository and
+   `flag=pytest` coverage badges both resolve to 100%.
+3. The README badge resolves to the project report:
 
    ```markdown
    [![Codecov](https://codecov.io/gh/iarjunganesh/drift/graph/badge.svg)](https://codecov.io/gh/iarjunganesh/drift)
    ```
 
-4. Protect the default branch and require the CI quality gate.
+4. The default branch is protected (2026-07-17): `main` requires the five CI
+   quality-gate checks (Ruff lint, Mypy type check, Tests and coverage, Frontend
+   build, Documentation hygiene) with strict up-to-date merges; admins retain a
+   bypass for pre-deadline hotfixes.
 5. The Railway API is live at `https://drift-api-prod.up.railway.app`, and the
    Vercel frontend is live at `https://dr1ftless.vercel.app`. Keep the Vercel
    Root Directory set to `frontend/`; its checked-in configuration supplies
@@ -115,7 +123,7 @@ Insight stage now has structured-output coverage.
 
 The baseline, hosted-deployment follow-up, bounded v0.4.0 baseline, v0.5.0
 capture-path release, and
-implementation follow-ups are supported by nine project initiatives:
+implementation follow-ups are supported by ten project initiatives:
 
 - Foundation and inspectable vertical slice —
   `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -123,10 +131,10 @@ implementation follow-ups are supported by nine project initiatives:
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`
 - Hosted deployment and README follow-up —
   `019f6253-ddfc-7272-8077-e34dfb3aee84`
-- Day 1/Day 2 implementation follow-up —
-  `019f62e8-6715-70e2-a92a-fe28254f7b71`
 - Grounded live chat, resilience, and locked delivery (primary candidate
   initiative) — `019f62b9-10b7-7d82-a463-e6eb1192141c`
+- Day 1/Day 2 implementation follow-up —
+  `019f62e8-6715-70e2-a92a-fe28254f7b71`
 - Day 3/Day 4 Insight structured output —
   `019f6336-3690-7022-a8ef-c8c0947e240f`
 - Bounded capture/provenance and documentation cleanup —
@@ -135,5 +143,7 @@ implementation follow-ups are supported by nine project initiatives:
   `019f6773-0e96-7363-9657-0e0531c3d594`
 - Submission audit and frontend evidence presentation —
   `019f6a46-e3eb-7de2-81b1-91515ae80043`
+- Reviewed-evidence hardening, hosted verification, and `v0.8.0` source release —
+  `019f6a78-6fa2-7121-9059-85ac8ceb9904`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.

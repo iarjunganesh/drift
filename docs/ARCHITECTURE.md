@@ -5,9 +5,11 @@ This document explains the checked-in architecture visual, the boundaries behind
 it, and the evidence required before the live path can be called complete.
 
 The implementation, publication, and current release work are recorded in the
-nine [Codex project initiatives](INITIATIVES.md).
+ten [Codex project initiatives](INITIATIVES.md).
 
-> **Current truth:** the fixture path is working and reproducible. The local
+> **Current truth:** the fixture path is working and reproducible. Its example
+> claims point to checked-in synthetic source text, not mutable upstream pages,
+> and retain the same exact-span/source-hash invariant as live claims. The local
 > capture job persists/reloads primary source evidence, freezes exact claim
 > spans, separately verifies the draft, embeds it, and stores both model-run
 > audits. It cannot publish a draft: live read paths admit only human-reviewed,
@@ -23,27 +25,41 @@ nine [Codex project initiatives](INITIATIVES.md).
 
 ## Visual source of truth
 
-The canonical architecture is maintained in
-[`assets/architecture/architecture-diagram.mmd`](../assets/architecture/architecture-diagram.mmd).
-The checked-in themed renders are the README and presentation assets:
+The canonical *pipeline* is maintained in
+[`assets/architecture/arch-pipeline.mmd`](../assets/architecture/arch-pipeline.mmd);
+the hand-authored *presentation diagram* (`arch-*`) dramatizes the same six
+stages as a first-look trust-boundary story. Both are checked-in README and
+presentation assets that share one visual language with the `assets/brand/`
+banner.
 
 <p align="center">
-  <a href="../assets/architecture/architecture-diagram-light.svg" target="_blank" rel="noopener noreferrer">
+  <a href="../assets/architecture/arch-light.svg" target="_blank" rel="noopener noreferrer">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="../assets/architecture/architecture-diagram-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="../assets/architecture/architecture-diagram-light.svg">
-      <img width="1000" src="../assets/architecture/architecture-diagram-light.svg"
-           alt="DRIFT architecture — Engineer to FastAPI, fixture mode or live release-intelligence pipeline, and cited briefing output"/>
+      <source media="(prefers-color-scheme: dark)" srcset="../assets/architecture/arch-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="../assets/architecture/arch-light.svg">
+      <img width="1000" src="../assets/architecture/arch-light.svg"
+           alt="DRIFT trust boundary — untrusted release feeds through machine claim extraction and a separate verifier into quarantined drafts; a human review gate is the only bridge to the trusted, published briefing an engineer sees."/>
     </picture>
   </a>
 </p>
 
-Open the [light SVG](../assets/architecture/architecture-diagram-light.svg) or
-[dark SVG](../assets/architecture/architecture-diagram-dark.svg) for a scalable
-version. The corresponding [light PNG](../assets/architecture/architecture-diagram-light.png)
-and [dark PNG](../assets/architecture/architecture-diagram-dark.png) are for
-slides and video. Regeneration instructions live in the
-[architecture asset guide](../assets/architecture/README.md).
+<p align="center">
+  <a href="../assets/architecture/arch-pipeline-light.svg" target="_blank" rel="noopener noreferrer">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../assets/architecture/arch-pipeline-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="../assets/architecture/arch-pipeline-light.svg">
+      <img width="1000" src="../assets/architecture/arch-pipeline-light.svg"
+           alt="DRIFT pipeline — Engineer to FastAPI, fixture mode or live release-intelligence pipeline through Scout, Synthesizer, claim extraction, a separate verifier, a human review gate, and Briefing"/>
+    </picture>
+  </a>
+</p>
+
+Open the presentation [light SVG](../assets/architecture/arch-light.svg) /
+[dark SVG](../assets/architecture/arch-dark.svg) or the pipeline
+[light SVG](../assets/architecture/arch-pipeline-light.svg) /
+[dark SVG](../assets/architecture/arch-pipeline-dark.svg) for scalable versions;
+the matching PNGs are for slides and video. Regeneration instructions live in
+the [architecture asset guide](../assets/architecture/README.md).
 
 The main diagram stays intentionally horizontal because it describes the
 pipeline’s ownership sequence. Supporting diagrams below are kept short or
@@ -71,7 +87,7 @@ what must be demonstrated before each stage moves to complete.
 ### Fixture path — complete
 
 ```text
-backend/fixtures/insights.json
+backend/fixtures/source_evidence/*.txt + insights.json
         │
         ▼
 InsightStore (read-only, in-memory)
@@ -82,8 +98,8 @@ InsightStore (read-only, in-memory)
 ```
 
 Fixture mode is the default. It needs no database, network, OpenAI key, or
-frontend build. Every record is an explicit example and uses
-`model_used: fixture-curated`.
+frontend build. Every record is an explicit example backed by checked-in
+synthetic source text and uses `model_used: fixture-curated`.
 
 ### Live path — target
 
@@ -219,7 +235,7 @@ a SHA-256 manifest. It refuses draft/unverified rows and archive overwrites.
 | `GET /search?q=2..300 chars` | `Insight[]` | Fixture token relevance by default; live mode uses query embeddings/pgvector over reviewed verifier-passed rows only |
 | `POST /chat` | `ChatRequest → ChatResponse` | Fixture composition by default; retrieve-first model answer from reviewed verifier-passed evidence in live mode |
 | `GET /docs` | Swagger UI | Generated OpenAPI UI with the canonical theme-aware DRIFT banner |
-| `GET /brand/{dark\|light}.svg` | Canonical hero banner | Served from `assets/brand/`; excluded from the OpenAPI contract |
+| `GET /brand/{dark\|light}.svg` | Canonical brand banner | Served from `assets/brand/`; excluded from the OpenAPI contract |
 | `GET /openapi.json` | OpenAPI document | FastAPI-generated; not checked in |
 
 The chat path retrieves matching insights first. If no matching evidence exists,
@@ -354,7 +370,7 @@ Ruff → mypy → pytest + coverage → Codecov upload → frontend build → do
 ```
 
 The enforceable floor is 100% for implemented code; the current local suite is
-148 tests at 100.00%. Deliberately unimplemented live-stage raises remain explicit and are
+150 tests at 100.00%. Deliberately unimplemented live-stage raises remain explicit and are
 excluded only at the boundary itself. New live behavior must arrive with tests
 that preserve the 100% floor.
 

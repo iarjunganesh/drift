@@ -19,6 +19,8 @@
         `019f6773-0e96-7363-9657-0e0531c3d594`
       - Submission audit and frontend evidence presentation:
         `019f6a46-e3eb-7de2-81b1-91515ae80043`
+      - Reviewed-evidence hardening, hosted verification, and `v0.8.0` source release:
+        `019f6a78-6fa2-7121-9059-85ac8ceb9904`
 - [x] Use `019f62b9-10b7-7d82-a463-e6eb1192141c` as the primary `/feedback`
       Session ID if the Devpost form accepts only one.
 - [x] Implement local claim-level evidence, separate verification, and

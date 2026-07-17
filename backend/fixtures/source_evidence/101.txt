@@ -1,0 +1,2 @@
+Synthetic DRIFT fixture source — not an upstream release note.
+Default attention backend is now chosen automatically based on GPU capability; pass --attention-backend to override the selection.

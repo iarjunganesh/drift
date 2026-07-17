@@ -13,20 +13,37 @@
 [![Codecov](https://codecov.io/gh/iarjunganesh/drift/graph/badge.svg)](https://codecov.io/gh/iarjunganesh/drift)
 [![Release](https://img.shields.io/badge/release-latest-2ea44f?logo=github&logoColor=white)](https://github.com/iarjunganesh/drift/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Watch Video](https://img.shields.io/badge/%E2%96%B6_Watch-3--min_demo-FF0000?logo=youtube&logoColor=white)](#live--interactive-demo)
+[![Watch Video](https://img.shields.io/badge/%E2%96%B6_Watch-3--min_demo-FF0000?logo=youtube&logoColor=white)](#try-drift-in-60-seconds)
 
-[![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![pgvector](https://img.shields.io/badge/pgvector-0.5.0-336791?logo=postgresql&logoColor=white)](https://github.com/pgvector/pgvector)
-[![OpenAI](https://img.shields.io/badge/OpenAI-SDK-412991?logo=openai&logoColor=white)](https://platform.openai.com/)
-[![Ruff](https://img.shields.io/badge/Ruff-lint%20%2B%20format-D7FF64?logo=ruff&logoColor=111827)](https://docs.astral.sh/ruff/)
+<!-- Row 2 — AI & agent core -->
+[![Agent Pattern](https://img.shields.io/badge/Agent_Pattern-asyncio_typed_stages-3776AB?logo=python&logoColor=white)](backend/agents/base.py)
+[![GPT-5.6 Luna](https://img.shields.io/badge/GPT--5.6-Luna-412991?logo=openai&logoColor=white)](https://developers.openai.com/api/docs/models/gpt-5.6-luna)
+[![GPT-5.6 Terra](https://img.shields.io/badge/GPT--5.6-Terra-412991?logo=openai&logoColor=white)](https://developers.openai.com/api/docs/models/gpt-5.6-terra)
+[![GPT-5.6 Sol](https://img.shields.io/badge/GPT--5.6-Sol-412991?logo=openai&logoColor=white)](https://developers.openai.com/api/docs/models/gpt-5.6-sol)
+[![Pydantic](https://img.shields.io/badge/Pydantic-2.13_contracts-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
+[![structlog](https://img.shields.io/badge/structlog-JSON_observability-4A90E2)](https://www.structlog.org/)
 
+<!-- Row 3 — Frontend + live Vercel app -->
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.10-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.7-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-24-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![Railway](https://img.shields.io/badge/Railway-backend-0B0D0E?logo=railway&logoColor=white)](https://drift-api-prod.up.railway.app/docs)
-[![Vercel](https://img.shields.io/badge/Vercel-frontend-000000?logo=vercel&logoColor=white)](https://dr1ftless.vercel.app)
+[![Vercel Hobby](https://img.shields.io/badge/Vercel-Hobby-000000?logo=vercel&logoColor=white)](https://vercel.com)
+
+<!-- Row 4 — Backend -->
+[![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Ruff](https://img.shields.io/badge/Ruff-lint%20%2B%20format-D7FF64?logo=ruff&logoColor=111827)](https://docs.astral.sh/ruff/)
+[![pytest](https://img.shields.io/badge/pytest-9.1-0A9EDC?logo=pytest&logoColor=white)](https://docs.pytest.org/)
+[![Railway Hobby](https://img.shields.io/badge/Railway-Hobby-0B0D0E?logo=railway&logoColor=white)](https://railway.com)
+
+<!-- Row 5 — Live store -->
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![pgvector](https://img.shields.io/badge/pgvector-0.5.0-336791?logo=postgresql&logoColor=white)](https://github.com/pgvector/pgvector)
+
+<!-- Row 6 — Hosting (live deployments) -->
+[![Vercel live frontend](https://img.shields.io/badge/Vercel-live_frontend-000000?logo=vercel&logoColor=white)](https://dr1ftless.vercel.app)
+[![Railway live API](https://img.shields.io/badge/Railway-live_API-0B0D0E?logo=railway&logoColor=white)](https://drift-api-prod.up.railway.app/docs)
 
 ---
 
@@ -55,15 +72,17 @@ Built for **OpenAI Build Week 2026 · Developer Tools**.
 
 ## Try DRIFT in 60 Seconds
 
-**Hosted — nothing to install.** The live briefing now serves four
-human-reviewed Insights from one real bounded capture (Transformers v5.14.1,
-vLLM v0.25.1, NCCL v2.30.7-1, TensorRT 11.1):
+**Hosted — nothing to install.** The live briefing serves four human-reviewed
+Insights from one real bounded capture (Transformers v5.14.1, vLLM v0.25.1,
+NCCL v2.30.7-1, TensorRT 11.1); `/briefing`, `/search`, and `/chat` were verified
+provider-backed on 2026-07-16.
 
 | Surface | Link |
 | --- | --- |
 | **Frontend** — briefing with inspectable claim evidence | <https://dr1ftless.vercel.app> |
-| **API docs** — `/health`, `/briefing`, `/search`, `/chat` | <https://drift-api-prod.up.railway.app/docs> |
+| **API docs** — `/health`, `/briefing`, `/search`, `/chat`, `/openapi.json` | <https://drift-api-prod.up.railway.app/docs> |
 | **Grounded chat** — cited answer over reviewed evidence (verified provider-backed) | [`POST /chat` in the API docs](https://drift-api-prod.up.railway.app/docs) |
+| **Demo video** — 3-min narrated walkthrough (Codex + GPT-5.6) | [▶ Watch on YouTube](https://youtu.be/TBD) *(recording before submission)* |
 
 **Local — one command, no API key.** The deterministic fixture path brings up the
 API, PostgreSQL, and the frontend — including the in-app **Ask DRIFT**
@@ -100,28 +119,47 @@ The currently working path substitutes committed examples for the unfinished
 live stages:
 
 ```text
-backend/fixtures/insights.json → InsightStore → FastAPI → briefing/search/chat
+backend/fixtures/source_evidence/*.txt + insights.json → InsightStore → FastAPI → briefing/search/chat
 ```
 
-Fixture records are explicitly labelled examples. They are never described as
-fresh live release analysis.
+Fixture records are explicitly labelled examples, backed by checked-in
+synthetic source text whose hashes and spans are verified in tests. They are
+never described as fresh live release analysis.
 
 ---
 
 ## Architecture
 
 <p align="center">
-  <a href="assets/architecture/architecture-diagram-light.svg" target="_blank" rel="noopener noreferrer">
+  <a href="assets/architecture/arch-light.svg" target="_blank" rel="noopener noreferrer">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="assets/architecture/architecture-diagram-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="assets/architecture/architecture-diagram-light.svg">
-      <img width="900" src="assets/architecture/architecture-diagram-light.svg"
-           alt="DRIFT architecture — primary release feeds through Scout, Synthesizer, Insight, and Briefing into FastAPI"/>
+      <source media="(prefers-color-scheme: dark)" srcset="assets/architecture/arch-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="assets/architecture/arch-light.svg">
+      <img width="960" src="assets/architecture/arch-light.svg"
+           alt="DRIFT trust boundary — untrusted release feeds pass through machine claim extraction and a separate verifier into quarantined drafts; a human review gate is the only bridge to the trusted, published briefing an engineer sees."/>
     </picture>
   </a>
 </p>
 
-<sub>Click to enlarge: <a href="assets/architecture/architecture-diagram-light.svg">light SVG</a> / <a href="assets/architecture/architecture-diagram-dark.svg">dark SVG</a> · Downloadable <a href="assets/architecture/architecture-diagram-light.png">light PNG</a> / <a href="assets/architecture/architecture-diagram-dark.png">dark PNG</a> · Source: <a href="assets/architecture/architecture-diagram.mmd"><code>architecture-diagram.mmd</code></a></sub>
+<p align="center"><sub><b>The trust boundary at a glance.</b> Everything left of the gate is untrusted machine output; a human reviewer is the only path to what an engineer sees. · <a href="assets/architecture/arch-light.svg">light SVG</a> / <a href="assets/architecture/arch-dark.svg">dark SVG</a></sub></p>
+
+<details>
+<summary><b>Detailed pipeline diagram</b> — the same six typed stages, as the maintainable Mermaid source of truth</summary>
+
+<p align="center">
+  <a href="assets/architecture/arch-pipeline-light.svg" target="_blank" rel="noopener noreferrer">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="assets/architecture/arch-pipeline-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="assets/architecture/arch-pipeline-light.svg">
+      <img width="900" src="assets/architecture/arch-pipeline-light.svg"
+           alt="DRIFT architecture — primary release feeds through Scout, Synthesizer, claim extraction, a separate verifier, a human review gate, and Briefing into FastAPI"/>
+    </picture>
+  </a>
+</p>
+
+<sub>Click to enlarge: <a href="assets/architecture/arch-pipeline-light.svg">light SVG</a> / <a href="assets/architecture/arch-pipeline-dark.svg">dark SVG</a> · Downloadable <a href="assets/architecture/arch-pipeline-light.png">light PNG</a> / <a href="assets/architecture/arch-pipeline-dark.png">dark PNG</a> · Source: <a href="assets/architecture/arch-pipeline.mmd"><code>arch-pipeline.mmd</code></a></sub>
+
+</details>
 
 **In short:** the fixture path is complete and no-key. The local live path now
 persists source evidence, generates and separately verifies claim-grounded
@@ -146,7 +184,7 @@ bounded reviewed set, not a broad live-release-analysis claim.
 ### Codex project initiatives
 
 The baseline, publication follow-up, bounded release milestones, and
-documentation follow-up are tied to nine project initiatives. The grounded
+documentation follow-up are tied to ten project initiatives. The grounded
 live-chat row remains the primary v0.4.0 implementation session; v0.5.0 adds
 the bounded local capture path.
 
@@ -155,12 +193,13 @@ the bounded local capture path.
 | Foundation and inspectable vertical slice | `019f61e7-1ea1-7742-9acc-99d62f39b888` | Fixture API, typed contracts, agent boundaries, safety invariants, tests |
 | Publication and judge-readiness baseline | `019f61fc-c32e-7d92-9d2e-0bd9083d08e7` | Documentation, architecture assets, CI/Codecov, deployment and submission surfaces |
 | Hosted deployment and README follow-up | `019f6253-ddfc-7272-8077-e34dfb3aee84` | Railway/Vercel URLs, release badges, and public demo documentation |
-| Day 1/Day 2 implementation follow-up | `019f62e8-6715-70e2-a92a-fe28254f7b71` | Scout feeds, async PostgreSQL/pgvector foundation, Tier.DEV embeddings/clustering/classification, session instructions, and status cleanup |
 | Grounded live chat, resilience, and locked delivery | `019f62b9-10b7-7d82-a463-e6eb1192141c` | Primary `0.2.0` candidate work: local live chat, async safeguards, locked delivery, and full implemented-code coverage |
+| Day 1/Day 2 implementation follow-up | `019f62e8-6715-70e2-a92a-fe28254f7b71` | Scout feeds, async PostgreSQL/pgvector foundation, Tier.DEV embeddings/clustering/classification, session instructions, and status cleanup |
 | Day 3/Day 4 Insight structured output | `019f6336-3690-7022-a8ef-c8c0947e240f` | Standalone `generate_insight()` structured parsing, strict validation, citations, confidence, and model provenance |
 | Bounded capture, provenance, and status cleanup | `019f66b4-78b8-7943-a41d-91e836d28f00` | One-shot persisted capture, all-call budget/retry controls, live briefing adapter, evidence UI, and documentation synchronization |
 | Grounding guardrails and capture readiness | `019f6773-0e96-7363-9657-0e0531c3d594` | Claim spans/hashes, separate verifier, review-gated publication, cross-references, calibration cases, manual notebook, and all-source capture preflight |
 | Submission audit and frontend evidence presentation | `019f6a46-e3eb-7de2-81b1-91515ae80043` | Handwritten-next-step audit, explicit briefing states, system-theme presentation, canonical API-served banners, and status synchronization |
+| Reviewed-evidence release hardening, hosted verification, and v0.8.0 source release | `019f6a78-6fa2-7121-9059-85ac8ceb9904` | Evidence-byte integrity, database-only review notes, display-only results artifact, `v0.7.0` hosted verification, and the `v0.8.0` grounded-chat / verifiable-fixture source release |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -176,7 +215,9 @@ the Day 3/Day 4 Insight implementation session is
 `019f6336-3690-7022-a8ef-c8c0947e240f`; the grounding guardrail and
 capture-readiness follow-up is `019f6773-0e96-7363-9657-0e0531c3d594`; and the
 submission-audit/frontend-presentation follow-up is
-`019f6a46-e3eb-7de2-81b1-91515ae80043`.
+`019f6a46-e3eb-7de2-81b1-91515ae80043`; the reviewed-evidence hardening,
+hosted-verification, and `v0.8.0` source-release session is
+`019f6a78-6fa2-7121-9059-85ac8ceb9904`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
 provides an API key. The local capture job routes embeddings, classification,
@@ -249,14 +290,14 @@ conservatively; it is never silently treated as free.
 
 | Layer | Technology | Role |
 | --- | --- | --- |
-| **Backend** | [![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/) [![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](https://www.python.org/) | Typed HTTP API and explicit pipeline stages |
+| **Backend** | [![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/) | Typed HTTP API and explicit pipeline stages |
 | **Contracts** | [![Pydantic](https://img.shields.io/badge/Pydantic-2.13-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/) | Typed raw-item, insight, briefing, and chat contracts |
 | **Agent Pattern** | [![asyncio](https://img.shields.io/badge/asyncio-typed%20stages-3776AB?logo=python&logoColor=white)](backend/agents/base.py) | Small lifecycle-wrapped functions; no orchestration framework |
 | **Release Feeds** | [![feedparser](https://img.shields.io/badge/feedparser-Atom%20%2F%20RSS-3776AB?logo=python&logoColor=white)](https://feedparser.readthedocs.io/) [![PyYAML](https://img.shields.io/badge/PyYAML-sources-3776AB?logo=python&logoColor=white)](https://pyyaml.org/) | Configured primary-source feed definitions and parsing |
 | **Live Store** | [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/) [![pgvector](https://img.shields.io/badge/pgvector-0.5.0-336791?logo=postgresql&logoColor=white)](https://github.com/pgvector/pgvector) | Durable raw items, insights, and vector retrieval |
-| **Model Boundary** | [![OpenAI](https://img.shields.io/badge/OpenAI-SDK-412991?logo=openai&logoColor=white)](https://platform.openai.com/) | Provider isolation, model tiers, and budget control |
-| **Quality** | [![Ruff](https://img.shields.io/badge/Ruff-0.15.21-D7FF64?logo=ruff&logoColor=111827)](https://docs.astral.sh/ruff/) [![pytest](https://img.shields.io/badge/pytest-9.1-0A9EDC?logo=pytest&logoColor=white)](https://docs.pytest.org/) [![Codecov](https://img.shields.io/badge/Codecov-pytest-f01f7a?logo=codecov&logoColor=white)](https://codecov.io/) | Lint, types, tests, coverage evidence, and CI enforcement |
-| **Frontend** | [![Next.js](https://img.shields.io/badge/Next.js-16.2.10-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-19.2.7-61DAFB?logo=react&logoColor=black)](https://react.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) | Operator-facing briefing view |
+| **Model Boundary** | [![GPT-5.6](https://img.shields.io/badge/OpenAI-GPT--5.6_tiers-412991?logo=openai&logoColor=white)](https://developers.openai.com/api/docs/models) | Provider isolation, GPT-5.6 Luna/Terra/Sol tiers, and budget control |
+| **Quality** | [![Codecov](https://img.shields.io/badge/Codecov-pytest-f01f7a?logo=codecov&logoColor=white)](https://codecov.io/) [![pytest](https://img.shields.io/badge/pytest-9.1-0A9EDC?logo=pytest&logoColor=white)](https://docs.pytest.org/) [![Ruff](https://img.shields.io/badge/Ruff-0.15.21-D7FF64?logo=ruff&logoColor=111827)](https://docs.astral.sh/ruff/) | Lint, types, tests, coverage evidence, and CI enforcement |
+| **Frontend** | [![Next.js](https://img.shields.io/badge/Next.js-16.2.10-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-19.2.7-61DAFB?logo=react&logoColor=black)](https://react.dev/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Node.js](https://img.shields.io/badge/Node.js-24-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/) | Operator-facing briefing view |
 | **Hosting** | [![Railway](https://img.shields.io/badge/Backend-Railway-0B0D0E?logo=railway&logoColor=white)](https://railway.app/) [![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/) | Railway API/database; Vercel Next.js frontend |
 | **Observability** | [![structlog](https://img.shields.io/badge/structlog-JSON-4A90E2)](https://www.structlog.org/) | Structured logs and explicit request/stage boundaries |
 
@@ -267,39 +308,23 @@ that frozen lockfile. JavaScript dependencies are locked in
 
 ---
 
-## Live & Interactive Demo
+## Deployment status
 
-The Railway API and Vercel frontend are live. The Vercel project deploys from
-`frontend/` using its checked-in build configuration. On 2026-07-16, hosted
-`v0.6.1` verified the briefing-state and canonical-banner release after Railway
-PostgreSQL reached the review-gate migration. The API-docs banner frame follows
-the same system light/dark preference as the canonical banner.
+Both tiers are live and were verified on 2026-07-16 — the live links live up top
+in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
 
-| | |
+| Surface | Status |
 | --- | --- |
-| **Current hosted API** | `v0.7.0` `live` — `/health`, `/briefing` (four reviewed Insights with review notes redacted), `/docs`, and Vercel-origin CORS verified on 2026-07-16; deployed Vercel requests `top_n=10` |
-| **Hosted frontend source** | Vercel HTML references the canonical API-served light/dark banner pair; the browser post-fetch empty-state rendering is not separately recorded |
-| **API docs branding** | The Swagger banner frame and canonical banner pair follow the same system light/dark preference |
-| **Historical evidence** | `v0.5.1` `live` — one unreviewed vLLM Insight served through `/briefing` on 2026-07-15; retained as pre-gate evidence only |
-| **Database schema** | Railway PostgreSQL verified at `0003_claim_evidence_review_gate` through its public TCP proxy on 2026-07-16 |
-| **Frontend** | [https://dr1ftless.vercel.app](https://dr1ftless.vercel.app) |
-| **API** | [https://drift-api-prod.up.railway.app](https://drift-api-prod.up.railway.app) |
-| **Swagger** | [`/docs`](https://drift-api-prod.up.railway.app/docs) |
-| **OpenAPI** | [`/openapi.json`](https://drift-api-prod.up.railway.app/openapi.json) |
-| **Briefing** | [`/briefing`](https://drift-api-prod.up.railway.app/briefing) |
-| **Demo Video** | [`https://youtu.be/TBD`](https://youtu.be/TBD) *(≤ 3 min, record before submission)* |
-| **Public demo** | Vercel frontend and Railway API are live; Vercel-to-Railway CORS was reverified on 2026-07-16 |
+| **Current source release** | `v0.8.0` — grounded Ask DRIFT UI and verifiable synthetic fixture evidence; source tag published, hosted deployment verification pending |
+| **Hosted API** | `v0.7.0` `live` — `/health`, `/briefing` (four reviewed Insights, review notes redacted), `/docs`, `/openapi.json`, and Vercel-origin CORS verified; the deployed Vercel bundle requests `top_n=10` |
+| **Grounded retrieval** | `/briefing`, `/search`, and `/chat` verified provider-backed from an eight-source capture — six verifier-passed drafts, four published after human review |
+| **Database schema** | Railway PostgreSQL at `0003_claim_evidence_review_gate`, verified through its public TCP proxy |
+| **Branding** | Swagger banner frame and canonical API-served banner pair follow the same system light/dark preference |
+| **Historical** | `v0.5.1` served one unreviewed vLLM Insight through `/briefing` on 2026-07-15 — retained as pre-gate evidence only |
 
-One unreviewed real-model vLLM capture is saved as historical hosted evidence.
-The fixture path remains the reproducible no-key demo. The review-gated code
-is deployed with its Railway schema migration. On 2026-07-16 an eight-source
-capture produced six verifier-passed drafts; four were published after human
-review, so hosted `/briefing`, `/search`, and `/chat` now serve those four
-reviewed Insights (verified provider-backed). This is a small, bounded reviewed
-set, not broad live-release analysis.
-
-The Swagger contract groups the backend into **System**, **Briefing**,
-**Search**, and **Chat** sections so reviewers can navigate the API by job.
+This is a small, bounded reviewed set, not broad live-release analysis. The
+Swagger contract groups the backend into **System**, **Briefing**, **Search**,
+and **Chat** sections so reviewers can navigate the API by job.
 
 ---
 
@@ -326,7 +351,7 @@ available as visual evidence:
 
 | API documentation | Architecture (light / dark) |
 | --- | --- |
-| [![DRIFT branded Swagger API documentation](assets/screenshots/02-api-docs.png)](assets/screenshots/02-api-docs.png) | [![DRIFT architecture light](assets/architecture/architecture-diagram-light.png)](assets/architecture/architecture-diagram-light.svg)<br/>[![DRIFT architecture dark](assets/architecture/architecture-diagram-dark.png)](assets/architecture/architecture-diagram-dark.svg) |
+| [![DRIFT branded Swagger API documentation](assets/screenshots/02-api-docs.png)](assets/screenshots/02-api-docs.png) | [![DRIFT architecture light](assets/architecture/arch-pipeline-light.png)](assets/architecture/arch-pipeline-light.svg)<br/>[![DRIFT architecture dark](assets/architecture/arch-pipeline-dark.png)](assets/architecture/arch-pipeline-dark.svg) |
 
 The scrubbed hosted capture evidence is stored separately in
 [`assets/evidence/`](assets/evidence/), including the verified unreviewed vLLM
@@ -418,7 +443,8 @@ Invoke-RestMethod http://127.0.0.1:8000/chat `
 ```
 
 Run the frontend in another terminal (same command on every platform). This is
-also where the in-app **Ask DRIFT** box calls `/search` and `/chat`:
+also where the in-app **Ask DRIFT** box calls `/chat` for a grounded, cited
+answer:
 
 ```bash
 npm --prefix frontend ci
@@ -471,12 +497,16 @@ not a scheduled feed service and does not publish or verify the hosted deploymen
 
 The fixture path uses [`backend/fixtures/insights.json`](backend/fixtures/insights.json).
 These records are committed examples for deterministic development and judging;
-they are not current release analysis. Each record preserves the contract that
-the live path must also satisfy:
+they are not current release analysis. Each record carries typed `claims` with
+frozen example excerpts, offsets, and source hashes, so the **Inspect claim
+evidence** panel renders in no-key fixture mode exactly as it does for a reviewed
+live capture. Each record preserves the contract that the live path must also
+satisfy:
 
 | Field | Purpose |
 | --- | --- |
 | `citations` | Source URLs supporting the insight |
+| `claims` | Typed `direct_fact` / `inference` / `recommended_check` statements, each with a frozen example evidence span |
 | `confidence` | Visible certainty in `[0, 1]` |
 | `model_used` | Fixture audit label or exact live model identifier |
 | `what_to_check` | Bounded engineering action |
@@ -489,38 +519,42 @@ the live path must also satisfy:
 ```text
 drift/
 ├── backend/
-│   ├── agents/          # Base, Scout, Synthesizer, Insight, and Briefing stages
-│   ├── core/            # Settings, model router, fixture store, and SpendGuard
-│   ├── fixtures/        # Deterministic citation-backed example insights
-│   ├── models/           # Pydantic domain and API contracts
-│   ├── main.py           # FastAPI app: health, briefing, search, chat
-│   ├── pipeline.py        # Bounded one-shot live capture CLI
-│   ├── review.py          # Explicit human publication gate
-│   ├── sources.yaml      # Primary release-feed configuration
-├── frontend/             # Next.js + React + TypeScript briefing view
-│   ├── .nvmrc            # Node.js 24.x local/runtime selection
-│   └── vercel.json       # Vercel build settings and Railway API URL
+│   ├── agents/               # base, scout, synthesizer, insight, briefing stages
+│   ├── core/                 # config, model_router, store, live_store, budget, resilience
+│   ├── models/schema.py      # Pydantic domain, claim-evidence, and API contracts
+│   ├── fixtures/insights.json # deterministic example insights with claim evidence
+│   ├── main.py               # FastAPI app: health, briefing, search, chat, /brand
+│   ├── pipeline.py           # bounded one-shot live capture CLI (draft-only)
+│   ├── review.py             # explicit human publication gate
+│   ├── evidence_archive.py   # reviewed-evidence archive + SHA-256 manifest writer
+│   └── sources.yaml          # primary release-feed configuration
+├── frontend/                 # Next.js + React + TypeScript briefing view
+│   ├── app/                  # page.tsx, layout.tsx, AskDrift.tsx (grounded chat box)
+│   ├── .nvmrc                # Node.js 24.x local/runtime selection
+│   └── vercel.json           # Vercel build settings and Railway API URL
 ├── assets/
-│   ├── architecture/     # Mermaid source plus themed SVG/PNG renders
-│   └── brand/            # Repository-native DRIFT hero banners
+│   ├── architecture/         # arch-* presentation (build_arch.py) + arch-pipeline-* Mermaid
+│   ├── brand/                # DRIFT brand banners (build_banner.py); API-served
+│   ├── evidence/             # scrubbed hosted-capture records + SHA-256 manifests
+│   └── screenshots/          # live-state UI captures used in the README
 ├── tests/
-│   ├── unit/              # Agent, budget, and configuration tests
-│   └── integration/       # API and lifespan tests
+│   ├── unit/                 # agent, budget, resilience, and configuration tests
+│   └── integration/          # API, lifespan, and evidence-boundary tests
 ├── docs/
-│   ├── ARCHITECTURE.md    # Runtime and deployment deep dive
-│   ├── INITIATIVES.md      # Codex project initiative/session records
-│   ├── BUILD_SEQUENCE.md  # Implementation sequence and GitHub/Codecov setup
-│   ├── RUNBOOK.md         # Fixture/live demo procedure
-│   └── adr/               # Architecture Decision Records 001–010
-├── notebooks/             # Local bounded capture/review workflow
-├── submission/            # Developer Tools handoff, checklist, and demo script
-├── Dockerfile             # Railway image built from frozen uv.lock
-├── docker-compose.yml     # Local API + PostgreSQL + frontend wiring
-├── migrations/             # Alembic schema and provenance revisions
-├── railway.json           # Railway build and health-check configuration
-├── pyproject.toml         # Python project, Ruff, mypy, pytest, coverage
-├── uv.lock                # Reproducible Python dependency resolution
-└── .github/workflows/     # CI quality gate and tagged release workflow
+│   ├── ARCHITECTURE.md       # runtime and deployment deep dive
+│   ├── INITIATIVES.md        # Codex project initiative/session records
+│   ├── BUILD_SEQUENCE.md     # implementation sequence and GitHub/Codecov setup
+│   ├── RUNBOOK.md · CODEX_PROMPTS.md  # demo procedure and prompt records
+│   └── adr/                  # Architecture Decision Records 001–010
+├── notebooks/                # local bounded capture/review workflow + results record
+├── scripts/                  # check_openai_spend.py (read-only spend reconciliation)
+├── migrations/               # Alembic env + versions (schema and provenance revisions)
+├── submission/               # Developer Tools handoff, checklist, Devpost, demo script
+├── Dockerfile · docker-compose.yml   # Railway image + local API/PostgreSQL/frontend
+├── alembic.ini · Makefile · railway.json · codecov.yml  # tooling and deploy config
+├── pyproject.toml · uv.lock  # Python project + reproducible dependency lock
+├── .gitattributes            # pins evidence JSON to LF for byte-exact manifests
+└── .github/workflows/        # CI quality gate and tagged release workflow
 ```
 
 ---
@@ -531,7 +565,7 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **148 tests passed and 100.00% backend coverage**.
+The current local result is **150 tests passed and 100.00% backend coverage**.
 The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline boundaries remain visible while
@@ -562,12 +596,16 @@ before any production-readiness claim.
 
 ## GitHub + Codecov Operations
 
-GitHub `main`, the Railway API, and the Vercel frontend are published.
-The remaining hosted verification operations are documented in
-[docs/BUILD_SEQUENCE.md](docs/BUILD_SEQUENCE.md#github-and-codecov-setup):
+GitHub `main`, the Railway API, and the Vercel frontend are published. The two
+repository-operations steps documented in
+[docs/BUILD_SEQUENCE.md](docs/BUILD_SEQUENCE.md#github-and-codecov-setup) are now
+complete:
 
-1. confirm the `pytest` upload in Codecov; and
-2. enable branch protection requiring the CI quality gate.
+1. the `pytest` upload is confirmed on Codecov — the repository and `flag=pytest`
+   coverage badges both resolve to 100%; and
+2. `main` branch protection is enabled, requiring the five CI quality-gate checks
+   (Ruff lint, Mypy type check, Tests and coverage, Frontend build, Documentation
+   hygiene) to pass, with strict up-to-date merges.
 
 The earlier populated `v0.5.1` `/briefing` response was verified on 2026-07-15.
 On 2026-07-16, hosted `v0.6.1` health, `/briefing` (four reviewed Insights),

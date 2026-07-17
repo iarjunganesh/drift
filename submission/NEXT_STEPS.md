@@ -5,9 +5,11 @@
 release and submission work only; do P2 polish by hand where possible.
 **OpenAI API budget (separate from Codex credits):** capture runs and hosted smoke tests draw on the `drift` project key, bounded by `DRIFT_MAX_SPEND_USD=10`. That is enough for several capture runs; do not raise the cap.
 
-Audit verdict: hosted `v0.7.0` is verified (149 tests and 100% backend
-coverage), including evidence-byte integrity, public review-note redaction, and
-the ten-item frontend request. Railway `/health`/`/docs`, Vercel CORS,
+Audit verdict: hosted `v0.7.0` is verified; the `v0.8.0` source release has
+150 tests and 100% backend coverage, verifiable synthetic fixture evidence, and
+the grounded Ask DRIFT UI, but must not be called hosted until deployment is
+observed. `v0.7.0` includes evidence-byte integrity, public review-note
+redaction, and the ten-item frontend request. Railway `/health`/`/docs`, Vercel CORS,
 `/briefing` (four records with no review notes), `/openapi.json` (no review-note
 field), and the deployed Vercel bundle were checked on 2026-07-16. The
 reviewed-output blocker is cleared; the demo video remains the final submission
@@ -61,24 +63,19 @@ blocker.
 
 ### 4. Restructure README top (Potential Impact / first impression)
 - [x] First screen: problem → what DRIFT does → live demo links (now showing real
-      content) → 60-second judge path (`docker compose up` + hosted URLs). Added a
-      **Try DRIFT in 60 Seconds** block and embedded the reviewed-briefing and
-      claim-evidence screenshots as live-state evidence.
+      content) → 60-second judge path (`docker compose up` + hosted URLs).
 - [x] Move the boundary/disclaimer material lower and reframe it as the trust
       model — "release notes are untrusted input; every claim carries a frozen
       source span, a separate verifier pass, and a human review gate" — not as
-      an apology. (Renamed the closing **Disclaimer** section to **Trust Model**.)
+      an apology.
 - [x] Keep the Codex/GPT-5.6 usage section prominent (judges are told to look for it).
 
-### 5. Add a minimal chat/search box to the frontend (Design)
-- [x] One component against the existing `/search` + `/chat` endpoints; show the
-      grounded answer with citations. This is the single biggest demo-video uplift.
-      Added `frontend/app/AskDrift.tsx` (**Ask DRIFT**): posts to `/chat`, renders
-      the grounded answer, source citations, model label, and grounded insight IDs,
-      with loading / no-match (404) / error states. Contract verified against the
-      fixture backend; frontend build passes.
-- [ ] If credits run short, cut this before cutting anything in P0. (Not needed;
-      built by hand without spending Codex credits.)
+### 5. Add a minimal grounded-chat box to the frontend (Design)
+- [x] One component (`AskDrift`) against the retrieve-first `/chat` endpoint;
+      shows the grounded answer with source citations. The separate `/search`
+      endpoint remains available in the API rather than duplicating live
+      retrieval in the browser. This is the single biggest demo-video uplift.
+- [x] If credits run short, cut this before cutting anything in P0.
 
 ### 6. Cross-platform judge path
 - [x] Add bash/curl equivalents beside every PowerShell command in Quick Start
@@ -89,16 +86,21 @@ blocker.
 
 ## P2 — Polish (Jul 20). Hand-edit; do not spend Codex credits here.
 
-- [x] README quality result — updated to 149 tests after a verified pytest run.
+- [x] README quality result — updated to 150 tests after a verified pytest run.
 - [x] README clone URL — replaced `git clone <DRIFT-GITHUB-URL>` with:
       `https://github.com/iarjunganesh/drift.git`.
 - [x] Scrubbed `bankers-wrapped` references from public surfaces:
       `backend/main.py` docstring, `.env.example`, `docs/CODEX_PROMPTS.md` intro.
-- [ ] Give the 3 fixture records `claims` arrays so the "Inspect claim evidence"
+- [x] Give the 3 fixture records `claims` arrays so the "Inspect claim evidence"
       panel renders in no-key mode; retitle them to read like realistic examples
-      (still labelled fixtures).
-- [ ] Enable branch protection requiring the CI quality gate.
-- [ ] Confirm the Codecov `pytest` upload appears on the dashboard.
+      (still labelled fixtures), then backed them with checked-in synthetic
+      source text and an integrity regression test. Validated against the
+      `Insight` model; 150 tests still pass at 100% coverage.
+- [x] Enable branch protection requiring the CI quality gate (main: 5 required
+      checks — Ruff lint, Mypy type check, Tests and coverage, Frontend build,
+      Documentation hygiene; strict up-to-date; admins retain bypass).
+- [x] Confirm the Codecov `pytest` upload appears on the dashboard (tokenless
+      OIDC upload queued and processed; repo and `flag=pytest` badges both 100%).
 
 ---
 
@@ -109,7 +111,7 @@ blocker.
 - [ ] Video URL: final public YouTube link.
 - [ ] Repo URL: `https://github.com/iarjunganesh/drift` (public, MIT — already verified).
 - [ ] Primary `/feedback` Session ID: `019f62b9-10b7-7d82-a463-e6eb1192141c`
-      (all 9 initiative IDs stay documented in README/`docs/INITIATIVES.md`).
+      (all 10 initiative IDs stay documented in README/`docs/INITIATIVES.md`).
 - [ ] Judge testing path: hosted frontend + API links, plus `docker compose up`.
 - [ ] Re-run the "Do not claim until verified" checklist in `SUBMISSION.md` —
       after P0 lands, most of those claims become safely claimable.

@@ -1,0 +1,2 @@
+Synthetic DRIFT fixture source — not an upstream release note.
+The default all-reduce algorithm selection has changed for multi-node configurations in this release.
