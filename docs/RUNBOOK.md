@@ -91,6 +91,9 @@ This path uses committed example data and makes no external calls.
    pair. The `v0.7.0` deployment adds evidence-byte integrity, database-only
    review notes, and a ten-item frontend request; Railway `/health`/`/docs`,
    CORS, public redaction, and the Vercel bundle were verified after rollout.
+   On 2026-07-17, `v0.8.0` Railway `/health` reported `0.8.0`, `/docs` returned
+   `200`, the public Vercel page rendered Ask DRIFT, and Vercel CORS passed.
+   Paid `/search` and `/chat` were not re-invoked for this rollout.
    Scheduled population and a larger reviewed capture remain future work.
 
 ## Recording order
@@ -125,5 +128,5 @@ are listed in
   `019f6773-0e96-7363-9657-0e0531c3d594`
 - Submission audit and frontend evidence presentation:
   `019f6a46-e3eb-7de2-81b1-91515ae80043`
-- Reviewed-evidence hardening, hosted verification, and `v0.8.0` source release:
+- Reviewed-evidence hardening and `v0.8.0` hosted verification:
   `019f6a78-6fa2-7121-9059-85ac8ceb9904`

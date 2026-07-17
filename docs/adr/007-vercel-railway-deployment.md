@@ -88,6 +88,10 @@ capacity commitment.
   `0.7.0`; `/docs` and Vercel CORS remain available, `/briefing` returns four
   reviewed Insights without `human_review_notes`, and `/openapi.json` omits
   that private field. The production Vercel bundle requests `top_n=10`.
+- **2026-07-17 v0.8.0 addendum:** the Git-connected Railway deployment reports
+  `0.8.0` at `/health` and serves `/docs` with `200`; the public Vercel page
+  renders Ask DRIFT and a Vercel-origin CORS preflight allows `GET, POST`.
+  Paid `/search` and `/chat` were not re-invoked for this rollout.
 - A future alternative may consolidate the frontend and API, but that would
   require a new ADR because it changes operational boundaries.
 

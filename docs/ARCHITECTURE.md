@@ -347,7 +347,10 @@ with `/health`, `/docs`, and `/openapi.json` exposed publicly. As of
 configuration are verified. The Vercel HTML references the canonical API-served
 banner pair. The `v0.7.0` deployment makes review notes database-only and
 raises the frontend briefing limit to ten; its `/briefing`, `/openapi.json`,
-and Vercel bundle were verified after rollout. See
+and Vercel bundle were verified after rollout. On 2026-07-17, the
+Git-connected `v0.8.0` rollout verified Railway `/health` (`0.8.0`) and
+`/docs`, the public Ask DRIFT UI, and Vercel CORS; paid `/search` and `/chat`
+were not re-invoked. See
 [ADR-007](adr/007-vercel-railway-deployment.md).
 
 The browser can consume the hosted API from Vercel. On 2026-07-15, Vercel CORS

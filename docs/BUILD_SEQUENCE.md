@@ -55,10 +55,11 @@ AI-infrastructure release intelligence.
 - [x] Operator: deployed `v0.7.0`; Railway `/health`/`/docs`, Vercel CORS,
       review-note redaction in `/briefing` and `/openapi.json`, and the deployed
       frontend's `top_n=10` request were verified
-- [x] Codex: released `v0.8.0` source changes — Ask DRIFT validates the public
+- [x] Codex: released and hosted-verified `v0.8.0` — Ask DRIFT validates the public
       `/chat` boundary, and no-key fixture claims point to checked-in synthetic
-      source text with verified offsets and hashes; hosted verification remains
-      a separate required observation
+      source text with verified offsets and hashes; Railway `/health` reported
+      `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT,
+      and Vercel CORS passed (paid `/search` and `/chat` were not re-invoked)
 - [x] No new model calls — the current UI remains presentation-only
 
 ## Day 8 — Final content + docs
@@ -143,7 +144,7 @@ implementation follow-ups are supported by ten project initiatives:
   `019f6773-0e96-7363-9657-0e0531c3d594`
 - Submission audit and frontend evidence presentation —
   `019f6a46-e3eb-7de2-81b1-91515ae80043`
-- Reviewed-evidence hardening, hosted verification, and `v0.8.0` source release —
+- Reviewed-evidence hardening and `v0.8.0` hosted verification —
   `019f6a78-6fa2-7121-9059-85ac8ceb9904`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.

@@ -5,13 +5,15 @@
 release and submission work only; do P2 polish by hand where possible.
 **OpenAI API budget (separate from Codex credits):** capture runs and hosted smoke tests draw on the `drift` project key, bounded by `DRIFT_MAX_SPEND_USD=10`. That is enough for several capture runs; do not raise the cap.
 
-Audit verdict: hosted `v0.7.0` is verified; the `v0.8.0` source release has
-150 tests and 100% backend coverage, verifiable synthetic fixture evidence, and
-the grounded Ask DRIFT UI, but must not be called hosted until deployment is
-observed. `v0.7.0` includes evidence-byte integrity, public review-note
-redaction, and the ten-item frontend request. Railway `/health`/`/docs`, Vercel CORS,
-`/briefing` (four records with no review notes), `/openapi.json` (no review-note
-field), and the deployed Vercel bundle were checked on 2026-07-16. The
+Audit verdict: hosted `v0.8.0` is verified. It has 150 tests and 100% backend
+coverage, verifiable synthetic fixture evidence, and the grounded Ask DRIFT UI.
+On 2026-07-17, Railway `/health` reported `0.8.0`, `/docs` returned `200`, the
+public Vercel page rendered Ask DRIFT, Vercel CORS allowed `GET, POST`, and an
+immutable tag-pinned fixture source resolved. `v0.7.0` includes evidence-byte
+integrity, public review-note redaction, and the ten-item frontend request.
+Its `/briefing` (four records with no review notes), `/openapi.json` (no
+review-note field), and deployed Vercel bundle were checked on 2026-07-16.
+Paid `/search` and `/chat` were not re-invoked for the `v0.8.0` rollout. The
 reviewed-output blocker is cleared; the demo video remains the final submission
 blocker.
 
@@ -36,7 +38,7 @@ blocker.
     -H "Content-Type: application/json" \
     -d '{"question":"What should I check for vLLM?"}'        # grounded answer + citations
   ```
-- [x] Recorded reviewed-evidence hosted smoke-test results in CHANGELOG (Unreleased).
+- [x] Recorded reviewed-evidence hosted smoke-test results in CHANGELOG.
       Empty-store responses are not evidence of provider-backed retrieval or grounded chat.
 
 ### 2. Deploy the reviewed-evidence frontend and redaction fix
@@ -46,6 +48,10 @@ blocker.
 - [x] Deployed `v0.7.0` to Railway and Vercel; `/health` reports `0.7.0`,
       `/briefing` and `/openapi.json` omit `human_review_notes`, CORS allows
       Vercel, and the deployed frontend requests `top_n=10`.
+- [x] Deployed `v0.8.0` to Railway and Vercel; `/health` reports `0.8.0`,
+      `/docs` returns `200`, the public Vercel page renders Ask DRIFT, Vercel
+      CORS allows `GET, POST`, and a tag-pinned fixture source resolves. Paid
+      `/search` and `/chat` were not re-invoked for this rollout.
 
 ### 3. Record and publish the demo video  *(≤ 3 min, public YouTube, English voiceover)*
 - [ ] Follow `submission/DEMO_SCRIPT.md`, updated for the now-populated hosted app:

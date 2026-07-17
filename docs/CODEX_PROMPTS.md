@@ -222,7 +222,7 @@ changes:
    - `019f6a46-e3eb-7de2-81b1-91515ae80043` — submission audit and frontend
      evidence presentation
    - `019f6a78-6fa2-7121-9059-85ac8ceb9904` — reviewed-evidence hardening,
-     hosted verification, and `v0.8.0` source release
+     hosted verification, and `v0.8.0` hosted release
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.

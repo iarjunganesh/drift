@@ -13,8 +13,16 @@ the annotated `v0.1.0` tag.
 ### Codex session record
 
 - Carried `019f6a78-6fa2-7121-9059-85ac8ceb9904` from reviewed-evidence release
-  hardening and `v0.7.0` hosted verification through this `v0.8.0` source
-  release.
+  hardening and `v0.7.0` hosted verification through this `v0.8.0` source and
+  hosted release.
+
+### Hosted deployment verification — 2026-07-17
+
+- Verified the Git-connected Railway `v0.8.0` deployment in `DRIFT_MODE=live`:
+  `/health` reports `0.8.0` and `/docs` returns `200`.
+- Verified the public Vercel page renders Ask DRIFT, a Vercel-origin CORS
+  preflight allows `GET, POST`, and immutable `v0.8.0` fixture-source links
+  resolve. Paid `/search` and `/chat` were intentionally not re-invoked.
 
 ### Added
 
