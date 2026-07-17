@@ -1,0 +1,2781 @@
+{
+  "record_type": "reviewed_manual_capture",
+  "archived_at": "2026-07-17T21:28:32.041515+00:00",
+  "capture": {
+    "draft_insight_ids": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "fetched_count": 80,
+    "persisted_raw_count": 0,
+    "selected_count": 8,
+    "source_ids": [
+      "cutlass",
+      "jax",
+      "nccl",
+      "pytorch",
+      "tensorrt",
+      "transformers",
+      "triton",
+      "vllm"
+    ]
+  },
+  "insights": [
+    {
+      "id": 10,
+      "raw_item_ids": [
+        10
+      ],
+      "title": "JAX v0.11.0",
+      "summary": "JAX v0.11.0 drops support for Python 3.11, NumPy 2.0, and SciPy 1.14. jax.numpy.empty and jax.numpy.empty_like now return uninitialized arrays instead of zero-initialized arrays; zeros or zeros_like provide the prior behavior. The deprecated jax.cloud_tpu_init module was removed; upstream states that it did nothing and its references can be removed. Passing 2D arrays, or mixed 2D and 3D arrays, to jax.numpy.cross is deprecated and scheduled for removal in JAX 0.12.0. Several previously deprecated APIs under jax.core and jax.interpreters.pxla were removed.",
+      "why_it_matters": "No additional operator interpretation was accepted from this evidence.",
+      "what_to_check": "Audit supported runtime environments before upgrading, specifically checking for Python 3.11, Python 3.13t, NumPy 2.0, or SciPy 1.14. Search for code that reads from jax.numpy.empty or jax.numpy.empty_like before fully initializing the result, and validate affected numerical paths or replace those allocations with zeros or zeros_like where zero initialization is required. Run import and test-suite checks for dependencies that access deprecated jax.core or jax.interpreters.pxla APIs, because listed APIs were removed.",
+      "severity": "minor",
+      "affected_libraries": [
+        "JAX",
+        "NumPy",
+        "SciPy",
+        "Python"
+      ],
+      "source_citations": [
+        "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0"
+      ],
+      "confidence": 0.99,
+      "model_used": "gpt-5.6-sol",
+      "claims": [
+        {
+          "text": "JAX v0.11.0 drops support for Python 3.11, NumPy 2.0, and SciPy 1.14.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "Support for Python 3.11, NumPy 2.0, and SciPy 1.14 has been dropped",
+              "start_char": 1492,
+              "end_char": 1559,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "jax.numpy.empty and jax.numpy.empty_like now return uninitialized arrays instead of zero-initialized arrays; zeros or zeros_like provide the prior behavior.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "<code>jax.numpy.empty</code> and <code>jax.numpy.empty_like</code> now produce<br />\nuninitialized arrays, similar to their NumPy counterparts. Prior to v0.11.0,<br />\nthey produced arrays initialized to zeros. To recover the previous behavior,<br />\nuse <code>jax.numpy.zeros</code> or <code>jax.numpy.zeros_like</code> instead.",
+              "start_char": 2078,
+              "end_char": 2407,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "The deprecated jax.cloud_tpu_init module was removed; upstream states that it did nothing and its references can be removed.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "The deprecated module j<code>ax.cloud_tpu_init</code> was removed. This did nothing and<br />\nreferences to it can be safely removed.",
+              "start_char": 1349,
+              "end_char": 1482,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Passing 2D arrays, or mixed 2D and 3D arrays, to jax.numpy.cross is deprecated and scheduled for removal in JAX 0.12.0.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "Passing 2-dimensional arrays (or mixed 2D and 3D arrays) to <code>jax.numpy.cross</code> is deprecated and will be removed in JAX 0.12.0, aligning with NumPy 2.5 behavior.",
+              "start_char": 2459,
+              "end_char": 2630,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Several previously deprecated APIs under jax.core and jax.interpreters.pxla were removed.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "Several previously-deprecated APIs from <code>jax.core</code> have been removed",
+              "start_char": 2640,
+              "end_char": 2719,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "Several previously-deprecated APIs from <code>jax.interpreters.pxla</code> have been removed",
+              "start_char": 3888,
+              "end_char": 3980,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Audit supported runtime environments before upgrading, specifically checking for Python 3.11, Python 3.13t, NumPy 2.0, or SciPy 1.14.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "Support for Python 3.11, NumPy 2.0, and SciPy 1.14 has been dropped",
+              "start_char": 1492,
+              "end_char": 1559,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "Support for Python 3.13 free-threaded (<code>3.13t</code>) has been dropped.",
+              "start_char": 1681,
+              "end_char": 1757,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Search for code that reads from jax.numpy.empty or jax.numpy.empty_like before fully initializing the result, and validate affected numerical paths or replace those allocations with zeros or zeros_like where zero initialization is required.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "<code>jax.numpy.empty</code> and <code>jax.numpy.empty_like</code> now produce<br />\nuninitialized arrays, similar to their NumPy counterparts. Prior to v0.11.0,<br />\nthey produced arrays initialized to zeros. To recover the previous behavior,<br />\nuse <code>jax.numpy.zeros</code> or <code>jax.numpy.zeros_like</code> instead.",
+              "start_char": 2078,
+              "end_char": 2407,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Run import and test-suite checks for dependencies that access deprecated jax.core or jax.interpreters.pxla APIs, because listed APIs were removed.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "Several previously-deprecated APIs from <code>jax.core</code> have been removed",
+              "start_char": 2640,
+              "end_char": 2719,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 10,
+              "source_url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+              "source_sha256": "7dbd58eb6319ec09fc4154d45445822c895fa43681d4d9403621644c3af2ce03",
+              "excerpt": "Several previously-deprecated APIs from <code>jax.interpreters.pxla</code> have been removed",
+              "start_char": 3888,
+              "end_char": 3980,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "JAX v0.11.0",
+                  "url": "https://github.com/jax-ml/jax/releases/tag/jax-v0.11.0",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "upstream_release_type": "unknown",
+      "operator_risks": [
+        "compatibility",
+        "correctness",
+        "reliability",
+        "startup"
+      ],
+      "applicability_conditions": [
+        "The deployment upgrades to JAX v0.11.0.",
+        "The environment uses Python 3.11, Python 3.13t, NumPy 2.0, or SciPy 1.14.",
+        "Application code assumes jax.numpy.empty or jax.numpy.empty_like returns zero-initialized storage.",
+        "Application code or dependencies import removed jax.core, jax.interpreters.pxla, or jax.cloud_tpu_init APIs.",
+        "Application code passes 2D arrays, or mixed 2D and 3D arrays, to jax.numpy.cross."
+      ],
+      "publication_status": "reviewed",
+      "verification_status": "passed",
+      "reviewed_at": "2026-07-17T21:27:43.199657Z",
+      "verified_at": "2026-07-17T21:21:16.579556Z",
+      "created_at": "2026-07-17T21:21:16.387807Z"
+    },
+    {
+      "id": 11,
+      "raw_item_ids": [
+        2
+      ],
+      "title": "Patch release: v5.14.1",
+      "summary": "Transformers v5.14.1 is identified upstream as a patch release. The patch addresses assisted-generation issues affecting models that use EncoderDecoderCache, including assisted decoding involving OlmoHybrid. The patch fixes an issue during prefill with StaticCache and SDPA without padding for Inkling models using position_bias. The release bumps the FP8 kernels version and includes a fix for DeepGEMM on multiple devices.",
+      "why_it_matters": "No additional operator interpretation was accepted from this evidence.",
+      "what_to_check": "If assisted generation is used with EncoderDecoderCache or OlmoHybrid, run a bounded generation regression test before deployment, comparing generated output and completion behavior against the currently deployed version. If workloads use StaticCache with SDPA, no padding, and position_bias, test prefill output correctness on a representative Inkling request before rollout. If FP8 or multi-device DeepGEMM paths are enabled, verify kernel loading and execute one representative multi-device inference test after upgrading.",
+      "severity": "minor",
+      "affected_libraries": [
+        "huggingface/transformers"
+      ],
+      "source_citations": [
+        "https://github.com/huggingface/transformers/releases/tag/v5.14.1"
+      ],
+      "confidence": 0.99,
+      "model_used": "gpt-5.6-sol",
+      "claims": [
+        {
+          "text": "Transformers v5.14.1 is identified upstream as a patch release.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "<h1>Patch release v5.14.1</h1>",
+              "start_char": 0,
+              "end_char": 30,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "The patch addresses assisted-generation issues affecting models that use EncoderDecoderCache, including assisted decoding involving OlmoHybrid.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "This patch solves a few issues which appeared when integrating Inkling model, most notably an issue affecting models using EncoderDecoderCache during assisted generation.",
+              "start_char": 34,
+              "end_char": 204,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "Fix assisted decoding for models with EncoderDecoder cache &amp; OlmoHybrid",
+              "start_char": 647,
+              "end_char": 722,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "The patch fixes an issue during prefill with StaticCache and SDPA without padding for Inkling models using position_bias.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "It also fixes an issue that could appear during prefill with StaticCache and sdpa without padding for Inkling which uses a position_bias.",
+              "start_char": 205,
+              "end_char": 342,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "The release bumps the FP8 kernels version and includes a fix for DeepGEMM on multiple devices.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "[FP8] Bump kernels version",
+              "start_char": 937,
+              "end_char": 963,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "Fix deepgemm on multiple devices",
+              "start_char": 1166,
+              "end_char": 1198,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "If assisted generation is used with EncoderDecoderCache or OlmoHybrid, run a bounded generation regression test before deployment, comparing generated output and completion behavior against the currently deployed version.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "Fix assisted decoding for models with EncoderDecoder cache &amp; OlmoHybrid",
+              "start_char": 647,
+              "end_char": 722,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "If workloads use StaticCache with SDPA, no padding, and position_bias, test prefill output correctness on a representative Inkling request before rollout.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "It also fixes an issue that could appear during prefill with StaticCache and sdpa without padding for Inkling which uses a position_bias.",
+              "start_char": 205,
+              "end_char": 342,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "If FP8 or multi-device DeepGEMM paths are enabled, verify kernel loading and execute one representative multi-device inference test after upgrading.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "[FP8] Bump kernels version",
+              "start_char": 937,
+              "end_char": 963,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 2,
+              "source_url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+              "source_sha256": "5ac6546ab3d061847b34038ca4c97999785ebb6390154ae6b27c7182df260497",
+              "excerpt": "Fix deepgemm on multiple devices",
+              "start_char": 1166,
+              "end_char": 1198,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "Patch release: v5.14.1",
+                  "url": "https://github.com/huggingface/transformers/releases/tag/v5.14.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47359",
+                  "url": "https://github.com/huggingface/transformers/pull/47359",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47361",
+                  "url": "https://github.com/huggingface/transformers/pull/47361",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47344",
+                  "url": "https://github.com/huggingface/transformers/pull/47344",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47323",
+                  "url": "https://github.com/huggingface/transformers/pull/47323",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "upstream_release_type": "patch",
+      "operator_risks": [
+        "compatibility",
+        "correctness",
+        "reliability",
+        "startup"
+      ],
+      "applicability_conditions": [
+        "Models using EncoderDecoderCache during assisted generation",
+        "Assisted decoding with OlmoHybrid",
+        "Inkling models using StaticCache with SDPA, no padding, and position_bias",
+        "Deployments using FP8 kernels",
+        "DeepGEMM workloads spanning multiple devices"
+      ],
+      "publication_status": "reviewed",
+      "verification_status": "passed",
+      "reviewed_at": "2026-07-17T21:27:43.199657Z",
+      "verified_at": "2026-07-17T21:21:16.579556Z",
+      "created_at": "2026-07-17T21:21:16.387807Z"
+    },
+    {
+      "id": 13,
+      "raw_item_ids": [
+        1
+      ],
+      "title": "v0.25.1",
+      "summary": "vLLM v0.25.1 is a patch release with two targeted bug fixes on top of v0.25.0. The release defers the missing-system-FFmpeg error from TorchCodec import time until TorchCodec is actually needed, preventing startup from being blocked when TorchCodec is unused.",
+      "why_it_matters": "No additional operator interpretation was accepted from this evidence.",
+      "what_to_check": "Check that vLLM model serving starts on a host without system FFmpeg when TorchCodec functionality is not used, and that an error appears only when TorchCodec is actually invoked. For NVFP4 deployments with BF16 activations and FP32 Gemma/Qwen-style RMSNorm weights, compare generated output against a known-good baseline and verify that repeated garbage tokens no longer occur. For same-dtype models using the affected fusion path, check that the full allreduce + RMSNorm + quant fusion remains enabled after upgrading.",
+      "severity": "minor",
+      "affected_libraries": [
+        "vLLM",
+        "TorchCodec",
+        "FFmpeg",
+        "FlashInfer"
+      ],
+      "source_citations": [
+        "https://github.com/vllm-project/vllm/releases/tag/v0.25.1"
+      ],
+      "confidence": 0.99,
+      "model_used": "gpt-5.6-sol",
+      "claims": [
+        {
+          "text": "vLLM v0.25.1 is a patch release with two targeted bug fixes on top of v0.25.0.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 1,
+              "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+              "source_sha256": "329339bd5e6b1899a0b986f3a3a906f0c17d7554aa6e917c944099937997772e",
+              "excerpt": "v0.25.1 is a patch release containing two targeted bug fixes on top of v0.25.0.",
+              "start_char": 113,
+              "end_char": 192,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "v0.25.1",
+                  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47888",
+                  "url": "https://github.com/vllm-project/vllm/pull/47888",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#48330",
+                  "url": "https://github.com/vllm-project/vllm/pull/48330",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "The release defers the missing-system-FFmpeg error from TorchCodec import time until TorchCodec is actually needed, preventing startup from being blocked when TorchCodec is unused.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 1,
+              "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+              "source_sha256": "329339bd5e6b1899a0b986f3a3a906f0c17d7554aa6e917c944099937997772e",
+              "excerpt": "Previously <code>import torchcodec</code> raised a <code>RuntimeError</code> at import time when system FFmpeg was missing, which blocked startup (e.g. <code>vllm serve Qwen/Qwen3-VL-2B-Instruct</code>) even when TorchCodec was not in use. The error is now deferred to runtime so it only surfaces if TorchCodec is actually needed.",
+              "start_char": 428,
+              "end_char": 758,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "v0.25.1",
+                  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47888",
+                  "url": "https://github.com/vllm-project/vllm/pull/47888",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#48330",
+                  "url": "https://github.com/vllm-project/vllm/pull/48330",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Check that vLLM model serving starts on a host without system FFmpeg when TorchCodec functionality is not used, and that an error appears only when TorchCodec is actually invoked.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 1,
+              "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+              "source_sha256": "329339bd5e6b1899a0b986f3a3a906f0c17d7554aa6e917c944099937997772e",
+              "excerpt": "Previously <code>import torchcodec</code> raised a <code>RuntimeError</code> at import time when system FFmpeg was missing, which blocked startup (e.g. <code>vllm serve Qwen/Qwen3-VL-2B-Instruct</code>) even when TorchCodec was not in use. The error is now deferred to runtime so it only surfaces if TorchCodec is actually needed.",
+              "start_char": 428,
+              "end_char": 758,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "v0.25.1",
+                  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47888",
+                  "url": "https://github.com/vllm-project/vllm/pull/47888",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#48330",
+                  "url": "https://github.com/vllm-project/vllm/pull/48330",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "For NVFP4 deployments with BF16 activations and FP32 Gemma/Qwen-style RMSNorm weights, compare generated output against a known-good baseline and verify that repeated garbage tokens no longer occur.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 1,
+              "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+              "source_sha256": "329339bd5e6b1899a0b986f3a3a906f0c17d7554aa6e917c944099937997772e",
+              "excerpt": "The fused FlashInfer allreduce + RMSNorm + static-quantization patterns could match graphs where the activation and RMSNorm weight dtypes differ (e.g. a BF16 residual stream with an FP32 Gemma/Qwen-style RMSNorm weight in NVFP4 models), corrupting the hidden state and producing garbage output such as repeated <code>!!!!!</code> tokens.",
+              "start_char": 940,
+              "end_char": 1277,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "v0.25.1",
+                  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47888",
+                  "url": "https://github.com/vllm-project/vllm/pull/47888",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#48330",
+                  "url": "https://github.com/vllm-project/vllm/pull/48330",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "For same-dtype models using the affected fusion path, check that the full allreduce + RMSNorm + quant fusion remains enabled after upgrading.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 1,
+              "source_url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+              "source_sha256": "329339bd5e6b1899a0b986f3a3a906f0c17d7554aa6e917c944099937997772e",
+              "excerpt": "while same-dtype models retain the full allreduce + RMSNorm + quant fusion.",
+              "start_char": 1359,
+              "end_char": 1434,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "v0.25.1",
+                  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.25.1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#47888",
+                  "url": "https://github.com/vllm-project/vllm/pull/47888",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#48330",
+                  "url": "https://github.com/vllm-project/vllm/pull/48330",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "upstream_release_type": "patch",
+      "operator_risks": [
+        "correctness",
+        "performance",
+        "reliability",
+        "startup"
+      ],
+      "applicability_conditions": [
+        "Upgrading vLLM from v0.25.0 to v0.25.1.",
+        "The host lacks system FFmpeg and vLLM imports TorchCodec, including deployments where TorchCodec is not otherwise used.",
+        "FlashInfer fused allreduce + RMSNorm + static-quantization patterns are used.",
+        "Activation and RMSNorm weight dtypes differ, such as BF16 activations with FP32 Gemma/Qwen-style RMSNorm weights in NVFP4 models.",
+        "Same-dtype models rely on retaining the full allreduce + RMSNorm + quant fusion."
+      ],
+      "publication_status": "reviewed",
+      "verification_status": "passed",
+      "reviewed_at": "2026-07-17T21:27:43.199657Z",
+      "verified_at": "2026-07-17T21:21:16.579556Z",
+      "created_at": "2026-07-17T21:21:16.387807Z"
+    },
+    {
+      "id": 15,
+      "raw_item_ids": [
+        6
+      ],
+      "title": "NCCL v2.30.7-1 Release",
+      "summary": "NCCL 2.30.7-1 adds hierarchical zero-SM AllGather and All2all collectives, using an RMA CPU proxy between nodes and Copy Engines within a node; they are enabled with NCCL_CTA_POLICY_ZERO. Support for v11 and v12 GIN plugin APIs is removed. This release fixes reported deadlock, proxy-thread hang, and high-message-rate request-loss defects in affected communication paths. One-sided host RMA APIs require every rank to perform a one-time initialization warm-up in this release.",
+      "why_it_matters": "No additional operator interpretation was accepted from this evidence.",
+      "what_to_check": "Before upgrading deployments that use custom GIN plugins, check the plugin API version and migrate plugins that depend on v11 or v12. When using one-sided host RMA APIs, validate that every rank executes the required one-time warm-up before normal traffic, including under high message rates. Benchmark zero-SM collectives on the target inter-node and intra-node topology before enabling NCCL_CTA_POLICY_ZERO in production, checking compute/communication overlap and end-to-end latency.",
+      "severity": "minor",
+      "affected_libraries": [
+        "NCCL"
+      ],
+      "source_citations": [
+        "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1"
+      ],
+      "confidence": 0.98,
+      "model_used": "gpt-5.6-sol",
+      "claims": [
+        {
+          "text": "NCCL 2.30.7-1 adds hierarchical zero-SM AllGather and All2all collectives, using an RMA CPU proxy between nodes and Copy Engines within a node; they are enabled with NCCL_CTA_POLICY_ZERO.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Adds hierarchical zero-SM collectives (AllGather and All2all) that use RMA CPU proxy for inter-node communication and Copy Engines for intra-node communication.",
+              "start_char": 38,
+              "end_char": 198,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            },
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Enable hierarchical zero-SM collectives with <code>NCCL_CTA_POLICY_ZERO</code> flag.",
+              "start_char": 270,
+              "end_char": 354,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Support for v11 and v12 GIN plugin APIs is removed.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Drops support for v11 and v12 GIN plugin APIs.",
+              "start_char": 2951,
+              "end_char": 2997,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "This release fixes reported deadlock, proxy-thread hang, and high-message-rate request-loss defects in affected communication paths.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Fixes a deadlock caused by cuda stream allocation under PXN when memseting a buffer at runtime.",
+              "start_char": 3037,
+              "end_char": 3132,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            },
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Fixes issue when receiving an external TCP request causes the proxy thread's <code>ncclProxyService</code> to hang",
+              "start_char": 3807,
+              "end_char": 3921,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            },
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Fixes one-sided host API issue where requests are dropped at a high message rate",
+              "start_char": 4565,
+              "end_char": 4645,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "One-sided host RMA APIs require every rank to perform a one-time initialization warm-up in this release.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "NCCL one-sided host RMA APIs, e.g., <code>ncclPutSignal</code>, require every rank to call the API as a one-time initialization warm-up.",
+              "start_char": 5620,
+              "end_char": 5756,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Before upgrading deployments that use custom GIN plugins, check the plugin API version and migrate plugins that depend on v11 or v12.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Drops support for v11 and v12 GIN plugin APIs.",
+              "start_char": 2951,
+              "end_char": 2997,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "When using one-sided host RMA APIs, validate that every rank executes the required one-time warm-up before normal traffic, including under high message rates.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "NCCL one-sided host RMA APIs, e.g., <code>ncclPutSignal</code>, require every rank to call the API as a one-time initialization warm-up.",
+              "start_char": 5620,
+              "end_char": 5756,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            },
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Fixes one-sided host API issue where requests are dropped at a high message rate",
+              "start_char": 4565,
+              "end_char": 4645,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Benchmark zero-SM collectives on the target inter-node and intra-node topology before enabling NCCL_CTA_POLICY_ZERO in production, checking compute/communication overlap and end-to-end latency.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Adds hierarchical zero-SM collectives (AllGather and All2all) that use RMA CPU proxy for inter-node communication and Copy Engines for intra-node communication.",
+              "start_char": 38,
+              "end_char": 198,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            },
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Enables better overlap of compute and communication.",
+              "start_char": 208,
+              "end_char": 260,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            },
+            {
+              "raw_item_id": 6,
+              "source_url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+              "source_sha256": "b6124862cc62eb30cac2f8ff0f54b35d3103d6f5314fa04813ccb3a723e9db7a",
+              "excerpt": "Enable hierarchical zero-SM collectives with <code>NCCL_CTA_POLICY_ZERO</code> flag.",
+              "start_char": 270,
+              "end_char": 354,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "NCCL v2.30.7-1 Release",
+                  "url": "https://github.com/NVIDIA/nccl/releases/tag/v2.30.7-1",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2151",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2151",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2155",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2155",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2182",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2182",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1806",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1806",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2150",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2150",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#1834",
+                  "url": "https://github.com/NVIDIA/nccl/pull/1834",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2187",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2187",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2179",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2179",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2119",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2119",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "pull_request",
+                  "identifier": "#2198",
+                  "url": "https://github.com/NVIDIA/nccl/pull/2198",
+                  "commit_sha": null
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "e12963e1c799",
+                  "url": "https://github.com/NVIDIA/nccl/commit/e12963e1c7994e054c29df0994e8675ff4749875",
+                  "commit_sha": "e12963e1c7994e054c29df0994e8675ff4749875"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "08b3662c2181",
+                  "url": "https://github.com/NVIDIA/nccl/commit/08b3662c2181d55551d76f97caca497a467d1e84",
+                  "commit_sha": "08b3662c2181d55551d76f97caca497a467d1e84"
+                },
+                {
+                  "kind": "commit",
+                  "identifier": "430afbcef0d0",
+                  "url": "https://github.com/NVIDIA/nccl/commit/430afbcef0d0dbe4bac8de317cf4cedd50ffefa2",
+                  "commit_sha": "430afbcef0d0dbe4bac8de317cf4cedd50ffefa2"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "upstream_release_type": "unknown",
+      "operator_risks": [
+        "compatibility",
+        "correctness",
+        "performance",
+        "reliability"
+      ],
+      "applicability_conditions": [
+        "Deployments upgrading to NCCL v2.30.7-1.",
+        "Custom GIN plugins that use v11 or v12 GIN plugin APIs.",
+        "Workloads using NCCL one-sided host RMA APIs such as ncclPutSignal.",
+        "Workloads enabling hierarchical zero-SM AllGather or All2all with NCCL_CTA_POLICY_ZERO.",
+        "MPS deployments using CUDA MLOPart with up to two ranks per physical GPU.",
+        "Systems exercising PXN, external TCP proxy requests, or high-rate one-sided host API traffic."
+      ],
+      "publication_status": "reviewed",
+      "verification_status": "passed",
+      "reviewed_at": "2026-07-17T21:27:43.199657Z",
+      "verified_at": "2026-07-17T21:21:16.579556Z",
+      "created_at": "2026-07-17T21:21:16.387807Z"
+    },
+    {
+      "id": 16,
+      "raw_item_ids": [
+        7
+      ],
+      "title": "TensorRT 11.1 Release",
+      "summary": "TensorRT 11.1 updates its default CUDA version to 13.3. TensorRT 11.1 adds an Ubuntu 26.04 container and support for Python 3.14. TensorRT 11.1 adds a global performance tuner option to trtexec. TensorRT 11.1 adds topkLastDimPlugin and updates TRT_Attention to support raggedness.",
+      "why_it_matters": "No additional operator interpretation was accepted from this evidence.",
+      "what_to_check": "Before upgrading, verify that deployed NVIDIA drivers, CUDA-dependent components, and build/runtime images are compatible with CUDA 13.3. If adopting the new Ubuntu 26.04 container or Python 3.14 runtime, run startup and inference regression tests for native extensions, plugins, and Python integrations. If enabling the new trtexec global performance tuner, benchmark representative models and compare latency, throughput, and engine correctness against the prior configuration.",
+      "severity": "minor",
+      "affected_libraries": [
+        "TensorRT",
+        "CUDA",
+        "Python"
+      ],
+      "source_citations": [
+        "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1"
+      ],
+      "confidence": 0.98,
+      "model_used": "gpt-5.6-sol",
+      "claims": [
+        {
+          "text": "TensorRT 11.1 updates its default CUDA version to 13.3.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Default CUDA version updated to 13.3.",
+              "start_char": 218,
+              "end_char": 255,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "TensorRT 11.1 adds an Ubuntu 26.04 container and support for Python 3.14.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Added Ubuntu 26.04 container.",
+              "start_char": 265,
+              "end_char": 294,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Added support for Python 3.14.",
+              "start_char": 304,
+              "end_char": 334,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "TensorRT 11.1 adds a global performance tuner option to trtexec.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Added a global performance tuner option in trtexec.",
+              "start_char": 475,
+              "end_char": 526,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "TensorRT 11.1 adds topkLastDimPlugin and updates TRT_Attention to support raggedness.",
+          "kind": "direct_fact",
+          "evidence": [
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Added new plugin topkLastDimPlugin.",
+              "start_char": 564,
+              "end_char": 599,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Updated TRT_Attention to support raggedness.",
+              "start_char": 637,
+              "end_char": 681,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "Before upgrading, verify that deployed NVIDIA drivers, CUDA-dependent components, and build/runtime images are compatible with CUDA 13.3.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Default CUDA version updated to 13.3.",
+              "start_char": 218,
+              "end_char": 255,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "If adopting the new Ubuntu 26.04 container or Python 3.14 runtime, run startup and inference regression tests for native extensions, plugins, and Python integrations.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Added Ubuntu 26.04 container.",
+              "start_char": 265,
+              "end_char": 294,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            },
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Added support for Python 3.14.",
+              "start_char": 304,
+              "end_char": 334,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "If enabling the new trtexec global performance tuner, benchmark representative models and compare latency, throughput, and engine correctness against the prior configuration.",
+          "kind": "recommended_check",
+          "evidence": [
+            {
+              "raw_item_id": 7,
+              "source_url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+              "source_sha256": "117270998e9043844cb4c5d30e23ae91659a90c56867a7f993e3a00b0b3b3835",
+              "excerpt": "Added a global performance tuner option in trtexec.",
+              "start_char": 475,
+              "end_char": 526,
+              "cross_references": [
+                {
+                  "kind": "release",
+                  "identifier": "TensorRT 11.1 Release",
+                  "url": "https://github.com/NVIDIA/TensorRT/releases/tag/v11.1",
+                  "commit_sha": null
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "upstream_release_type": "unknown",
+      "operator_risks": [
+        "compatibility",
+        "correctness",
+        "performance",
+        "reliability",
+        "startup"
+      ],
+      "applicability_conditions": [
+        "The environment is upgrading to TensorRT 11.1.",
+        "The deployment relies on TensorRT's default CUDA version or CUDA-dependent components.",
+        "The deployment uses the Ubuntu 26.04 container or Python 3.14 support.",
+        "The deployment enables the new trtexec global performance tuner.",
+        "Models use TRT_Attention raggedness support or topkLastDimPlugin."
+      ],
+      "publication_status": "reviewed",
+      "verification_status": "passed",
+      "reviewed_at": "2026-07-17T21:27:43.199657Z",
+      "verified_at": "2026-07-17T21:21:16.579556Z",
+      "created_at": "2026-07-17T21:21:16.387807Z"
+    }
+  ],
+  "limitations": [
+    "This record contains reviewed captured evidence, not a guarantee of compatibility or release completeness.",
+    "Operator risks and recommended checks are labelled interpretations, not upstream facts."
+  ]
+}

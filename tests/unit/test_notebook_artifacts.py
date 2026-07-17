@@ -6,7 +6,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 def test_results_notebook_is_display_only_and_has_no_operator_config() -> None:
     notebook = json.loads(
-        (REPOSITORY_ROOT / "notebooks" / "drift_manual_run.results.ipynb").read_text(
+        (REPOSITORY_ROOT / "notebooks" / "drift_manual_run.luna.results.ipynb").read_text(
             encoding="utf-8"
         )
     )

@@ -68,11 +68,10 @@ AI-infrastructure release intelligence.
 - [x] No new model calls — the current UI remains presentation-only
 
 ## Day 8 — Final content + docs
-- [ ] Targeted `v0.9.0` evidence pass: rerun selected reviewed examples on
-      Tier.FINAL (Sol), initially Transformers, vLLM, NCCL, and TensorRT, only
-      after confirming the spend guard and available budget. The `dev`/Luna
-      reviewed set remains the current saved submission evidence until the new
-      run is verified and human-reviewed.
+- [x] Targeted `v0.9.0` evidence pass: eight Tier.FINAL (Sol) drafts were
+      captured and verified; five were human-reviewed and published to the live
+      Railway store (IDs 10, 11, 13, 15, and 16), while Luna IDs 3, 6, 7, and 8
+      were retracted to draft.
 - [ ] Optional `v0.9.0` polish: include only focused changes that improve judge
       clarity or the demo path without expanding the frozen feature surface.
 - [x] Fill in README's "How Codex and GPT-5.6 were used" section —
@@ -97,10 +96,15 @@ AI-infrastructure release intelligence.
 
 ## Targeted release path — after the current `v0.8.0`
 
-- [ ] `v0.9.0`: publish verified Tier.FINAL evidence and any selected,
-      independently verified polish; do not call this released until the
-      evidence archive, review gate, tests, and intended hosted/local path are
-      checked.
+- [x] `v0.9.0`: publish verified Tier.FINAL evidence and selected,
+      independently verified polish; the source/evidence release is prepared,
+      while the deployed app remains `v0.8.0` pending redeploy.
+- [x] Record the v0.9.0 evidence-cleanup and session-synchronization session:
+      `019f7213-be19-7e50-92ac-a48bd5ecaacb`
+- [ ] Planned `v0.9.1`: run and independently verify bounded Terra
+      (`gpt-5.6-terra`) grounded-run evidence, updated screenshots, and the
+      retrieve-first citation boundary; do not call it released before the
+      artifacts, tests, docs, and intended deployment path are checked.
 - [ ] `v1.0.0`: freeze the final judge path, complete the under-three-minute
       public demo video, replace the video placeholder everywhere, and finish
       the Devpost submission records.

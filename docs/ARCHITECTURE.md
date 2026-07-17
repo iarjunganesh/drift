@@ -246,9 +246,10 @@ retrieved, citation-bearing evidence. In the current local code, live
 verifier-passed rows; search and chat use pgvector retrieval. Fixture mode
 remains the no-key path. The hosted deployment served one unreviewed captured
 vLLM Insight through `/briefing` on 2026-07-15 before this gate was implemented.
-On 2026-07-16, an eight-source capture produced six verifier-passed drafts;
-four were published after human review, and hosted `/briefing`, `/search`, and
-`/chat` were verified provider-backed over those four reviewed Insights.
+On 2026-07-17, the Tier.FINAL pass produced eight verifier-passed drafts; five
+were published after human review, and the live Railway `/briefing` was verified
+to return exactly those five reviewed Sol Insights. The deployed app remains
+`v0.8.0` pending redeploy.
 
 ## Model, budget, and safety boundaries
 

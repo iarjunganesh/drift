@@ -21,6 +21,10 @@
         `019f6a46-e3eb-7de2-81b1-91515ae80043`
       - Reviewed-evidence hardening and `v0.8.0` hosted verification:
         `019f6a78-6fa2-7121-9059-85ac8ceb9904`
+      - Freeze-plan audit and documentation synchronization:
+        `019f7190-912d-70e3-be6d-fcc81bf8e203`
+      - v0.9.0 evidence cleanup and session synchronization:
+        `019f7213-be19-7e50-92ac-a48bd5ecaacb`
 - [x] Use `019f62b9-10b7-7d82-a463-e6eb1192141c` as the primary `/feedback`
       Session ID if the Devpost form accepts only one.
 - [x] Implement local claim-level evidence, separate verification, and

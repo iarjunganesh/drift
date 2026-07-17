@@ -137,3 +137,5 @@ are listed in
   `019f6a78-6fa2-7121-9059-85ac8ceb9904`
 - Freeze-plan audit and documentation synchronization:
   `019f7190-912d-70e3-be6d-fcc81bf8e203`
+- v0.9.0 evidence cleanup and session synchronization:
+  `019f7213-be19-7e50-92ac-a48bd5ecaacb`
