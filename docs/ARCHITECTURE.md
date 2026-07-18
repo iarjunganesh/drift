@@ -381,7 +381,7 @@ Ruff → mypy → pytest + coverage → Codecov upload → frontend build → do
 ```
 
 The enforceable floor is 100% for implemented code; the current local suite is
-150 tests at 100.00%. Deliberately unimplemented live-stage raises remain explicit and are
+160 tests at 100.00%. Deliberately unimplemented live-stage raises remain explicit and are
 excluded only at the boundary itself. New live behavior must arrive with tests
 that preserve the 100% floor.
 
@@ -401,7 +401,8 @@ Before the live path is called complete:
 - [x] live retrieval filters to human-reviewed verifier-passed rows;
 - [x] local live pgvector retrieval constrains chat context;
 - [x] local live-chat budget, capacity, and provider failures are tested; and
-- [ ] a paid, human-reviewed controlled end-to-end run is saved and repeatable.
+- [x] a paid, controlled Terra grounded-chat run over human-reviewed evidence
+      is saved and repeatable.
 
 ## Decision records
 

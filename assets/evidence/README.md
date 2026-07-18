@@ -18,3 +18,5 @@ new dated evidence file and manifest after human review.
 
 The archive helper accepts JSON-only capture metadata and rejects common
 credential, database-URL, and review-note markers before writing either file.
+The 2026-07-18 Terra record is a grounded-chat capture over the reviewed store;
+it is not a new Insight capture or a hosted deployment claim.

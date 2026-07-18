@@ -1,6 +1,6 @@
 # DRIFT project initiatives
 
-These are the twelve Codex project initiatives associated with the DRIFT baseline,
+These are the thirteen Codex project initiatives associated with the DRIFT baseline,
 publication follow-up, `0.2.0` release candidate, and the current build-sequence
 implementation work. They are submission evidence pointers for the build work;
 they are not model-run provenance and do not turn fixture records into live
@@ -345,13 +345,31 @@ Devpost `/feedback` session.
 This follow-up retracted superseded Luna Insights 3, 6, 7, and 8 through the
 audited `REVIEWED → DRAFT` helper, verified the hosted five-record Sol
 briefing, synchronized the v0.9.0 release boundary, and made the Luna results
-notebook name explicit for future Terra results.
+notebook name explicit ahead of the later Terra evidence record.
+
+The follow-on v0.9.1 Terra capture is recorded in the release changelog and
+archive; it is a grounded-chat evidence pass, not a new Insight publication or
+hosted deployment.
 
 It did not commit, push, or redeploy the application.
 
+## Initiative 13 — v0.9.1 evidence and screenshot synchronization
+
+**Codex Session ID:** `019f7278-ee77-7f02-bafd-6eba8bf046d2`
+
+**Date:** 2026-07-18
+
+This session completed the v0.9.1 clean pass: it audited the stronger Luna,
+Sol, and Terra screenshot gallery, synchronized README/changelog/freeze/build
+references, and made the capture-time Terra grounding labels explicit against
+the authoritative scrubbed archive. It verified the nine non-empty screenshot
+captures and the full quality gates before committing the refresh.
+
+It did not change the reviewed store or hosted deployment state.
+
 ## Submission usage
 
-Devpost requires one primary `/feedback` session, use Initiative 04. All twelve
+Devpost requires one primary `/feedback` session, use Initiative 04. All thirteen
 IDs should be retained in the project README, changelog, and submission notes.
 If Devpost requires one primary `/feedback` session, use Initiative 04:
 `019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
@@ -364,4 +382,5 @@ reviewed-evidence hardening and `v0.8.0` hosted-verification
 record; the earlier sessions remain the foundation, publication, and hosted-demo
 follow-up initiatives, Initiative 11 is the additive freeze-plan audit and
 documentation-synchronization record, and Initiative 12 is the v0.9.0 evidence
-cleanup and session-synchronization follow-up.
+cleanup and session-synchronization follow-up; Initiative 13 is the v0.9.1
+evidence and screenshot synchronization follow-up.

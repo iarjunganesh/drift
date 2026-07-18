@@ -19,7 +19,7 @@ verification records. The following are verified boundaries for the freeze:
 - The tracked repository has no DRIFT MCP server, MCP tools, generic tool-call
   API, IDE integration, or release-timeline feature. Those remain optional
   future ideas and must not be presented as shipped features.
-- The repository contains architecture diagrams and four screenshots, but no
+- The repository contains architecture diagrams and nine refreshed screenshots, but no
   demo GIFs. The demo remains an operator-owned, under-three-minute recording
   gate; the existing script targets 2:50–2:55.
 - Hosted evidence remains bounded: the deployed app is still `v0.8.0` for
@@ -43,6 +43,18 @@ and returned exactly the five reviewed Tier.FINAL Sol Insights (10, 11, 13,
 15, and 16). The deployed app remains `v0.8.0` pending redeploy; this does not
 claim hosted application verification for the `v0.9.0` source release.
 
+## Terra evidence addendum — 2026-07-18
+
+**Codex Session ID:** `019f7278-ee77-7f02-bafd-6eba8bf046d2`
+
+The bounded `v0.9.1` Terra run asked one question per configured source over
+the five reviewed Tier.FINAL Insights. Seven answers were grounded, PyTorch was
+declined, no database rows were written, and the true grounded IDs, citations,
+provider metadata, and spend deltas were archived with a SHA-256 manifest.
+The refreshed screenshot gallery is committed as bounded visual evidence;
+hosted redeployment remains an open human-operated gate, and the hosted
+application is still verified only as `v0.8.0`.
+
 ---
 
 # Philosophy
@@ -65,16 +77,16 @@ Everything below is prioritized for maximum judging impact.
 
 These are internal readiness estimates, not guaranteed judge scores. **Current**
 reflects the verified repository and hosted state before the Tier.FINAL rerun
-and public video. **Target** reflects a successful v0.9.0 evidence pass and
+and public video. **Target** reflects the completed v0.9.0 and v0.9.1 evidence passes and
 v1.0.0 submission finish.
 
 | Category | Current | Target | Readiness |
 |-----------|---------|--------|-----------|
 | Problem Selection | 9.4 | 9.6 | ✅ Strong and specific |
 | Innovation | 8.9 | 9.2 | 🟡 Strong concept; demo must make differentiation immediate |
-| OpenAI Integration | 8.4 | 9.3 | 🟡 Sol rerun and GPT-5.6 narration pending |
+| OpenAI Integration | 8.4 | 9.3 | 🟡 GPT-5.6 narration pending |
 | Technical Difficulty | 9.6 | 9.8 | ✅ Typed pipeline, persistence, retrieval, and review gate implemented |
-| Engineering Quality | 9.7 | 9.8 | ✅ 150 tests and 100% backend coverage verified |
+| Engineering Quality | 9.7 | 9.8 | ✅ 160 tests and 100% backend coverage verified |
 | Documentation | 9.0 | 9.7 | 🟡 Strong records; final evidence/video links remain pending |
 | Architecture | 9.7 | 9.8 | ✅ Architecture and trust boundaries are implemented and documented |
 | Safety & Trust | 9.7 | 9.8 | ✅ Evidence spans, verifier screening, and human publication gate |

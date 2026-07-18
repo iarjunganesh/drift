@@ -227,6 +227,8 @@ changes:
      documentation synchronization
    - `019f7213-be19-7e50-92ac-a48bd5ecaacb` — v0.9.0 evidence cleanup,
      audited Luna retraction, Sol briefing verification, and session sync
+   - `019f7278-ee77-7f02-bafd-6eba8bf046d2` — v0.9.1 evidence and screenshot
+     synchronization, Terra capture-time grounding audit, and quality gates
 
 4. Leave the Demo video line as-is (placeholder) — recording is a human
    task, not a Codex task.

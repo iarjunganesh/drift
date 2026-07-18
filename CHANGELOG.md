@@ -8,12 +8,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning:
 The `0.1.0` entry is the initial repository baseline published on GitHub as
 the annotated `v0.1.0` tag.
 
-## Targeted releases — planned, not released
+## Current source release
 
-These targets are planning records only. They do not change the current
-verified app deployment (`v0.8.0`) or claim that the `v0.9.0` app build has
-been redeployed. The `v0.9.0` Tier.FINAL evidence pass and live-store update
-are recorded in the `[0.9.0]` entry below.
+`v0.9.1` is the current source and evidence release. It records the bounded
+Terra grounded-chat pass below; it does not change the current verified app
+deployment (`v0.8.0`) or claim that the source release has been redeployed.
+
+## Targeted releases — planned, not released
 
 ### `v1.0.0` — final submission release
 
@@ -31,6 +32,8 @@ surfaces such as MCP, tool calling, IDE integration, or a release timeline.
 ## [0.9.1] - 2026-07-18
 
 ### Tier.LIVE grounded-chat evidence pass — 2026-07-18
+
+**Codex Session ID:** `019f7278-ee77-7f02-bafd-6eba8bf046d2`
 
 - Executed a small, explicitly bounded Tier.LIVE (`gpt-5.6-terra`) grounded-chat
   capture against the reviewed store through the DRIFT Manual Run notebook
@@ -78,16 +81,26 @@ surfaces such as MCP, tool calling, IDE integration, or a release timeline.
 - Archived the bounded run's inspectable evidence and SHA-256 integrity manifest
   to `assets/evidence/2026-07-18-all-sources-terra.json`
   (sha256 `b606fe31f22449de0d404446a9249ddd4c2397dc7d258c7c204a177539dec00d`).
+- Refreshed the tracked README screenshot gallery into a numbered
+  Luna → Sol → Terra flow: landing (`01-landing`), branded API docs
+  (`02-api-docs`), briefing and frozen claim evidence at the `gpt-5.6-luna`
+  dev tier and `gpt-5.6-sol` final tier (`03.1`–`03.4`), the Ask DRIFT box
+  (`04-ask-drift`), and two `gpt-5.6-terra` grounded answers (`05.1` NCCL,
+  `05.2` TensorRT). Every gallery reference resolves to a checked-in file.
+  The two Terra answer frames preserve their capture-time grounding labels;
+  the authoritative current reviewed-store IDs and Terra grounding are the
+  scrubbed archive and manifest above.
 
 ### Release boundary
 
-- This is a source and grounded-chat-evidence release. It does not draft,
-  publish, or retract any Insight: the live Railway store continues to serve the
-  same five reviewed Tier.FINAL Insights (IDs 10, 11, 13, 15, 16). Updated UI
-  screenshots are not part of this pass and remain outstanding. Hosted app
-  verification remains at `v0.8.0` pending redeploy; the deployed Railway
-  `/health` and Vercel frontend are not being described as `v0.9.1`. The
-  configured spend guard remains authoritative over any reported balance.
+- This is a source, grounded-chat-evidence, and documentation release. It does
+  not draft, publish, or retract any Insight: the live Railway store continues
+  to serve the same five reviewed Tier.FINAL Insights (IDs 10, 11, 13, 15, 16).
+  The tracked README screenshots were refreshed to the current Luna/Sol briefing
+  and Terra Ask DRIFT UI. Hosted app verification remains at `v0.8.0` pending an
+  independent recheck; the deployed Railway `/health` and Vercel frontend are
+  not being described as `v0.9.1`. The configured spend guard remains
+  authoritative over any reported balance.
 
 ## [0.9.0] - 2026-07-17
 

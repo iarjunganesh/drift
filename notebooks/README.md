@@ -47,8 +47,9 @@ is set explicitly.
 
 ## Rendered snapshots
 
-[`drift_manual_run.luna.results.ipynb`](drift_manual_run.luna.results.ipynb) and
-[`drift_manual_run.sol.results.ipynb`](drift_manual_run.sol.results.ipynb) are frozen,
+[`drift_manual_run.luna.results.ipynb`](drift_manual_run.luna.results.ipynb),
+[`drift_manual_run.sol.results.ipynb`](drift_manual_run.sol.results.ipynb), and
+[`drift_manual_run.terra.results.ipynb`](drift_manual_run.terra.results.ipynb) are frozen,
 Markdown-only records of completed draft-capture runs. They have no executable cells,
 operator database host, provider/budget logs, or internal review notes. The executable
 notebook above is the clean template; keep it output-free when committing, and

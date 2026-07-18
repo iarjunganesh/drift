@@ -27,7 +27,7 @@ AI-infrastructure release intelligence.
 - [x] Operator: ran the manual notebook against eight primary-release sources;
       six drafts passed verification and four were human-reviewed/published
       (Transformers, vLLM, NCCL, TensorRT) with recorded notes. The `dev`/Luna
-      tier was used to bound cost; Sol remains reserved for a future final pass.
+      tier bounded the first pass; the later Sol final pass is archived below.
 
 ## Day 5 — Briefing + search + chat
 - [x] Codex: deterministic `build_daily_briefing()`, fixture search, and
@@ -72,8 +72,8 @@ AI-infrastructure release intelligence.
       captured and verified; five were human-reviewed and published to the live
       Railway store (IDs 10, 11, 13, 15, and 16), while Luna IDs 3, 6, 7, and 8
       were retracted to draft.
-- [ ] Optional `v0.9.0` polish: include only focused changes that improve judge
-      clarity or the demo path without expanding the frozen feature surface.
+- [x] Freeze-boundary review: no optional polish was added beyond the focused
+      evidence and grounding work recorded below.
 - [x] Fill in README's "How Codex and GPT-5.6 were used" section —
       required for submission, judged under Technological Implementation
 - [x] Record the primary `/feedback` Codex Session ID:
@@ -101,10 +101,13 @@ AI-infrastructure release intelligence.
       while the deployed app remains `v0.8.0` pending redeploy.
 - [x] Record the v0.9.0 evidence-cleanup and session-synchronization session:
       `019f7213-be19-7e50-92ac-a48bd5ecaacb`
-- [ ] Planned `v0.9.1`: run and independently verify bounded Terra
-      (`gpt-5.6-terra`) grounded-run evidence, updated screenshots, and the
-      retrieve-first citation boundary; do not call it released before the
-      artifacts, tests, docs, and intended deployment path are checked.
+- [x] `v0.9.1`: run and independently verify bounded Terra (`gpt-5.6-terra`)
+      grounded-run evidence, archive the true retrieve-first grounding, and
+      synchronize the source release boundary. The refreshed nine-image
+      screenshot gallery is committed as bounded visual evidence; hosted
+      redeployment remains explicitly deferred.
+- [x] Record the v0.9.1 evidence and screenshot synchronization session:
+      `019f7278-ee77-7f02-bafd-6eba8bf046d2`
 - [ ] `v1.0.0`: freeze the final judge path, complete the under-three-minute
       public demo video, replace the video placeholder everywhere, and finish
       the Devpost submission records.

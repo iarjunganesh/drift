@@ -101,6 +101,12 @@ This path uses committed example data and makes no external calls.
    tagged on `feature/v0.9.0-final-evidence`; do not describe it as hosted until
    Railway/Vercel deployment and `/health` verification are complete.
 
+   The `v0.9.1` Terra evidence pass is archived at
+   [`assets/evidence/2026-07-18-all-sources-terra.json`](../assets/evidence/2026-07-18-all-sources-terra.json)
+   with its adjacent SHA-256 manifest. It asked eight bounded questions over
+   the five reviewed Insights, wrote no database rows, and records Terra's
+   actual grounded Insight IDs rather than the UX fallback retrieval window.
+
 ## Recording order
 
 1. State the operational problem: release drift reaches production teams late.
@@ -116,7 +122,7 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The eleven Codex initiatives associated with this baseline, deployment follow-up,
+The thirteen Codex initiatives associated with this baseline, deployment follow-up,
 the v0.4.0 baseline, v0.5.0 capture-path release, and implementation follow-ups
 are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
@@ -139,3 +145,5 @@ are listed in
   `019f7190-912d-70e3-be6d-fcc81bf8e203`
 - v0.9.0 evidence cleanup and session synchronization:
   `019f7213-be19-7e50-92ac-a48bd5ecaacb`
+- v0.9.1 evidence and screenshot synchronization:
+  `019f7278-ee77-7f02-bafd-6eba8bf046d2`

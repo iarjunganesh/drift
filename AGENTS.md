@@ -36,19 +36,26 @@ continuous live-release analysis.
 
 The fixture demo now ships typed claim evidence backed by explicit synthetic
 source files, so the inspect-claim-evidence panel renders without an API key.
-The suite is 150 tests at 100% backend
+The suite is 160 tests at 100% backend
 coverage; `main` branch protection requires the CI quality gate and the Codecov
 `pytest` upload is confirmed (both verified 2026-07-17).
 The 2026-07-17 freeze-plan audit and documentation synchronization is recorded
 under Codex session `019f7190-912d-70e3-be6d-fcc81bf8e203`.
 The v0.9.0 evidence cleanup and session synchronization is recorded under
-Codex session `019f7213-be19-7e50-92ac-a48bd5ecaacb`.
+Codex session `019f7213-be19-7e50-92ac-a48bd5ecaacb`. The v0.9.1 evidence and
+screenshot synchronization is recorded under Codex session
+`019f7278-ee77-7f02-bafd-6eba8bf046d2`.
 The source patch `v0.8.1` contains the Ask DRIFT grounding/citation fix and is
 tagged from `feature/v0.9.0-final-evidence`; hosted verification remains
 at the deployed `v0.8.0` app build until a v0.9.0 redeploy is independently
 checked. The live Railway store was updated on 2026-07-17 and `/briefing`
 verified exactly five reviewed Tier.FINAL (`gpt-5.6-sol`) Insights: 10, 11, 13,
-15, and 16; Luna IDs 3, 6, 7, and 8 are draft.
+15, and 16; Luna IDs 3, 6, 7, and 8 are draft. On 2026-07-18, a bounded Terra
+grounded-chat capture asked one question per configured source, answered seven
+from reviewed evidence, declined PyTorch, and archived retrieve-first grounding
+and spend records without changing the database. The source release is now
+`v0.9.1`; hosted verification remains at `v0.8.0` until redeployment is
+independently checked.
 
 ## Key commands
 
@@ -192,7 +199,7 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The current verified hosted application
-build is `v0.8.0` in `DRIFT_MODE=live`; the current source version is `v0.9.0`.
+build is `v0.8.0` in `DRIFT_MODE=live`; the current source version is `v0.9.1`.
 On 2026-07-17, Railway `/health` reported
 `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and
 a Vercel-origin CORS preflight allowed `GET, POST`. `v0.7.0` is the prior

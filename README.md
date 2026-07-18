@@ -202,6 +202,7 @@ the bounded local capture path.
 | Reviewed-evidence release hardening and hosted verification | `019f6a78-6fa2-7121-9059-85ac8ceb9904` | Evidence-byte integrity, database-only review notes, display-only results artifact, `v0.7.0` hosted verification, and the `v0.8.0` grounded-chat / verifiable-fixture hosted release |
 | Freeze-plan audit and documentation synchronization | `019f7190-912d-70e3-be6d-fcc81bf8e203` | Audited the frozen scope against tracked implementation, corrected unshipped MCP/timeline/IDE claims, aligned demo requirements, and synchronized records |
 | v0.9.0 evidence cleanup and session synchronization | `019f7213-be19-7e50-92ac-a48bd5ecaacb` | Retracted superseded Luna Insights through the audited review helper, verified the five-record Sol briefing, synchronized release status, and made the Luna results artifact explicit |
+| v0.9.1 Terra grounded-chat evidence and screenshot pass | `019f7278-ee77-7f02-bafd-6eba8bf046d2` | Captured eight bounded Terra questions, refreshed the nine-image Luna/Sol/Terra gallery, and preserved the no-write boundary |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -223,7 +224,8 @@ hosted-verification, and `v0.8.0` release session is
 The freeze-plan audit and documentation-synchronization session is
 `019f7190-912d-70e3-be6d-fcc81bf8e203`; the v0.9.0 evidence-cleanup and
 session-synchronization follow-up is
-`019f7213-be19-7e50-92ac-a48bd5ecaacb`.
+`019f7213-be19-7e50-92ac-a48bd5ecaacb`; the v0.9.1 evidence and screenshot
+synchronization session is `019f7278-ee77-7f02-bafd-6eba8bf046d2`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
 provides an API key. The local capture job routes embeddings, classification,
@@ -322,7 +324,7 @@ in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
 | Surface | Status |
 | --- | --- |
 | **Current hosted release** | `v0.8.0` `live` — `/health` reports `0.8.0`, `/docs` returns `200`, the public Vercel page renders Ask DRIFT, and Vercel-origin CORS allows `GET, POST` |
-| **Current source release** | `v0.9.0` — Tier.FINAL reviewed evidence, audited retraction helper, and structured Ask DRIFT grounding; app redeploy remains pending |
+| **Current source release** | `v0.9.1` — Terra grounded-chat evidence pass over the five reviewed Tier.FINAL Insights; app redeploy remains pending |
 | **Prior hosted release** | `v0.7.0` `live` — `/briefing` (four reviewed Insights, review notes redacted), `/openapi.json`, and the deployed Vercel bundle's `top_n=10` request were verified |
 | **Live reviewed store** | `/briefing?top_n=10` verified 2026-07-17 with exactly five reviewed, verifier-passed Tier.FINAL Insights: 10, 11, 13, 15, and 16 |
 | **Database schema** | Railway PostgreSQL at `0003_claim_evidence_review_gate`, verified through its public TCP proxy |
@@ -337,12 +339,27 @@ and **Chat** sections so reviewers can navigate the API by job.
 
 ## Screenshots & Evidence
 
-These are live-state captures of the hosted app and reviewed Tier.FINAL evidence
-— not mockups. Click any image to open it full size.
+These are captures of the DRIFT app and its reviewed evidence — not mockups.
+They follow DRIFT's tiered flow: the landing page, the briefing and its frozen
+claim evidence at the `gpt-5.6-luna` dev tier and the current reviewed
+`gpt-5.6-sol` final tier, the Terra-powered Ask DRIFT chat, and the branded API
+contract. Click any image to open it full size.
 
-| Briefing — five reviewed Insights | Inspecting frozen claim evidence |
+| DRIFT landing page |
+| --- |
+| [![DRIFT landing page](assets/screenshots/01-landing.png)](assets/screenshots/01-landing.png) |
+
+The briefing is shown at two model tiers — `gpt-5.6-luna` (the cheap dev tier
+used for iteration) and `gpt-5.6-sol` (the final tier behind the current
+reviewed live-store capture):
+
+| Briefing — Luna dev tier | Briefing — Sol final tier |
 | --- | --- |
-| [![DRIFT briefing showing five reviewed Insights](assets/screenshots/01-briefing.png)](assets/screenshots/01-briefing.png) | [![DRIFT briefing expanded to show each claim's primary-source excerpt](assets/screenshots/02-briefing-claim-evidence.png)](assets/screenshots/02-briefing-claim-evidence.png) |
+| [![DRIFT briefing drafted at the gpt-5.6-luna dev tier](assets/screenshots/03.1-gpt5.6-luna-briefing.png)](assets/screenshots/03.1-gpt5.6-luna-briefing.png) | [![DRIFT briefing drafted at the gpt-5.6-sol final tier](assets/screenshots/03.3-gpt5.6-sol-briefing.png)](assets/screenshots/03.3-gpt5.6-sol-briefing.png) |
+
+| Claim evidence — Luna | Claim evidence — Sol |
+| --- | --- |
+| [![Luna briefing expanded to each claim's primary-source excerpt](assets/screenshots/03.2-gpt5.6-luna-briefing-claim-evidence.png)](assets/screenshots/03.2-gpt5.6-luna-briefing-claim-evidence.png) | [![Sol briefing expanded to each claim's primary-source excerpt](assets/screenshots/03.4-gpt5.6-sol-briefing-claim-evidence.png)](assets/screenshots/03.4-gpt5.6-sol-briefing-claim-evidence.png) |
 
 The Next.js briefing view exposes each record's status label, confidence,
 model/audit label, rationale, bounded action, source links, and—when present—
@@ -356,15 +373,23 @@ changelog. `v0.8.0` deployed the grounded Ask DRIFT UI and tag-pinned synthetic
 fixture evidence; Railway health/docs, the public UI, and CORS were verified.
 Neither rollout re-ran paid provider chat.
 
-| Ask DRIFT — grounded answer | Ask DRIFT — cited example |
-| --- | --- |
-| [![DRIFT Ask DRIFT grounded chat box](assets/screenshots/03-ask-drift.png)](assets/screenshots/03-ask-drift.png) | [![DRIFT Ask DRIFT grounded NCCL answer](assets/screenshots/04.1-ask-drift-grounded-answer-nccl-example.png)](assets/screenshots/04.1-ask-drift-grounded-answer-nccl-example.png) |
+Ask DRIFT answers questions live at the `gpt-5.6-terra` tier, grounded in the
+reviewed Insights:
+
+| Ask DRIFT box | Grounded NCCL answer | Grounded TensorRT answer |
+| --- | --- | --- |
+| [![DRIFT Ask DRIFT grounded chat box](assets/screenshots/04-ask-drift.png)](assets/screenshots/04-ask-drift.png) | [![Terra grounded NCCL answer](assets/screenshots/05.1-gpt5.6-terra-ask-drift-grounded-answer-nccl-example.png)](assets/screenshots/05.1-gpt5.6-terra-ask-drift-grounded-answer-nccl-example.png) | [![Terra grounded TensorRT answer](assets/screenshots/05.2-gpt5.6-terra-ask-drift-grounded-answer-tensorRT-example.png)](assets/screenshots/05.2-gpt5.6-terra-ask-drift-grounded-answer-tensorRT-example.png) |
+
+The Terra answer frames are visual captures from the bounded run and retain
+the IDs shown at capture time. For current publication state and exact Terra
+grounding, use the scrubbed archive in [`assets/evidence/`](assets/evidence/):
+the live reviewed set is IDs 10, 11, 13, 15, and 16.
 
 The branded Swagger contract is also available as visual evidence:
 
 | API documentation |
 | --- |
-| [![DRIFT branded Swagger API documentation](assets/screenshots/05-api-docs.png)](assets/screenshots/05-api-docs.png) |
+| [![DRIFT branded Swagger API documentation](assets/screenshots/02-api-docs.png)](assets/screenshots/02-api-docs.png) |
 
 The scrubbed hosted capture evidence is stored separately in
 [`assets/evidence/`](assets/evidence/), including the verified unreviewed vLLM
@@ -578,7 +603,7 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **150 tests passed and 100.00% backend coverage**.
+The current local result is **160 tests passed and 100.00% backend coverage**.
 The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline boundaries remain visible while

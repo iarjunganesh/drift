@@ -39,7 +39,7 @@ def test_health_and_briefing(api_client) -> None:
     root = api_client.get("/")
     health = api_client.get("/health")
 
-    assert health.json()["version"] == "0.9.0"
+    assert health.json()["version"] == "0.9.1"
     briefing = api_client.get("/briefing")
 
     assert root.status_code == 200
