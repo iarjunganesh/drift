@@ -1,6 +1,6 @@
 # DRIFT project initiatives
 
-These are the thirteen Codex project initiatives associated with the DRIFT baseline,
+These are the fourteen Codex project initiatives associated with the DRIFT baseline,
 publication follow-up, `0.2.0` release candidate, and the current build-sequence
 implementation work. They are submission evidence pointers for the build work;
 they are not model-run provenance and do not turn fixture records into live
@@ -367,9 +367,45 @@ captures and the full quality gates before committing the refresh.
 
 It did not change the reviewed store or hosted deployment state.
 
+## Initiative 14 — v0.10.0 MCP thin-client implementation
+
+**Codex Session ID:** `019f7607-aa5a-79b2-8101-4cd634495fbe`
+
+**Date:** 2026-07-18
+
+This session implemented [ADR-011](adr/011-mcp-thin-client-layer.md): a
+thin-client MCP integration in `integrations/mcp/` exposing three stdio tools
+(`drift_briefing`, `drift_search`, `ask_drift`), each a one-to-one call to the
+existing public `/briefing`, `/search`, and `/chat` endpoints. The server reads
+only `DRIFT_API_URL` (plus an optional `DRIFT_MCP_TIMEOUT_SECONDS`), holds no
+credentials, and changes nothing under
+`backend/`. It added an optional `mcp` dependency group (core runtime install
+and Docker image unchanged — `uv.lock` records the optional group, but
+`uv sync --no-dev` does not install it), extended ruff/mypy/test targets and CI to
+`integrations/`, and bumped the source release to `v0.10.0` across the locked
+version fields.
+
+Verification was end-to-end against a fixture-mode API at $0: all three tools
+worked, and an unmatched question declined rather than hallucinating. The suite
+adds 40 mocked-HTTP tests at 100% `integrations/` coverage; the backend suite is
+unchanged at 160 tests / 100% backend coverage. A bounded hosted MCP capture
+(with SHA-256 manifest) and a real MCP-client screenshot remain pending operator
+gates; the `v0.10.0` MCP source is not yet redeployed.
+
+The session also corrected stale hosted-version claims across the repository:
+independent live verification on 2026-07-18 showed the deployed Railway app is
+`v0.9.1` (not `v0.8.0`) — `/health` and `/` report `0.9.1`, `/docs` returns
+`200`, `/briefing?top_n=10` returns the five reviewed Tier.FINAL Insights with no
+review notes, and Vercel-origin CORS allows `GET, POST`; paid `/search` and
+`/chat` were not re-invoked. Current-state docs were updated to `v0.9.1` while
+the dated `v0.8.0`/`v0.7.0` verification records were preserved.
+
+This is the fourteenth Codex project session; the identifier above is its
+session ID, recorded in the same registry as the earlier initiatives.
+
 ## Submission usage
 
-Devpost requires one primary `/feedback` session, use Initiative 04. All thirteen
+Devpost requires one primary `/feedback` session, use Initiative 04. All fourteen
 IDs should be retained in the project README, changelog, and submission notes.
 If Devpost requires one primary `/feedback` session, use Initiative 04:
 `019f62b9-10b7-7d82-a463-e6eb1192141c`. Initiative 05 is the additive Day 1/Day
@@ -383,4 +419,5 @@ record; the earlier sessions remain the foundation, publication, and hosted-demo
 follow-up initiatives, Initiative 11 is the additive freeze-plan audit and
 documentation-synchronization record, and Initiative 12 is the v0.9.0 evidence
 cleanup and session-synchronization follow-up; Initiative 13 is the v0.9.1
-evidence and screenshot synchronization follow-up.
+evidence and screenshot synchronization follow-up; and Initiative 14 is the
+v0.10.0 MCP thin-client implementation.

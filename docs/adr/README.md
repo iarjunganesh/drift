@@ -10,12 +10,13 @@ decisions compose.
 | [002](002-typed-agents-no-framework.md) | Typed hand-rolled stages | Accepted |
 | [003](003-citations-and-visible-uncertainty.md) | Citations and visible uncertainty are mandatory | Accepted |
 | [004](004-local-budget-guard.md) | Local hard budget for live iteration | Accepted |
-| [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; Railway schema verified; five human-reviewed Tier.FINAL Insights now serve the live store, with app redeploy pending |
+| [005](005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store | Accepted; Railway schema verified; five human-reviewed Tier.FINAL Insights serve the live store on the deployed `v0.9.1` build (verified 2026-07-18) |
 | [006](006-ci-quality-gates.md) | CI quality gates and coverage ratchet | Accepted |
-| [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted `v0.8.0` health/docs, public Ask DRIFT UI, and CORS verified 2026-07-17; `v0.7.0` redaction/`top_n=10` and reviewed `/briefing`/`/search`/`/chat` verification remain historical |
+| [007](007-vercel-railway-deployment.md) | Vercel frontend + Railway API and database | Accepted; hosted `v0.9.1` health/`/`/docs, five-Insight `/briefing`, and CORS verified 2026-07-18; the `v0.8.0` (2026-07-17) and `v0.7.0` verifications remain historical |
 | [008](008-live-grounded-chat.md) | Live grounded chat over the fixture store | Accepted |
 | [009](009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery | Accepted |
-| [010](010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication | Accepted; hosted `v0.8.0` remains the deployed app, while five human-reviewed Tier.FINAL Insights are the bounded live-store set verified 2026-07-17 |
+| [010](010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication | Accepted; the deployed app is `v0.9.1`, and five human-reviewed Tier.FINAL Insights are the bounded live-store set (verified via `/briefing` 2026-07-18) |
+| [011](011-mcp-thin-client-layer.md) | MCP integration as a thin client over the reviewed API | Accepted; implemented in `v0.10.0` (2026-07-18) and fixture-verified at $0; hosted MCP evidence and a client screenshot remain pending |
 
 When implementation invalidates a decision, amend the original record or add a
 new ADR. Do not silently rewrite the decision history in code comments or

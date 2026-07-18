@@ -36,7 +36,7 @@ jobs:
         run: uv sync --locked --group dev
 
       - name: Ruff check
-        run: uv run ruff check backend tests
+        run: uv run ruff check backend tests integrations
 
   typecheck:
     name: Mypy type check
@@ -57,10 +57,10 @@ jobs:
           cache-dependency-glob: uv.lock
 
       - name: Install dependencies
-        run: uv sync --locked --group dev
+        run: uv sync --locked --group dev --group integrations
 
       - name: Mypy
-        run: uv run mypy backend
+        run: uv run mypy backend integrations
 
   tests:
     name: Tests and coverage
@@ -107,6 +107,34 @@ jobs:
           flags: pytest
           name: drift-pytest
           fail_ci_if_error: false
+
+  integrations:
+    name: MCP integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install integrations dependencies
+        run: uv sync --locked --group integrations
+
+      - name: Run MCP thin-client tests (mocked HTTP, no credentials)
+        run: >-
+          uv run pytest integrations
+          -o addopts=
+          --cov=integrations
+          --cov-report=term-missing
 
   frontend:
     name: Frontend build

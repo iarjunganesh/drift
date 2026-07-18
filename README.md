@@ -74,8 +74,11 @@ Built for **OpenAI Build Week 2026 · Developer Tools**.
 
 **Hosted — nothing to install.** The live Railway store serves five human-reviewed
 Tier.FINAL Insights (JAX v0.11.0, Transformers v5.14.1, vLLM v0.25.1, NCCL
-v2.30.7-1, TensorRT 11.1); `/briefing?top_n=10` was verified on 2026-07-17.
-The deployed app build remains `v0.8.0` pending redeploy.
+v2.30.7-1, TensorRT 11.1); `/briefing?top_n=10` returned exactly those five,
+verified on 2026-07-18. The deployed app build is `v0.9.1`, verified live the
+same day (`/health` reports `0.9.1`, `/docs` returns `200`, Vercel-origin CORS
+allows `GET, POST`). The local `v0.10.0` source adds the MCP thin client and is
+not yet redeployed.
 
 | Surface | Link |
 | --- | --- |
@@ -184,7 +187,7 @@ bounded reviewed set, not a broad live-release-analysis claim.
 ### Codex project initiatives
 
 The baseline, publication follow-up, bounded release milestones, and
-documentation follow-up are tied to eleven project initiatives. The grounded
+documentation follow-up are tied to fourteen project initiatives. The grounded
 live-chat row remains the primary v0.4.0 implementation session; v0.5.0 adds
 the bounded local capture path.
 
@@ -203,6 +206,7 @@ the bounded local capture path.
 | Freeze-plan audit and documentation synchronization | `019f7190-912d-70e3-be6d-fcc81bf8e203` | Audited the frozen scope against tracked implementation, corrected unshipped MCP/timeline/IDE claims, aligned demo requirements, and synchronized records |
 | v0.9.0 evidence cleanup and session synchronization | `019f7213-be19-7e50-92ac-a48bd5ecaacb` | Retracted superseded Luna Insights through the audited review helper, verified the five-record Sol briefing, synchronized release status, and made the Luna results artifact explicit |
 | v0.9.1 Terra grounded-chat evidence and screenshot pass | `019f7278-ee77-7f02-bafd-6eba8bf046d2` | Captured eight bounded Terra questions, refreshed the nine-image Luna/Sol/Terra gallery, and preserved the no-write boundary |
+| v0.10.0 MCP thin-client integration | `019f7607-aa5a-79b2-8101-4cd634495fbe` | Thin-client MCP server (`integrations/mcp/`, ADR-011) over the public API — three stdio tools, no credentials, nothing changed under `backend/`; fixture-verified at $0 with 40 mocked-HTTP tests, and corrected stale hosted-version records to `v0.9.1` |
 
 See the full [project initiative record](docs/INITIATIVES.md).
 
@@ -225,7 +229,9 @@ The freeze-plan audit and documentation-synchronization session is
 `019f7190-912d-70e3-be6d-fcc81bf8e203`; the v0.9.0 evidence-cleanup and
 session-synchronization follow-up is
 `019f7213-be19-7e50-92ac-a48bd5ecaacb`; the v0.9.1 evidence and screenshot
-synchronization session is `019f7278-ee77-7f02-bafd-6eba8bf046d2`.
+synchronization session is `019f7278-ee77-7f02-bafd-6eba8bf046d2`; and the
+v0.10.0 MCP thin-client implementation session is
+`019f7607-aa5a-79b2-8101-4cd634495fbe`.
 
 GPT-5.6 is used only when an operator explicitly enables `DRIFT_MODE=live` and
 provides an API key. The local capture job routes embeddings, classification,
@@ -239,7 +245,7 @@ it is not broad live-release analysis or evidence that the new gate is hosted.
 
 ### Architecture Decision Records
 
-Ten decisions currently constrain the implementation. They are intentionally
+Eleven decisions currently constrain the implementation. They are intentionally
 short; the architecture document explains how they compose.
 
 | ADR | Decision |
@@ -254,6 +260,7 @@ short; the architecture document explains how they compose.
 | [008](docs/adr/008-live-grounded-chat.md) | Live grounded chat over the cited fixture store |
 | [009](docs/adr/009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery |
 | [010](docs/adr/010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication |
+| [011](docs/adr/011-mcp-thin-client-layer.md) | MCP integration as a thin client over the reviewed API (`v0.10.0`) |
 
 ---
 
@@ -266,7 +273,7 @@ Agent code must not hard-code provider model names. The intended tiers are:
 | --- | --- | --- |
 | `dev` / Luna | Classification, clustering, and prompt iteration | Produced the four reviewed Insights published 2026-07-16; run only with an explicit live key |
 | `live` / Terra | Retrieve-first grounded chat | Serves hosted grounded chat over reviewed pgvector rows; verified provider-backed 2026-07-16 |
-| `final` / Sol | Three to five reviewed demo insights | Produced the five reviewed Tier.FINAL Insights now served by the live Railway store; app redeploy remains pending |
+| `final` / Sol | Three to five reviewed demo insights | Produced the five reviewed Tier.FINAL Insights now served by the live Railway store (`v0.9.1`, verified 2026-07-18) |
 
 Every live insight must preserve:
 
@@ -318,15 +325,16 @@ that frozen lockfile. JavaScript dependencies are locked in
 
 ## Deployment status
 
-Both tiers are live and `v0.8.0` was verified on 2026-07-17 — the live links live up top
-in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
+Both tiers are live and the deployed app is `v0.9.1`, verified on 2026-07-18 — the
+live links live up top in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
 
 | Surface | Status |
 | --- | --- |
-| **Current hosted release** | `v0.8.0` `live` — `/health` reports `0.8.0`, `/docs` returns `200`, the public Vercel page renders Ask DRIFT, and Vercel-origin CORS allows `GET, POST` |
-| **Current source release** | `v0.9.1` — Terra grounded-chat evidence pass over the five reviewed Tier.FINAL Insights; app redeploy remains pending |
-| **Prior hosted release** | `v0.7.0` `live` — `/briefing` (four reviewed Insights, review notes redacted), `/openapi.json`, and the deployed Vercel bundle's `top_n=10` request were verified |
-| **Live reviewed store** | `/briefing?top_n=10` verified 2026-07-17 with exactly five reviewed, verifier-passed Tier.FINAL Insights: 10, 11, 13, 15, and 16 |
+| **Current hosted release** | `v0.9.1` `live` — verified 2026-07-18: `/health` and `/` report `0.9.1`, `/docs` returns `200`, `/briefing?top_n=10` returns the five reviewed Insights, and Vercel-origin CORS allows `GET, POST`. Paid `/search` and `/chat` were not re-invoked |
+| **Current source release** | `v0.10.0` — thin-client MCP integration (`integrations/mcp/`) over the existing public API, fixture-verified at $0; changes nothing under `backend/`. Not yet redeployed (hosted is `v0.9.1`); hosted MCP evidence remains pending |
+| **Prior hosted release** | `v0.8.0` `live` — verified 2026-07-17: `/health` reported `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and Vercel CORS allowed `GET, POST` |
+| **Earlier hosted release** | `v0.7.0` `live` — `/briefing` (four reviewed Insights, review notes redacted), `/openapi.json`, and the deployed Vercel bundle's `top_n=10` request were verified |
+| **Live reviewed store** | `/briefing?top_n=10` verified 2026-07-18 with exactly five reviewed, verifier-passed Tier.FINAL Insights: 10, 11, 13, 15, and 16 |
 | **Database schema** | Railway PostgreSQL at `0003_claim_evidence_review_gate`, verified through its public TCP proxy |
 | **Branding** | Swagger banner frame and canonical API-served banner pair follow the same system light/dark preference |
 | **Historical** | `v0.5.1` served one unreviewed vLLM Insight through `/briefing` on 2026-07-15 — retained as pre-gate evidence only |
@@ -365,13 +373,16 @@ The Next.js briefing view exposes each record's status label, confidence,
 model/audit label, rationale, bounded action, source links, and—when present—
 claim-type evidence. On 2026-07-16, the hosted UI was verified against the
 review-gated API; reviewed evidence has since been published, so `/briefing`
-now serves the five reviewed Tier.FINAL Insights in the live store; the public
-app UI remains the deployed `v0.8.0` build pending redeploy.
-`v0.7.0` deployed the review-note redaction and ten-item briefing request;
-Railway, CORS, public-contract, and Vercel-bundle checks are recorded in the
-changelog. `v0.8.0` deployed the grounded Ask DRIFT UI and tag-pinned synthetic
-fixture evidence; Railway health/docs, the public UI, and CORS were verified.
-Neither rollout re-ran paid provider chat.
+now serves the five reviewed Tier.FINAL Insights in the live store. The public
+app is the deployed `v0.9.1` build, verified live on 2026-07-18 (`/health` and
+`/` report `0.9.1`, `/docs` returns `200`, `/briefing` returns the five reviewed
+Insights, and Vercel CORS allows `GET, POST`); the local `v0.10.0` source is not
+yet redeployed. `v0.7.0` deployed the review-note redaction and ten-item briefing
+request; Railway, CORS, public-contract, and Vercel-bundle checks are recorded in
+the changelog. `v0.8.0` deployed the grounded Ask DRIFT UI and tag-pinned
+synthetic fixture evidence; Railway health/docs, the public UI, and CORS were
+verified. Paid `/search` and `/chat` were not re-invoked for the `v0.9.1`
+verification.
 
 Ask DRIFT answers questions live at the `gpt-5.6-terra` tier, grounded in the
 reviewed Insights:
@@ -531,6 +542,68 @@ not a scheduled feed service and does not publish or verify the hosted deploymen
 
 ---
 
+## Use DRIFT inside your AI assistant (MCP)
+
+DRIFT's reviewed release intelligence is also available to any MCP-compatible
+assistant — in the browser, over HTTP, and inside your AI assistant. The
+[`integrations/mcp/`](integrations/mcp/) server ([ADR-011](docs/adr/011-mcp-thin-client-layer.md))
+is a **thin client** over the same public API the frontend uses. It exposes
+exactly three tools, each a one-to-one call to an existing endpoint:
+
+| Tool | Calls | Returns |
+| --- | --- | --- |
+| `drift_briefing(top_n)` | `GET /briefing` | The ranked reviewed briefing |
+| `drift_search(query)` | `GET /search` | Cited reviewed insights matching a query |
+| `ask_drift(question)` | `POST /chat` | A grounded, cited answer — or a decline when nothing in the reviewed corpus matches |
+
+The server is configured with only `DRIFT_API_URL` (plus an optional
+`DRIFT_MCP_TIMEOUT_SECONDS` request timeout) and holds **no OpenAI key, no
+database URL, and no credential of any kind**. Every guarantee the API enforces —
+reviewed-only reads, redacted review notes, spend guards, resilience — applies
+automatically, because there is no second path to the store. The MCP server
+cannot draft, verify, publish, or retract an Insight.
+
+**Install** the optional SDK group (the core install is unchanged):
+
+```bash
+uv sync --group integrations
+```
+
+**Configure a client.** Point `DRIFT_API_URL` at a local fixture instance
+(`http://localhost:8000`, zero cost) or the hosted API
+(`https://drift-api-prod.up.railway.app`). For Claude Desktop, add to
+`claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "drift": {
+      "command": "uv",
+      "args": ["run", "--group", "integrations", "python", "-m", "integrations.mcp"],
+      "env": { "DRIFT_API_URL": "http://localhost:8000" }
+    }
+  }
+}
+```
+
+Cursor (`.cursor/mcp.json`) and other stdio MCP clients use the same
+`command`/`args`/`env` shape.
+
+**Judge testing path (no key, $0):** start the fixture API with
+`uv run uvicorn backend.main:app`, then in your MCP client run
+`drift_briefing`, `drift_search` for `vllm`, and `ask_drift` a GPU/AI-infra
+release question. `ask_drift` a question outside the reviewed corpus (e.g. an
+unrelated library) and watch it decline rather than guess.
+
+> MCP is an additional consumption channel, not a repositioning: DRIFT stays
+> release intelligence for GPU and AI infrastructure — cited, bounded, and
+> inspectable. The tools can offer nothing the public API does not; new
+> capability requires a reviewed API change first, never an MCP side door.
+> Hosted MCP evidence and a client screenshot are pending; the deployed app is
+> `v0.9.1` (the `v0.10.0` source is not yet redeployed).
+
+---
+
 ## Synthetic Fixture Data
 
 The fixture path uses [`backend/fixtures/insights.json`](backend/fixtures/insights.json).
@@ -570,6 +643,10 @@ drift/
 │   ├── app/                  # page.tsx, layout.tsx, AskDrift.tsx (grounded chat box)
 │   ├── .nvmrc                # Node.js 24.x local/runtime selection
 │   └── vercel.json           # Vercel build settings and Railway API URL
+├── integrations/mcp/         # thin-client MCP server (no credentials, stdio) + mocked tests
+│   ├── client.py · config.py # one-to-one HTTP wrapper; DRIFT_API_URL only
+│   ├── formatting.py · server.py # response formatters + drift_briefing/drift_search/ask_drift
+│   └── tests/                # 40 mocked-HTTP tests, 100% integrations coverage
 ├── assets/
 │   ├── architecture/         # arch-* presentation (build_arch.py) + arch-pipeline-* Mermaid
 │   ├── brand/                # DRIFT brand banners (build_banner.py); API-served
@@ -583,7 +660,7 @@ drift/
 │   ├── INITIATIVES.md        # Codex project initiative/session records
 │   ├── BUILD_SEQUENCE.md     # implementation sequence and GitHub/Codecov setup
 │   ├── RUNBOOK.md · CODEX_PROMPTS.md  # demo procedure and prompt records
-│   └── adr/                  # Architecture Decision Records 001–010
+│   └── adr/                  # Architecture Decision Records 001–011
 ├── notebooks/                # local bounded capture/review workflow + results record
 ├── scripts/                  # check_openai_spend.py (read-only spend reconciliation)
 ├── migrations/               # Alembic env + versions (schema and provenance revisions)
@@ -662,8 +739,23 @@ briefing/search/chat retrieval; the fixture demo, evidence UI, typed contracts,
 model-router boundary, architecture evidence, CI gates, and deployed Vercel
 frontend.
 
+**Shipped as a consumption channel (`v0.10.0`):** a thin-client MCP server
+(`integrations/mcp/`, [ADR-011](docs/adr/011-mcp-thin-client-layer.md)) exposing
+`drift_briefing`, `drift_search`, and `ask_drift` over the existing public API —
+no credentials, nothing changed under `backend/`, fixture-verified at $0 with 40
+mocked-HTTP tests. See
+[Use DRIFT inside your AI assistant (MCP)](#use-drift-inside-your-ai-assistant-mcp).
+It is a channel, not new capability: the tools can offer nothing the public API
+does not.
+
 **Next implementation slices:**
 
+- capture bounded hosted MCP evidence (a live-API run archived with a SHA-256
+  manifest) and add a real MCP-client screenshot; keep the MCP surface a thin
+  channel — any new capability requires a reviewed API change first, never an
+  MCP side door;
+- redeploy the `v0.10.0` source (the deployed app is `v0.9.1`) once the hosted
+  MCP evidence is captured;
 - expand beyond the initial reviewed capture (the first eight-source run
   produced six verifier-passed drafts and four reviewed Insights on 2026-07-16);
 - exercise the Alembic migration and capture path against a clean PostgreSQL

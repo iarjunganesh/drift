@@ -6,12 +6,16 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** `v0.8.0` is the current verified Railway/Vercel release. It
-adds a grounded frontend chat box and makes the no-key fixture evidence
-inspectable against checked-in synthetic source files. On 2026-07-17, Railway
-`/health` reported live `0.8.0`, `/docs` returned `200`, the public Vercel page
-rendered **Ask DRIFT**, and Vercel-origin CORS passed. `v0.7.0` is the prior
-verified release: it hardens evidence byte integrity, makes human review notes
+**Current phase:** the deployed Railway/Vercel app is `v0.9.1`, verified live on
+2026-07-18 — `/health` and `/` report `0.9.1` in `DRIFT_MODE=live`, `/docs`
+returns `200`, `/briefing?top_n=10` returns the five reviewed Tier.FINAL Insights
+(10, 11, 13, 15, 16) with no review notes, and a Vercel-origin CORS preflight
+allows `GET, POST` (paid `/search` and `/chat` were not re-invoked). The current
+source release is `v0.10.0` (the MCP thin client), not yet redeployed. `v0.8.0` —
+verified on 2026-07-17 (`/health` `0.8.0`, `/docs` `200`, public **Ask DRIFT**,
+Vercel CORS) — added a grounded frontend chat box and made the no-key fixture
+evidence inspectable against checked-in synthetic source files. `v0.7.0` is an
+earlier verified release: it hardens evidence byte integrity, makes human review notes
 database-only, and raises the frontend briefing limit to ten. `v0.6.1` is the
 previously verified hosted Railway revision, and `v0.5.1` is historical
 pre-review-gate evidence. The new local
@@ -46,16 +50,25 @@ Codex session `019f7213-be19-7e50-92ac-a48bd5ecaacb`. The v0.9.1 evidence and
 screenshot synchronization is recorded under Codex session
 `019f7278-ee77-7f02-bafd-6eba8bf046d2`.
 The source patch `v0.8.1` contains the Ask DRIFT grounding/citation fix and is
-tagged from `feature/v0.9.0-final-evidence`; hosted verification remains
-at the deployed `v0.8.0` app build until a v0.9.0 redeploy is independently
-checked. The live Railway store was updated on 2026-07-17 and `/briefing`
+tagged from `feature/v0.9.0-final-evidence`; it is part of the `v0.9.x` line now
+deployed as `v0.9.1` (hosted `/health` reported `0.9.1` on 2026-07-18, though the
+grounded `/chat` behavior itself was not re-invoked in that check). The live
+Railway store was updated on 2026-07-17 and `/briefing`
 verified exactly five reviewed Tier.FINAL (`gpt-5.6-sol`) Insights: 10, 11, 13,
 15, and 16; Luna IDs 3, 6, 7, and 8 are draft. On 2026-07-18, a bounded Terra
 grounded-chat capture asked one question per configured source, answered seven
 from reviewed evidence, declined PyTorch, and archived retrieve-first grounding
-and spend records without changing the database. The source release is now
-`v0.9.1`; hosted verification remains at `v0.8.0` until redeployment is
-independently checked.
+and spend records without changing the database. On 2026-07-18, `v0.10.0` added
+a thin-client MCP integration in `integrations/mcp/` (ADR-011): three stdio tools
+(`drift_briefing`, `drift_search`, `ask_drift`), each a one-to-one call to the
+existing public `/briefing`, `/search`, and `/chat` endpoints, configured with
+only `DRIFT_API_URL` (plus an optional `DRIFT_MCP_TIMEOUT_SECONDS`) and holding
+no credentials. It changes nothing under
+`backend/`, was verified end-to-end against a fixture-mode API at $0, and carries
+40 mocked-HTTP tests at 100% `integrations/` coverage. The source release is now
+`v0.10.0`; the deployed app is `v0.9.1` (verified 2026-07-18), so the `v0.10.0`
+MCP source is not yet redeployed, and a bounded hosted MCP capture plus a client
+screenshot remain the pending MCP operator gates.
 
 ## Key commands
 
@@ -65,6 +78,10 @@ uv run uvicorn backend.main:app --reload
 
 npm --prefix frontend ci
 npm --prefix frontend run dev
+
+# MCP thin client (ADR-011) — optional SDK group, no credentials
+uv sync --group integrations
+uv run python -m integrations.mcp        # stdio; DRIFT_API_URL (+ optional timeout), no credentials
 ```
 
 The API exposes `/health`, `/briefing`, `/search`, `/chat`, `/docs`,
@@ -137,6 +154,72 @@ records as fresh release analysis.
   and `/brand/light.svg` routes; do not copy, derive, or commit banner SVGs
   under `frontend/public/`.
 
+## Version, tag, and count synchronization (mandatory)
+
+After any change that adds a feature, test, evidence record, or release tag,
+sweep every tracked reference — do not rely on memory of which documents
+mention it.
+
+**Version fields that must always move together in one commit:**
+
+- `pyproject.toml` (`version`)
+- `backend/core/config.py` (`app_version`)
+- `frontend/package.json` (`version`) and `frontend/package-lock.json`
+  (two `version` fields — regenerate with `npm --prefix frontend install
+  --package-lock-only`, do not hand-edit)
+- `tests/integration/test_api.py` (the `/health` version assertion — CI fails
+  on a bump until it matches, which is intentional drift protection)
+- `notebooks/drift_manual_run.ipynb` (version-labelled section headings in
+  markdown cells; nothing enforces these, so they must be swept manually)
+
+**Deliberately pinned — do NOT bump on release:** the fixture source URLs in
+`backend/fixtures/insights.json` are tag-pinned to `v0.8.0`, the release where
+the synthetic evidence files landed, and `tests/unit/test_fixture_evidence.py`
+enforces that exact prefix. These are immutable historical links; re-pin them
+(and the test, in the same commit) only if the fixture evidence files
+themselves change.
+
+**Release automation dependency:** `.github/workflows/release.yml` extracts the
+GitHub release body from the `CHANGELOG.md` heading matching the pushed tag
+(`## [x.y.z]`). The changelog entry must exist on the tagged commit, or the
+release is created with a bare fallback body.
+
+Runtime code must keep deriving the version from `settings.app_version`
+(FastAPI metadata, `/health`, the Scout User-Agent header); never introduce a
+second hard-coded version literal in `backend/`.
+
+**Status-bearing documents that carry versions, tags, counts, or state** and
+must be reconciled in the same session:
+
+- `AGENTS.md` (current phase, deployment boundary)
+- `README.md` (badges, current release, judge path, test/coverage claims,
+  screenshot gallery)
+- `CHANGELOG.md` (release entry, "Current source release" line, planned-release
+  section, anchor links)
+- `submission/DRIFT_FREEZE_PLAN.md` (addenda, frozen feature list, checklists)
+- `submission/SUBMISSION.md` and `submission/DEMO_SCRIPT.md` (insight counts,
+  version claims, evidence references)
+- `SECURITY.md` (supported-versions table and the present-tense hosted-store
+  claims — both carry version numbers and reviewed-Insight counts)
+- `docs/BUILD_SEQUENCE.md`, `docs/INITIATIVES.md`, `docs/ARCHITECTURE.md`,
+  `docs/RUNBOOK.md`, `docs/CODEX_PROMPTS.md`, and the ADR index
+
+**Counts and identifiers that drift silently — verify, never carry forward:**
+
+- test count (run `uv run pytest --collect-only -q` for the real number) and
+  coverage percentage;
+- the number and IDs of reviewed live-store Insights;
+- screenshot filenames and evidence archive names/hashes;
+- the source version vs. the verified hosted app version — these are distinct
+  facts and every document must state which one it means.
+
+**Verification step (required before handoff):** grep the repository for the
+previous version string (e.g. `0.9.1` after bumping to `0.10.0`), the previous
+test count, and the previous insight count. Every hit must be either updated or
+an intentional historical record (a dated changelog entry, addendum, or session
+log). A stale count or tag in a current-state sentence is a defect, not a
+cosmetic issue.
+
 ## Session synchronization (mandatory)
 
 At the start of every new or resumed session:
@@ -160,19 +243,31 @@ Before handing off every session:
   boundary changes, preserving historical decisions through dated addenda;
 - search for stale URLs, modes, claims, placeholder names, and forbidden
   references before finishing; unchanged explanatory prose need not be
-  rewritten, but stale status prose must not remain.
+  rewritten, but stale status prose must not remain;
+- run the grep sweep from **Version, tag, and count synchronization** whenever
+  the session changed a version, feature surface, test suite, evidence record,
+  or reviewed-store contents.
 
 ## Testing strategy
 
 - `tests/unit/` covers agents, configuration, budgets, and pure logic.
 - `tests/integration/` covers the FastAPI API and lifespan.
+- `integrations/mcp/tests/` covers the MCP thin client with mocked HTTP; it runs
+  outside the backend `--cov=backend` gate with its own 100% `integrations/`
+  coverage. Lint and type targets extend to `integrations/`.
 - Keep fixture data deterministic and mock provider calls.
 - Before handing off Python changes, run:
 
   ```powershell
-  .venv\Scripts\python.exe -m ruff check backend tests
-  .venv\Scripts\python.exe -m mypy backend
+  .venv\Scripts\python.exe -m ruff check backend tests integrations
+  .venv\Scripts\python.exe -m mypy backend integrations
   .venv\Scripts\python.exe -m pytest tests --cov=backend --cov-report=term-missing --cov-fail-under=100
+  ```
+
+- When `integrations/` changed, also run its separate suite:
+
+  ```powershell
+  uv run --group integrations pytest integrations -o addopts= --cov=integrations --cov-report=term-missing
   ```
 
 - For frontend changes, run `npm --prefix frontend ci` and
@@ -199,10 +294,14 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The current verified hosted application
-build is `v0.8.0` in `DRIFT_MODE=live`; the current source version is `v0.9.1`.
-On 2026-07-17, Railway `/health` reported
-`0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and
-a Vercel-origin CORS preflight allowed `GET, POST`. `v0.7.0` is the prior
+build is `v0.9.1` in `DRIFT_MODE=live`; the current source version is `v0.10.0`,
+not yet redeployed. On 2026-07-18, Railway `/health` and `/` reported `0.9.1`,
+`/docs` returned `200`, `/briefing?top_n=10` returned the five reviewed
+Tier.FINAL Insights with no review notes, and a Vercel-origin CORS preflight
+allowed `GET, POST`; paid `/search` and `/chat` were not re-invoked. `v0.8.0` is
+the prior verified release: on 2026-07-17, its Railway `/health` reported `0.8.0`,
+`/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and a
+Vercel-origin CORS preflight allowed `GET, POST`. `v0.7.0` is an earlier
 verified release; `v0.6.1` was the revision before that. On 2026-07-16, `/health` reported
 `v0.6.1`, `/briefing` returned the four
 human-reviewed Insights published that day, `/docs` returned `200`, and
@@ -217,6 +316,11 @@ bundle's `top_n=10` request; `/search` and `/chat` were not re-invoked for this
 privacy/frontend-only release. The Git-connected `v0.8.0` rollout was verified
 through `/health`, `/docs`, the public Ask DRIFT UI, Vercel CORS, and a
 tag-pinned fixture-source link; paid `/search` and `/chat` were not re-invoked.
+The Git-connected `v0.9.1` deployment is the current verified build: on
+2026-07-18, `/health` and `/` reported `0.9.1`, `/docs` returned `200`,
+`/briefing?top_n=10` returned the five reviewed Insights with no review notes,
+and Vercel-origin CORS allowed `GET, POST`; paid `/search` and `/chat` were not
+re-invoked.
 
 [`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb) is the
 local operator path for bounded capture and manual publication. It requires a
@@ -237,5 +341,7 @@ Railway URL for local TCP-proxy access; it is not evidence of a hosted run.
 - `backend/fixtures/` — deterministic, citation-backed example insights, each
   carrying typed claim evidence.
 - `backend/fixtures/evals/` — claim-grounding calibration cases.
+- `integrations/mcp/` — thin-client MCP server over the public API (ADR-011);
+  no credentials, stdio, optional `mcp` dependency group, own mocked-HTTP tests.
 - `notebooks/` — local manual capture/review workflow; contains no secrets.
 - `assets/architecture/` — Mermaid source and themed SVG/PNG renders.

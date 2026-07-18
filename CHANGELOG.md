@@ -10,9 +10,14 @@ the annotated `v0.1.0` tag.
 
 ## Current source release
 
-`v0.9.1` is the current source and evidence release. It records the bounded
-Terra grounded-chat pass below; it does not change the current verified app
-deployment (`v0.8.0`) or claim that the source release has been redeployed.
+`v0.10.0` is the current source release. It adds a thin-client MCP integration
+(`integrations/mcp/`) that makes DRIFT's reviewed release intelligence available
+to any MCP-compatible assistant over the existing public API, verified
+end-to-end against a fixture-mode API at zero cost. It changes nothing under
+`backend/` and is not yet redeployed: the current verified app deployment is
+`v0.9.1` (verified live on 2026-07-18). Hosted MCP verification and a real
+MCP-client screenshot remain the pending operator gates, and no hosted MCP claim
+is made until that capture has run.
 
 ## Targeted releases — planned, not released
 
@@ -26,8 +31,79 @@ Targeted scope:
   workflow, citations, verification, Codex contribution, and GPT-5.6 role; and
 - final README, submission notes, Devpost metadata, and video-link replacement.
 
-`v1.0.0` is the submission-final target, not permission to add new feature
-surfaces such as MCP, tool calling, IDE integration, or a release timeline.
+`v1.0.0` is the submission-final target, not permission to add further feature
+surfaces such as tool calling, IDE integration, or a release timeline. (The MCP
+consumption channel shipped in `v0.10.0` below; `v1.0.0` still adds no new
+capture, provider, or write path.)
+
+## [0.10.0] - 2026-07-18
+
+### MCP thin-client integration — 2026-07-18
+
+**Codex Session ID:** `019f7607-aa5a-79b2-8101-4cd634495fbe`
+
+DRIFT's reviewed release intelligence is now also available to any
+MCP-compatible assistant, as an additional consumption channel over the
+existing public API — "in the browser, over HTTP, and inside your AI
+assistant." This does not reposition DRIFT: the tagline
+("Release intelligence for GPU and AI infrastructure. Cited, bounded,
+inspectable."), the brand banners, the frontend hero, and the FastAPI
+description are unchanged, per the branding boundary in
+[ADR-011](docs/adr/011-mcp-thin-client-layer.md).
+
+### Added
+
+- `integrations/mcp/` — a standalone thin-client MCP server (stdio, run with
+  `python -m integrations.mcp`) exposing exactly three tools, each a one-to-one
+  call to an existing public endpoint:
+  - `drift_briefing` → `GET /briefing`
+  - `drift_search` → `GET /search`
+  - `ask_drift` → `POST /chat`
+
+  The server is configured with only `DRIFT_API_URL` (hosted Railway API or a
+  local instance), plus an optional `DRIFT_MCP_TIMEOUT_SECONDS` request timeout,
+  and holds **no OpenAI key, no database URL, and no credential
+  of any kind**. It sits on the untrusted consumer side of the API boundary,
+  indistinguishable from the Vercel frontend.
+- An optional `mcp` dependency group and a separate `integrations` test group in
+  `pyproject.toml`. The core `[project.dependencies]` set is untouched, so the
+  `uv sync --no-dev` Docker install, the Railway image, and the deployed runtime
+  are unchanged; the SDK is opt-in.
+- 40 mocked-HTTP integration tests at 100% coverage of `integrations/`, run as a
+  separate CI job (`MCP integration tests`) outside the backend `--cov=backend`
+  gate. Ruff and mypy targets extend to `integrations/` in the `Makefile`,
+  `AGENTS.md`, and `.github/workflows/ci.yml`.
+
+### Safety boundary
+
+- Every guarantee the API already enforces applies to MCP traffic automatically,
+  because there is no second path to the store: reviewed-only reads, redacted
+  review notes, `SpendGuard` budgets, and retry/circuit resilience are all
+  server-side. The MCP server cannot draft, verify, publish, or retract an
+  Insight — the review gate remains a human, notebook-driven boundary with no
+  MCP tool. Questions outside the reviewed corpus decline rather than
+  hallucinate: the retrieve-first `/chat` 404 is surfaced as a spoken decline.
+
+### Verification
+
+- Local ($0): all three tools were exercised against a fixture-mode DRIFT API.
+  `drift_briefing` ranked the reviewed examples, `drift_search` matched a
+  library query, `ask_drift` returned a grounded, cited answer, and an unmatched
+  question declined instead of guessing.
+- The backend suite remains 160 tests at 100% backend coverage; the integrations
+  suite adds 40 mocked-HTTP tests at 100% `integrations/` coverage.
+
+### Release boundary
+
+- This is a source and integration release. It changes nothing under `backend/`,
+  adds no capture or Insight (the tools answer only over the five reviewed
+  Tier.FINAL Insights 10, 11, 13, 15, and 16 and decline otherwise), and is not
+  yet redeployed: the deployed app is `v0.9.1`, verified live on 2026-07-18
+  (`/health` and `/` report `0.9.1`, `/docs` `200`, `/briefing` returns the five
+  reviewed Insights, Vercel CORS `GET, POST`; paid `/search`/`/chat` not
+  re-invoked). A bounded hosted MCP capture archived with a SHA-256 manifest and a real
+  MCP-client screenshot are the remaining operator gates; no hosted MCP claim is
+  written until that capture has run.
 
 ## [0.9.1] - 2026-07-18
 
@@ -769,6 +845,7 @@ with explicit live-path architecture and publication-ready quality gates.
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
+[0.10.0]: #0100---2026-07-18
 [0.9.1]: #091---2026-07-18
 [0.9.0]: #090---2026-07-17
 [0.8.1]: #081---2026-07-17

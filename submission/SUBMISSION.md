@@ -27,6 +27,14 @@
         `019f7213-be19-7e50-92ac-a48bd5ecaacb`
       - v0.9.1 evidence and screenshot synchronization:
         `019f7278-ee77-7f02-bafd-6eba8bf046d2`
+      - v0.10.0 MCP thin-client implementation:
+        `019f7607-aa5a-79b2-8101-4cd634495fbe`
+- [x] Implement the `v0.10.0` thin-client MCP integration (`integrations/mcp/`,
+      ADR-011): three stdio tools (`drift_briefing`, `drift_search`,
+      `ask_drift`) over the existing public API, no credentials, nothing changed
+      under `backend/`, verified end-to-end against a fixture-mode API at $0 with
+      40 mocked-HTTP tests at 100% `integrations/` coverage. A bounded hosted MCP
+      capture and a real MCP-client screenshot remain pending operator gates.
 - [x] Record the v0.9.1 Terra grounded-chat evidence pass: eight bounded
       questions over the reviewed store, seven grounded answers, one explicit
       PyTorch decline, and the scrubbed archive plus SHA-256 manifest at
@@ -43,11 +51,13 @@
       via `gpt-5.6-terra` with source citations). Evidence + SHA-256 manifest
       archived to `assets/evidence/2026-07-16-all-sources-luna.json`.
 - [x] Provide a judge path: hosted app is available at
-      `https://dr1ftless.vercel.app` with a verified `v0.8.0` Railway API.
-      On 2026-07-17, Railway `/health` reported `0.8.0`, `/docs` returned
-      `200`, the public page rendered Ask DRIFT, and Vercel CORS passed;
-      reviewed live evidence remains an explicit operator gate. Its public
-      `/briefing` and OpenAPI contract omit private human review notes.
+      `https://dr1ftless.vercel.app` with a verified `v0.9.1` Railway API.
+      On 2026-07-18, Railway `/health` and `/` reported `0.9.1`, `/docs`
+      returned `200`, `/briefing?top_n=10` returned the five reviewed Tier.FINAL
+      Insights (10, 11, 13, 15, 16) with no review notes, and Vercel CORS passed
+      (`GET, POST`); paid `/search` and `/chat` were not re-invoked. The prior
+      `v0.8.0` verification (2026-07-17) is retained as a historical record. Its
+      public `/briefing` and OpenAPI contract omit private human review notes.
 - [ ] Upload a public YouTube video under three minutes with English narration.
 - [ ] Replace the placeholder with the final video URL:
       `https://youtu.be/TBD` (see [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md)).

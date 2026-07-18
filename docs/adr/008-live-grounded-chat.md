@@ -49,5 +49,7 @@ Live chat now requests a strict structured response containing the answer and
 the Insight IDs actually used. The API filters citations to those returned IDs
 and rejects malformed or blank structured responses, preserving the
 retrieve-first and evidence-only boundary while avoiding unrelated citations.
-The source patch is tagged on `feature/v0.9.0-final-evidence`; hosted state is
-still independently verified only at `v0.8.0`.
+The source patch is tagged on `feature/v0.9.0-final-evidence` and is part of the
+`v0.9.x` line now deployed as `v0.9.1` (hosted `/health` verified `0.9.1` on
+2026-07-18); the grounded `/chat` behavior itself was not re-invoked in that
+check.

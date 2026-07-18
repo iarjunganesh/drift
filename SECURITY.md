@@ -7,16 +7,20 @@ development baseline while the live pipeline is being implemented.
 
 | Version | Supported |
 | --- | --- |
-| `0.8.0` | ✅ Current hosted application; Railway `/health` reports `0.8.0`, `/docs` returns `200`, the public Vercel page renders Ask DRIFT, and Vercel CORS is verified |
+| `0.10.0` | Current source release; adds the `integrations/mcp/` thin-client MCP server, which carries no credentials and cannot reach the review gate. Not yet redeployed (hosted is `0.9.1`); hosted MCP evidence is pending |
+| `0.9.1` | ✅ Current hosted application; verified 2026-07-18: Railway `/health` and `/` report `0.9.1`, `/docs` returns `200`, `/briefing?top_n=10` returns the five reviewed Insights with no review notes, and Vercel CORS allows `GET, POST` (paid `/search`/`/chat` not re-invoked) |
+| `0.8.0` | Prior hosted application; on 2026-07-17 Railway `/health` reported `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and Vercel CORS was verified |
 | `0.7.0` | Prior verified hosted application; public review notes are redacted and the frontend requests up to ten briefing records |
 | `0.6.1` | Previously verified hosted application |
 | `0.5.1` | Historical hosted baseline |
 
 Fixture data is synthetic. Local live ingestion and provider-backed generation
 are explicitly operator-enabled and review-gated; the hosted gate returned no
-live evidence until the first human-reviewed capture. As of 2026-07-16 it serves
+live evidence until the first human-reviewed capture. On 2026-07-16 it served
 four human-reviewed Insights from an eight-source capture (six verifier-passed
-drafts). Version `0.7.0` keeps human review notes database-only; its deployed
+drafts); as of 2026-07-18 the reviewed store serves five human-reviewed
+Tier.FINAL Insights (10, 11, 13, 15, 16), verified through `/briefing` on the
+deployed `0.9.1` build. Version `0.7.0` keeps human review notes database-only; its deployed
 `/briefing` and `/openapi.json` boundaries were verified to omit them. Version
 `0.8.0` keeps fixture evidence explicitly synthetic and locally verifiable; it
 does not add an unverified hosted claim.
@@ -58,7 +62,16 @@ coordinated disclosure decision.
 - CORS origins are explicit; the frontend never receives `DATABASE_URL`.
 - Breaking or security-labelled insights increase review priority but never
   authorize automated infrastructure changes.
-- Do not represent the hosted app as broad live analysis. As of 2026-07-16 it
-  serves four human-reviewed Insights and hosted `/briefing`, `/search`, and
-  `/chat` are verified provider-backed, but that is a small, bounded reviewed
-  set — not continuous or comprehensive release monitoring.
+- The `integrations/mcp/` MCP server (ADR-011) is a thin client on the untrusted
+  consumer side of the API boundary. It reads only `DRIFT_API_URL` (plus an
+  optional `DRIFT_MCP_TIMEOUT_SECONDS` request timeout), holds no
+  OpenAI key or database URL, and cannot draft, verify, publish, or retract an
+  Insight. Reviewed-only reads, review-note redaction, spend guards, and
+  resilience remain enforced server-side, because there is no second path to the
+  store.
+- Do not represent the hosted app as broad live analysis. As of 2026-07-18 the
+  deployed `0.9.1` build serves five human-reviewed Insights (10, 11, 13, 15,
+  16), verified through `/briefing`; hosted `/briefing`, `/search`, and `/chat`
+  were verified provider-backed over the earlier reviewed set on 2026-07-16. This
+  is a small, bounded reviewed set — not continuous or comprehensive release
+  monitoring.

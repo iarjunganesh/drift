@@ -124,6 +124,38 @@ PostgreSQL, captured one unreviewed vLLM release Insight, and served it through
 hosted `/briefing`; that historic deployment does not have this gate and does
 not establish broad, reviewed live release analysis.
 
+### MCP client layer — implemented (`v0.10.0`)
+
+[ADR-011](adr/011-mcp-thin-client-layer.md) is implemented in
+[`integrations/mcp/`](../integrations/mcp/). The layer sits entirely on the
+untrusted consumer side of the existing boundary, indistinguishable from the
+Vercel frontend:
+
+```text
+MCP client (Cursor, Claude Desktop, VS Code, Windsurf)
+        │
+        ▼
+DRIFT MCP server (integrations/mcp/ — no credentials, stdio)
+        │  drift_briefing · drift_search · ask_drift
+        ▼
+DRIFT HTTP API → reviewed live store → grounded, cited answer
+```
+
+Each tool is a one-to-one call to an existing public endpoint —
+`drift_briefing` → `GET /briefing`, `drift_search` → `GET /search`,
+`ask_drift` → `POST /chat` — and the server is configured with only
+`DRIFT_API_URL`. It holds no OpenAI key and no database URL; reviewed-only
+reads, review-note redaction, spend guards, and resilience all remain enforced
+server-side because there is no second path to the store. A `/chat` no-match
+(HTTP 404) is surfaced as a decline, so questions outside the reviewed corpus
+do not hallucinate. The package is outside the backend `--cov=backend` gate and
+carries its own 40 mocked-HTTP tests at 100% `integrations/` coverage; lint and
+type targets extend to it. The full decision, rejected alternative, and dated
+implementation addendum live in ADR-011. The integration is verified end-to-end
+against a fixture-mode API at $0; a bounded hosted MCP capture and a real
+MCP-client screenshot remain operator gates, and the `v0.10.0` MCP source is not
+yet redeployed (the deployed app is `v0.9.1`, verified 2026-07-18).
+
 ## Small request flows
 
 ### Fixture request flow
@@ -248,8 +280,9 @@ remains the no-key path. The hosted deployment served one unreviewed captured
 vLLM Insight through `/briefing` on 2026-07-15 before this gate was implemented.
 On 2026-07-17, the Tier.FINAL pass produced eight verifier-passed drafts; five
 were published after human review, and the live Railway `/briefing` was verified
-to return exactly those five reviewed Sol Insights. The deployed app remains
-`v0.8.0` pending redeploy.
+to return exactly those five reviewed Sol Insights. The deployed app is `v0.9.1`
+(verified 2026-07-18, still returning those five Insights); the `v0.10.0` MCP
+source is not yet redeployed.
 
 ## Model, budget, and safety boundaries
 
@@ -351,8 +384,11 @@ raises the frontend briefing limit to ten; its `/briefing`, `/openapi.json`,
 and Vercel bundle were verified after rollout. On 2026-07-17, the
 Git-connected `v0.8.0` rollout verified Railway `/health` (`0.8.0`) and
 `/docs`, the public Ask DRIFT UI, and Vercel CORS; paid `/search` and `/chat`
-were not re-invoked. See
-[ADR-007](adr/007-vercel-railway-deployment.md).
+were not re-invoked. On 2026-07-18, the Git-connected `v0.9.1` deployment was
+verified: `/health` and `/` report `0.9.1`, `/docs` returns `200`,
+`/briefing?top_n=10` returns the five reviewed Insights with no review notes, and
+Vercel CORS allows `GET, POST` (paid `/search` and `/chat` again not re-invoked).
+See [ADR-007](adr/007-vercel-railway-deployment.md).
 
 The browser can consume the hosted API from Vercel. On 2026-07-15, Vercel CORS
 and a populated hosted `/briefing` response were verified against the migrated
@@ -369,8 +405,9 @@ The `v0.8.1` source patch makes live chat responses structured: the model
 returns the Insight IDs it actually used, and the API cites only that subset
 (falling back to the retrieved window only when no IDs are returned). This
 prevents a question-specific answer from presenting unrelated source links.
-The patch is tagged on `feature/v0.9.0-final-evidence`; hosted verification
-remains at `v0.8.0` until deployment is independently checked.
+The patch is tagged on `feature/v0.9.0-final-evidence` and is part of the
+`v0.9.x` line now deployed as `v0.9.1` (hosted `/health` verified `0.9.1` on
+2026-07-18; the grounded `/chat` behavior itself was not re-invoked).
 
 ## Verification and readiness
 
@@ -380,8 +417,10 @@ The repository quality sequence is:
 Ruff → mypy → pytest + coverage → Codecov upload → frontend build → docs hygiene
 ```
 
-The enforceable floor is 100% for implemented code; the current local suite is
-160 tests at 100.00%. Deliberately unimplemented live-stage raises remain explicit and are
+The enforceable floor is 100% for implemented code; the current backend suite is
+160 tests at 100.00%. The `v0.10.0` MCP thin client adds 40 mocked-HTTP tests at
+100% `integrations/` coverage, run as a separate gate outside `--cov=backend`.
+Deliberately unimplemented live-stage raises remain explicit and are
 excluded only at the boundary itself. New live behavior must arrive with tests
 that preserve the 100% floor.
 
@@ -418,6 +457,8 @@ The ADR index is [`docs/adr/README.md`](adr/README.md):
 - [ADR-008 — live grounded chat over the fixture store](adr/008-live-grounded-chat.md)
 - [ADR-009 — bounded model resilience and locked delivery](adr/009-bounded-model-resilience-and-locked-delivery.md)
 - [ADR-010 — claim evidence and review-first publication](adr/010-claim-evidence-and-review-gate.md)
+- [ADR-011 — MCP integration as a thin client over the reviewed API](adr/011-mcp-thin-client-layer.md)
+  *(Accepted; implemented in `v0.10.0`, fixture-verified at $0; hosted MCP evidence pending)*
 
 When a boundary changes, amend the relevant ADR or add a new one. Do not hide
 an unfinished implementation by rewriting decision history.

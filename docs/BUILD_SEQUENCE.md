@@ -94,20 +94,30 @@ AI-infrastructure release intelligence.
       and build-week-event@openai.com
 - [ ] Submit early
 
-## Targeted release path — after the current `v0.8.0`
+## Targeted release path — after the current `v0.9.1`
 
 - [x] `v0.9.0`: publish verified Tier.FINAL evidence and selected,
       independently verified polish; the source/evidence release is prepared,
-      while the deployed app remains `v0.8.0` pending redeploy.
+      while the deployed app was still `v0.8.0` at that point.
 - [x] Record the v0.9.0 evidence-cleanup and session-synchronization session:
       `019f7213-be19-7e50-92ac-a48bd5ecaacb`
 - [x] `v0.9.1`: run and independently verify bounded Terra (`gpt-5.6-terra`)
       grounded-run evidence, archive the true retrieve-first grounding, and
       synchronize the source release boundary. The refreshed nine-image
-      screenshot gallery is committed as bounded visual evidence; hosted
-      redeployment remains explicitly deferred.
+      screenshot gallery is committed as bounded visual evidence. The `v0.9.1`
+      build was subsequently deployed and verified on 2026-07-18 (`/health` and
+      `/` report `0.9.1`, `/briefing` returns the five reviewed Insights).
 - [x] Record the v0.9.1 evidence and screenshot synchronization session:
       `019f7278-ee77-7f02-bafd-6eba8bf046d2`
+- [x] `v0.10.0`: implement the thin-client MCP integration (`integrations/mcp/`,
+      ADR-011) — three stdio tools over the existing public API, no credentials,
+      nothing changed under `backend/`; verified end-to-end against a
+      fixture-mode API at $0 with 40 mocked-HTTP tests at 100% `integrations/`
+      coverage. Ruff/mypy/test targets extend to `integrations/`. A bounded
+      hosted MCP capture and a client screenshot remain pending; the deployed app
+      is `v0.9.1` (the `v0.10.0` MCP source is not yet redeployed).
+- [x] Record the v0.10.0 MCP thin-client implementation session:
+      `019f7607-aa5a-79b2-8101-4cd634495fbe`
 - [ ] `v1.0.0`: freeze the final judge path, complete the under-three-minute
       public demo video, replace the video placeholder everywhere, and finish
       the Devpost submission records.
@@ -153,7 +163,7 @@ Insight stage now has structured-output coverage.
 
 The baseline, hosted-deployment follow-up, bounded v0.4.0 baseline, v0.5.0
 capture-path release, and
-implementation follow-ups are supported by eleven project initiatives:
+implementation follow-ups are supported by fourteen project initiatives:
 
 - Foundation and inspectable vertical slice —
   `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -177,5 +187,11 @@ implementation follow-ups are supported by eleven project initiatives:
   `019f6a78-6fa2-7121-9059-85ac8ceb9904`
 - Freeze-plan audit and documentation synchronization —
   `019f7190-912d-70e3-be6d-fcc81bf8e203`
+- v0.9.0 evidence cleanup and session synchronization —
+  `019f7213-be19-7e50-92ac-a48bd5ecaacb`
+- v0.9.1 evidence and screenshot synchronization —
+  `019f7278-ee77-7f02-bafd-6eba8bf046d2`
+- v0.10.0 MCP thin-client implementation —
+  `019f7607-aa5a-79b2-8101-4cd634495fbe`
 
 See [`INITIATIVES.md`](INITIATIVES.md) for scope and submission usage.

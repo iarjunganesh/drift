@@ -1,7 +1,10 @@
-.PHONY: install dev migrate test lint type-check ci demo clean frontend-install frontend-build
+.PHONY: install install-integrations dev migrate test test-integrations lint type-check ci demo clean frontend-install frontend-build
 
 install:
 	uv sync --locked --group dev
+
+install-integrations:
+	uv sync --locked --group integrations
 
 dev:
 	uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
@@ -12,11 +15,17 @@ migrate:
 test:
 	uv run pytest tests --cov=backend --cov-report=term-missing --cov-fail-under=100
 
+# The MCP integration tests run outside the backend coverage gate with their own
+# mocked-HTTP coverage (ADR-011). `-o addopts=` drops the backend --cov flags the
+# default run injects, so only integrations coverage is measured.
+test-integrations:
+	uv run --group integrations pytest integrations -o addopts= --cov=integrations --cov-report=term-missing
+
 lint:
-	uv run ruff check backend tests
+	uv run ruff check backend tests integrations
 
 type-check:
-	uv run mypy backend
+	uv run --group integrations mypy backend integrations
 
 frontend-install:
 	npm --prefix frontend ci
@@ -24,7 +33,7 @@ frontend-install:
 frontend-build:
 	npm --prefix frontend run build
 
-ci: lint type-check test frontend-install frontend-build
+ci: lint type-check test test-integrations frontend-install frontend-build
 
 demo:
 	uv run uvicorn backend.main:app --host 0.0.0.0 --port 8000

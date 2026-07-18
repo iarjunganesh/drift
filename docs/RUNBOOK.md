@@ -107,6 +107,47 @@ This path uses committed example data and makes no external calls.
    the five reviewed Insights, wrote no database rows, and records Terra's
    actual grounded Insight IDs rather than the UX fallback retrieval window.
 
+## MCP thin client — local fixture run and hosted verification
+
+The `integrations/mcp/` server ([ADR-011](adr/011-mcp-thin-client-layer.md)) is a
+thin client over the public API. It reads only `DRIFT_API_URL` (plus an optional
+`DRIFT_MCP_TIMEOUT_SECONDS` request timeout) and holds no
+credentials, so it is developed and demonstrated entirely against a fixture-mode
+API at zero cost.
+
+### Local fixture-mode run ($0)
+
+1. Install the optional SDK group: `uv sync --group integrations`. The core
+   install is unchanged; nothing under `backend/` or the Docker image changes.
+2. Start a DRIFT API to point at, in the default fixture mode:
+   `uv run uvicorn backend.main:app`.
+3. Exercise the tools. Either configure a real MCP client (Claude Desktop or
+   Cursor) with the snippet in the README's *Use DRIFT inside your AI assistant*
+   section, or drive them directly:
+
+   ```powershell
+   $env:DRIFT_API_URL = "http://localhost:8000"
+   uv run python -m integrations.mcp   # stdio server for a connected client
+   ```
+
+4. Verify all three tools: `drift_briefing` ranks the reviewed examples,
+   `drift_search` for `vllm` matches, `ask_drift` returns a grounded, cited
+   answer, and a question outside the reviewed corpus **declines** rather than
+   guessing (the `/chat` 404 is surfaced as a decline).
+5. Run the mocked-HTTP suite outside the backend coverage gate:
+   `make test-integrations`.
+
+### Hosted verification (pending operator gate)
+
+Point `DRIFT_API_URL` at the hosted API
+(`https://drift-api-prod.up.railway.app`) and run one bounded capture: the
+briefing, one search, and 3–5 `ask_drift` questions (~$0.10–0.25 total). Archive
+the run as `assets/evidence/2026-07-XX-mcp-<model>.json` with a SHA-256 manifest,
+and screenshot one real MCP client for the gallery. No hosted MCP claim is
+written anywhere until this capture has actually run. The MCP server carries no
+credentials; every guarantee (reviewed-only reads, redacted review notes, spend
+guards, resilience) is enforced server-side.
+
 ## Recording order
 
 1. State the operational problem: release drift reaches production teams late.
@@ -122,7 +163,7 @@ The complete shot list and narration timing are in
 
 ## Project initiative records
 
-The thirteen Codex initiatives associated with this baseline, deployment follow-up,
+The fourteen Codex initiatives associated with this baseline, deployment follow-up,
 the v0.4.0 baseline, v0.5.0 capture-path release, and implementation follow-ups
 are listed in
 [`INITIATIVES.md`](INITIATIVES.md):
@@ -147,3 +188,6 @@ are listed in
   `019f7213-be19-7e50-92ac-a48bd5ecaacb`
 - v0.9.1 evidence and screenshot synchronization:
   `019f7278-ee77-7f02-bafd-6eba8bf046d2`
+- v0.10.0 MCP thin-client implementation (ADR-011), recorded in
+  [`INITIATIVES.md`](INITIATIVES.md) as Initiative 14:
+  `019f7607-aa5a-79b2-8101-4cd634495fbe`

@@ -92,6 +92,13 @@ capacity commitment.
   `0.8.0` at `/health` and serves `/docs` with `200`; the public Vercel page
   renders Ask DRIFT and a Vercel-origin CORS preflight allows `GET, POST`.
   Paid `/search` and `/chat` were not re-invoked for this rollout.
+- **2026-07-18 v0.9.1 addendum:** the Git-connected Railway deployment now
+  reports `0.9.1` at `/health` and `/` in `DRIFT_MODE=live`; `/docs` returns
+  `200`, `/briefing?top_n=10` returns the five reviewed Tier.FINAL Insights
+  (10, 11, 13, 15, 16) with no `human_review_notes`, and a Vercel-origin CORS
+  preflight allows `GET, POST`. Paid `/search` and `/chat` were not re-invoked.
+  The `v0.10.0` MCP source is not yet redeployed and adds nothing to this
+  deployment shape (the MCP server is a separate credential-free client).
 - A future alternative may consolidate the frontend and API, but that would
   require a new ADR because it changes operational boundaries.
 

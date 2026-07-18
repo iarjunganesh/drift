@@ -55,6 +55,45 @@ The refreshed screenshot gallery is committed as bounded visual evidence;
 hosted redeployment remains an open human-operated gate, and the hosted
 application is still verified only as `v0.8.0`.
 
+## MCP scope-amendment addendum — 2026-07-18
+
+**Codex Session ID:** `019f7607-aa5a-79b2-8101-4cd634495fbe`
+
+This addendum amends the freeze scope to include the thin-client MCP
+integration shipped in `v0.10.0`, per [ADR-011](../docs/adr/011-mcp-thin-client-layer.md).
+It supersedes the "no DRIFT MCP server" boundary recorded in the 2026-07-17
+audit addendum above, which remains an accurate record of the state on that
+date.
+
+- **What shipped:** `integrations/mcp/` — a standalone stdio MCP server exposing
+  three tools (`drift_briefing`, `drift_search`, `ask_drift`), each a one-to-one
+  call to the existing public `/briefing`, `/search`, and `/chat` endpoints. It
+  reads only `DRIFT_API_URL` (plus an optional `DRIFT_MCP_TIMEOUT_SECONDS`),
+  holds no credentials, changes nothing under
+  `backend/`, and carries 40 mocked-HTTP tests at 100% `integrations/` coverage.
+- **Verified:** all three tools exercised end-to-end against a fixture-mode API
+  at $0; the unmatched-question path declines rather than hallucinating.
+- **Still out of scope / pending:** a bounded hosted MCP capture (with SHA-256
+  manifest) and a real MCP-client screenshot are pending operator gates — no
+  hosted MCP claim is made until that capture runs. IDE integration, a release
+  timeline, autonomous agents, and additional providers remain unimplemented.
+- **Branding boundary held:** DRIFT's tagline, banners, hero, and API
+  description are unchanged; MCP is documented as a consumption channel, not a
+  repositioning.
+
+The Frozen Feature List below is updated accordingly: MCP Server and Tool
+Calling move ⬜ → ✅ (the three tools are DRIFT's tool-calling surface); IDE
+Integration and Release timeline stay ⬜.
+
+**Hosted-version correction (same session):** independent live verification on
+2026-07-18 showed the deployed Railway app is `v0.9.1`, not `v0.8.0` as the
+earlier 2026-07-17/18 addenda above recorded — `/health` and `/` report `0.9.1`,
+`/docs` returns `200`, `/briefing?top_n=10` returns the five reviewed Tier.FINAL
+Insights (10, 11, 13, 15, 16) with no review notes, and Vercel-origin CORS allows
+`GET, POST`; paid `/search` and `/chat` were not re-invoked. The `v0.10.0` MCP
+source is not yet redeployed. The earlier addenda are preserved as accurate
+point-in-time records; current-state documentation is corrected to `v0.9.1`.
+
 ---
 
 # Philosophy
@@ -219,9 +258,12 @@ Action recommendation
 
 ## MCP Integration
 
-DRIFT does not currently expose MCP. Add it only in a future scope if it
-creates a new capability; do not imply that the current HTTP API is an MCP
-server.
+**Status (2026-07-18):** implemented in `v0.10.0` as a thin-client server
+(`integrations/mcp/`, [ADR-011](../docs/adr/011-mcp-thin-client-layer.md)). The
+guidance below remains the bar it was held to: MCP is a consumption channel over
+the reviewed API, not a claim that the HTTP API is itself an MCP server, and it
+unlocks the in-assistant workflow rather than merely re-exposing endpoints.
+Hosted MCP evidence and a client screenshot are still pending.
 
 Good architecture:
 
@@ -284,6 +326,11 @@ The MCP layer should unlock new workflows.
 ---
 
 ## Tool Calling
+
+**Status (2026-07-18):** the `v0.10.0` MCP server ships `drift_briefing`,
+`drift_search`, and `ask_drift` as DRIFT's tool-calling surface. The broader
+tool ideas below (compare versions, dependency lookup, timeline) remain future
+work and require a reviewed API change first, never an MCP side door.
 
 Expose tools such as:
 
@@ -437,9 +484,9 @@ Core
 
 Stretch
 
-⬜ MCP Server — not implemented
+✅ MCP Server — implemented in `v0.10.0` (`integrations/mcp/`, thin client over the public API; hosted evidence pending)
 
-⬜ Tool Calling — not implemented
+✅ Tool Calling — `drift_briefing`, `drift_search`, and `ask_drift` MCP tools
 
 ⬜ IDE Integration — not implemented
 
