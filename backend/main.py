@@ -289,11 +289,11 @@ async def chat(request: ChatRequest) -> ChatResponse:
         answer = grounded.text
         model_used = get_model(Tier.LIVE)
         # The model answers over only the insights it reports grounding in, so
-        # cite that subset rather than the whole retrieval window. Fall back to
-        # every retrieved insight if it named none, so an answer never loses its
-        # sources.
+        # cite that subset rather than the whole retrieval window. An empty
+        # list is a real signal (e.g. a decline) and must not fabricate
+        # citations by falling back to every retrieved insight.
         grounded_ids = set(grounded.grounded_insight_ids)
-        cited = [item for item in insights if item.id in grounded_ids] or insights
+        cited = [item for item in insights if item.id in grounded_ids]
     else:
         answer = answer_question(request.question, insights)
         model_used = "fixture-curated"

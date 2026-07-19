@@ -6,12 +6,14 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** the deployed Railway/Vercel app is `v0.9.1`, verified live on
-2026-07-18 — `/health` and `/` report `0.9.1` in `DRIFT_MODE=live`, `/docs`
+**Current phase:** the deployed Railway/Vercel app is `v0.10.0`, verified live on
+2026-07-18 — `/health` and `/` report `0.10.0` in `DRIFT_MODE=live`, `/docs`
 returns `200`, `/briefing?top_n=10` returns the five reviewed Tier.FINAL Insights
 (10, 11, 13, 15, 16) with no review notes, and a Vercel-origin CORS preflight
 allows `GET, POST` (paid `/search` and `/chat` were not re-invoked). The current
-source release is `v0.10.0` (the MCP thin client), not yet redeployed. `v0.8.0` —
+source release is `v0.10.1`, an evidence/documentation patch that commits the
+VS Code MCP client evidence and synchronizes current-state records; it changes
+no backend behavior and does not require a redeploy. `v0.8.0` —
 verified on 2026-07-17 (`/health` `0.8.0`, `/docs` `200`, public **Ask DRIFT**,
 Vercel CORS) — added a grounded frontend chat box and made the no-key fixture
 evidence inspectable against checked-in synthetic source files. `v0.7.0` is an
@@ -50,9 +52,10 @@ Codex session `019f7213-be19-7e50-92ac-a48bd5ecaacb`. The v0.9.1 evidence and
 screenshot synchronization is recorded under Codex session
 `019f7278-ee77-7f02-bafd-6eba8bf046d2`.
 The source patch `v0.8.1` contains the Ask DRIFT grounding/citation fix and is
-tagged from `feature/v0.9.0-final-evidence`; it is part of the `v0.9.x` line now
-deployed as `v0.9.1` (hosted `/health` reported `0.9.1` on 2026-07-18, though the
-grounded `/chat` behavior itself was not re-invoked in that check). The live
+tagged from `feature/v0.9.0-final-evidence`; it shipped in the `v0.9.x` line as
+`v0.9.1` (hosted `/health` reported `0.9.1` on 2026-07-18, before the `v0.10.0`
+redeploy later that day; the grounded `/chat` behavior itself was not re-invoked
+in that check). The live
 Railway store was updated on 2026-07-17 and `/briefing`
 verified exactly five reviewed Tier.FINAL (`gpt-5.6-sol`) Insights: 10, 11, 13,
 15, and 16; Luna IDs 3, 6, 7, and 8 are draft. On 2026-07-18, a bounded Terra
@@ -65,10 +68,13 @@ existing public `/briefing`, `/search`, and `/chat` endpoints, configured with
 only `DRIFT_API_URL` (plus an optional `DRIFT_MCP_TIMEOUT_SECONDS`) and holding
 no credentials. It changes nothing under
 `backend/`, was verified end-to-end against a fixture-mode API at $0, and carries
-40 mocked-HTTP tests at 100% `integrations/` coverage. The source release is now
-`v0.10.0`; the deployed app is `v0.9.1` (verified 2026-07-18), so the `v0.10.0`
-MCP source is not yet redeployed, and a bounded hosted MCP capture plus a client
-screenshot remain the pending MCP operator gates.
+40 mocked-HTTP tests at 100% `integrations/` coverage. The `v0.10.0` build was
+subsequently deployed and verified live on 2026-07-18, a VS Code MCP client
+exercised the hosted `/briefing`, `/search`, and `/chat` (the four client
+captures are committed to the README gallery, with the credential-free
+`.vscode/mcp.json` configuration), and the current source release is `v0.10.1`
+(this evidence/documentation patch). The bounded scrubbed MCP response archive
+with its SHA-256 manifest remains the pending MCP operator gate.
 
 ## Key commands
 
@@ -196,7 +202,6 @@ must be reconciled in the same session:
   screenshot gallery)
 - `CHANGELOG.md` (release entry, "Current source release" line, planned-release
   section, anchor links)
-- `submission/DRIFT_FREEZE_PLAN.md` (addenda, frozen feature list, checklists)
 - `submission/SUBMISSION.md` and `submission/DEMO_SCRIPT.md` (insight counts,
   version claims, evidence references)
 - `SECURITY.md` (supported-versions table and the present-tense hosted-store
@@ -294,8 +299,9 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The current verified hosted application
-build is `v0.9.1` in `DRIFT_MODE=live`; the current source version is `v0.10.0`,
-not yet redeployed. On 2026-07-18, Railway `/health` and `/` reported `0.9.1`,
+build is `v0.10.0` in `DRIFT_MODE=live`; the current source version is `v0.10.1`
+(an evidence/documentation patch that requires no redeploy). On 2026-07-18,
+Railway `/health` and `/` reported `0.10.0`,
 `/docs` returned `200`, `/briefing?top_n=10` returned the five reviewed
 Tier.FINAL Insights with no review notes, and a Vercel-origin CORS preflight
 allowed `GET, POST`; paid `/search` and `/chat` were not re-invoked. `v0.8.0` is
@@ -316,11 +322,12 @@ bundle's `top_n=10` request; `/search` and `/chat` were not re-invoked for this
 privacy/frontend-only release. The Git-connected `v0.8.0` rollout was verified
 through `/health`, `/docs`, the public Ask DRIFT UI, Vercel CORS, and a
 tag-pinned fixture-source link; paid `/search` and `/chat` were not re-invoked.
-The Git-connected `v0.9.1` deployment is the current verified build: on
-2026-07-18, `/health` and `/` reported `0.9.1`, `/docs` returned `200`,
+The Git-connected `v0.9.1` deployment was verified earlier on 2026-07-18
+(`/health` and `/` reported `0.9.1`, `/docs` returned `200`,
 `/briefing?top_n=10` returned the five reviewed Insights with no review notes,
-and Vercel-origin CORS allowed `GET, POST`; paid `/search` and `/chat` were not
-re-invoked.
+and Vercel-origin CORS allowed `GET, POST`) before the `v0.10.0` redeploy the
+same day; the `v0.10.0` verification above is the current one. Paid `/search`
+and `/chat` were not re-invoked in either check.
 
 [`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb) is the
 local operator path for bounded capture and manual publication. It requires a

@@ -97,8 +97,14 @@ capacity commitment.
   `200`, `/briefing?top_n=10` returns the five reviewed Tier.FINAL Insights
   (10, 11, 13, 15, 16) with no `human_review_notes`, and a Vercel-origin CORS
   preflight allows `GET, POST`. Paid `/search` and `/chat` were not re-invoked.
-  The `v0.10.0` MCP source is not yet redeployed and adds nothing to this
-  deployment shape (the MCP server is a separate credential-free client).
+  The `v0.10.0` MCP source was not yet redeployed at that verification.
+- **2026-07-18 v0.10.0 addendum:** later the same day, the Git-connected
+  Railway deployment reports `0.10.0` at `/health` and `/` in
+  `DRIFT_MODE=live`; `/docs` returns `200`, `/briefing?top_n=10` returns the
+  five reviewed Tier.FINAL Insights with no `human_review_notes`, and a
+  Vercel-origin CORS preflight allows `GET, POST`. Paid `/search` and `/chat`
+  were not re-invoked. The MCP thin client adds nothing to this deployment
+  shape (it is a separate credential-free consumer of the same public API).
 - A future alternative may consolidate the frontend and API, but that would
   require a new ADR because it changes operational boundaries.
 

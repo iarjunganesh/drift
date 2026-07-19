@@ -327,9 +327,11 @@ This initiative audited and completed the reviewed-evidence release boundary:
 
 **Date:** 2026-07-17
 
-This session performed a deep audit of `submission/DRIFT_FREEZE_PLAN.md`
-against tracked implementation, assets, tests, deployment records, and
-submission requirements. It corrected the plan's false shipped-status marks
+This session performed a deep audit of the internal submission freeze plan (a
+planning document since removed as superseded by the shooting script and
+submission handoff) against tracked
+implementation, assets, tests, deployment records, and submission
+requirements. It corrected the plan's false shipped-status marks
 for release timeline, MCP, tool calling, and IDE integration; aligned the
 demo duration with the under-three-minute requirement; recorded the available
 screenshots and missing GIFs; and synchronized the project session registries.
@@ -388,9 +390,10 @@ version fields.
 Verification was end-to-end against a fixture-mode API at $0: all three tools
 worked, and an unmatched question declined rather than hallucinating. The suite
 adds 40 mocked-HTTP tests at 100% `integrations/` coverage; the backend suite is
-unchanged at 160 tests / 100% backend coverage. A bounded hosted MCP capture
-(with SHA-256 manifest) and a real MCP-client screenshot remain pending operator
-gates; the `v0.10.0` MCP source is not yet redeployed.
+unchanged at 160 tests / 100% backend coverage. At the session's close, a
+bounded hosted MCP capture (with SHA-256 manifest) and a real MCP-client
+screenshot remained pending operator gates, and the `v0.10.0` MCP source was
+not yet redeployed (see the addendum below).
 
 The session also corrected stale hosted-version claims across the repository:
 independent live verification on 2026-07-18 showed the deployed Railway app is
@@ -402,6 +405,18 @@ the dated `v0.8.0`/`v0.7.0` verification records were preserved.
 
 This is the fourteenth Codex project session; the identifier above is its
 session ID, recorded in the same registry as the earlier initiatives.
+
+### Addendum — 2026-07-19 hosted deployment and client evidence
+
+The `v0.10.0` build was subsequently deployed and independently verified on
+Railway on 2026-07-18 (`/health` and `/` report `0.10.0` in `DRIFT_MODE=live`;
+`/briefing?top_n=10` returns the five reviewed Insights). A VS Code MCP client
+was configured against the deployed API with only the public `DRIFT_API_URL`
+(`.vscode/mcp.json`), exercised all three tools with hosted `200` responses,
+and the four client captures are committed to the README gallery. The bounded
+scrubbed MCP response archive with its SHA-256 manifest remains the pending
+operator gate. Current-state documentation was synchronized in the `v0.10.1`
+evidence/documentation patch.
 
 ## Submission usage
 

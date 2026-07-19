@@ -2,6 +2,25 @@
 
 One-off operational scripts. Not part of the app or the test suite.
 
+## generate_demo_voiceover.py
+
+Generates the nine per-beat narration clips and the continuous reference track
+for the submission video (see [`submission/DEMO_SCRIPT.md`](../submission/DEMO_SCRIPT.md))
+into [`assets/demo-voiceover/`](../assets/demo-voiceover/), using OpenAI TTS
+(`tts-1`, voice `nova` by default). The narration text is embedded verbatim
+from the demo script — keep the two in sync.
+
+Reads `OPENAI_API_KEY` from the environment or the gitignored `.env`; the key
+is never printed. A full run is ~4.3K input characters ≈ **$0.07** at `tts-1`
+rates — a direct provider call outside the DRIFT `SpendGuard`/ledger, and the
+DRIFT project must have the TTS model enabled. Existing clips are never
+overwritten unless `--force` is passed.
+
+```bash
+uv run python scripts/generate_demo_voiceover.py
+uv run python scripts/generate_demo_voiceover.py --voice onyx --force
+```
+
 ## check_openai_spend.py
 
 Reports real billed OpenAI spend (grouped by project) and reconciles **DRIFT's

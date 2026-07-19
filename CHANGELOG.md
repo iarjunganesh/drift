@@ -10,14 +10,18 @@ the annotated `v0.1.0` tag.
 
 ## Current source release
 
-`v0.10.0` is the current source release. It adds a thin-client MCP integration
-(`integrations/mcp/`) that makes DRIFT's reviewed release intelligence available
-to any MCP-compatible assistant over the existing public API, verified
-end-to-end against a fixture-mode API at zero cost. It changes nothing under
-`backend/` and is not yet redeployed: the current verified app deployment is
-`v0.9.1` (verified live on 2026-07-18). Hosted MCP verification and a real
-MCP-client screenshot remain the pending operator gates, and no hosted MCP claim
-is made until that capture has run.
+`v0.10.1` is the current source release. It commits the VS Code MCP client
+evidence captured against the deployed `v0.10.0` API (four gallery screenshots
+plus the credential-free `.vscode/mcp.json` client configuration), adds the
+demo production shooting script and the nine-clip `tts-1` narration track,
+and fixes a `/chat` grounding bug: a genuine decline (the model reporting zero
+`grounded_insight_ids`) was falling back to citing every retrieved insight
+instead of none, so the API returned "Source" links and grounded-insight IDs
+alongside an answer that used no evidence. The hosted API already reports
+`version: 0.10.1` (`/health`, `DRIFT_MODE=live`), but the grounding fix is not
+yet deployed there — a redeploy is required before the decline path on the
+live app matches this release. The bounded scrubbed MCP response archive and
+SHA-256 manifest remain the pending operator gate.
 
 ## Targeted releases — planned, not released
 
@@ -36,7 +40,83 @@ surfaces such as tool calling, IDE integration, or a release timeline. (The MCP
 consumption channel shipped in `v0.10.0` below; `v1.0.0` still adds no new
 capture, provider, or write path.)
 
+The demo groundwork is already in the tree: `submission/DEMO_SCRIPT.md` is a
+beat-timed production shooting script, and the nine-clip `tts-1` narration
+plus continuous reference track are generated at `assets/demo-voiceover/` by
+`scripts/generate_demo_voiceover.py` (~$0.07, outside the DRIFT spend guard).
+Recording the three silent screen takes, assembling the cut, the public
+YouTube upload, and the link replacement remain the operator gates.
+
+## [0.10.1] - 2026-07-19
+
+### Chat grounding fix — 2026-07-19
+
+- Fixed `/chat`: when the model reports zero `grounded_insight_ids` (a genuine
+  decline — no supplied insight backed the answer), `backend/main.py` was
+  falling back to citing every retrieved insight (`... or insights`), so a
+  decline could render with "Source" links and a "Grounded in insight ..."
+  line pointing at evidence the answer never used. The fallback is removed;
+  an empty `grounded_insight_ids` now yields empty `source_citations`.
+- Corrected `submission/DEMO_SCRIPT.md`'s on-screen `/health` JSON, overlay
+  text, and checklist from `0.10.0` to the actually-deployed `0.10.1`, and
+  noted the grounding fix in Step 0.3 so the decline shoot is reverified
+  against it.
+
+### Production demo assets — 2026-07-19
+
+- Added `submission/DEMO_SCRIPT.md`, a beat-timed shooting script for the
+  public YouTube demo, and generated its nine-clip `tts-1` narration plus a
+  full reference track at `assets/demo-voiceover/` via
+  `scripts/generate_demo_voiceover.py`.
+
+### MCP client evidence and documentation synchronization — 2026-07-19
+
+- Committed the VS Code MCP client evidence for the deployed `v0.10.0` API:
+  four gallery captures — the MCP server log with all three tools discovered
+  and hosted `200` responses, `drift_briefing`, `drift_search` for TensorRT,
+  and `ask_drift` for NCCL — as `assets/screenshots/05.0`–`05.3`
+  (`*-mcp-vscode-*`), linked from a new README gallery section, together with
+  the workspace client configuration `.vscode/mcp.json` (which holds only the
+  public `DRIFT_API_URL`, per the ADR-011 no-credentials boundary).
+- Renumbered the Ask DRIFT gallery to `04.0`–`04.2` so the `05.x` series is
+  the MCP evidence set, and updated every gallery reference to match.
+- Synchronized every current-state document with the hosted `v0.10.0`
+  verification of 2026-07-18 (the dated addendum under `[0.10.0]` below):
+  README, `AGENTS.md`, `SECURITY.md`, `docs/ARCHITECTURE.md`,
+  `docs/BUILD_SEQUENCE.md`, ADR-007, ADR-011, the ADR index,
+  `docs/INITIATIVES.md`, and `submission/SUBMISSION.md` now state that the
+  deployed app is `v0.10.0` and that the bounded scrubbed MCP response archive
+  with its SHA-256 manifest is the remaining MCP operator gate.
+- Removed the superseded internal submission freeze plan (its addenda records
+  are preserved in this changelog, `docs/INITIATIVES.md`, and ADR-011) and
+  rewrote the remaining references — including those to earlier removed
+  planning notes — so no current document points at a deleted file.
+
+### Release boundary
+
+- Adds no capture, Insight, or provider path; the reviewed Tier.FINAL Insight
+  set (10, 11, 13, 15, and 16) is unchanged. The `/chat` grounding fix does
+  change backend behavior and requires a redeploy — until then, the hosted
+  app's decline path can still show citations it did not use. The demo video
+  remains the operator gate targeted by `v1.0.0`.
+
 ## [0.10.0] - 2026-07-18
+
+At release-tag creation, `v0.10.0` was the current local source release and the
+deployed app was `v0.9.1`. The dated hosted-deployment addendum below records
+the subsequent verification without rewriting that history.
+
+### Hosted deployment verification — 2026-07-18
+
+- Verified the Git-connected Railway `v0.10.0` deployment in `DRIFT_MODE=live`:
+  `/health` and `/` report `0.10.0`, `/docs` returns `200`,
+  `/briefing?top_n=10` returns exactly the five reviewed Tier.FINAL Insights
+  (10, 11, 13, 15, and 16) with no review notes, and a Vercel-origin CORS
+  preflight allows `GET, POST`. Paid `/search` and `/chat` were not re-invoked.
+- The local VS Code MCP client exercised the deployed `v0.10.0` API through
+  `/briefing`, `/search`, and `/chat` with successful responses; the client
+  screenshots are in the README gallery. The bounded scrubbed MCP response
+  archive and SHA-256 manifest remain the pending operator gate.
 
 ### MCP thin-client integration — 2026-07-18
 
@@ -161,8 +241,8 @@ description are unchanged, per the branding boundary in
   Luna → Sol → Terra flow: landing (`01-landing`), branded API docs
   (`02-api-docs`), briefing and frozen claim evidence at the `gpt-5.6-luna`
   dev tier and `gpt-5.6-sol` final tier (`03.1`–`03.4`), the Ask DRIFT box
-  (`04-ask-drift`), and two `gpt-5.6-terra` grounded answers (`05.1` NCCL,
-  `05.2` TensorRT). Every gallery reference resolves to a checked-in file.
+  (`04.0-ask-drift`), and two `gpt-5.6-terra` grounded answers (`04.1` NCCL,
+  `04.2` TensorRT). Every gallery reference resolves to a checked-in file.
   The two Terra answer frames preserve their capture-time grounding labels;
   the authoritative current reviewed-store IDs and Terra grounding are the
   scrubbed archive and manifest above.
@@ -217,17 +297,19 @@ description are unchanged, per the branding boundary in
 
 ### Changed
 
-- Rewrote the `submission/DRIFT_FREEZE_PLAN.md` score matrix as an honest
+- Rewrote the internal submission freeze plan's score matrix (a planning
+  document since removed as superseded by the shooting script and submission
+  handoff) as an honest
   current-vs-target readiness view and added a dated audit addendum; reclassified
   MCP, tool-calling, and IDE items as optional future work that is not shipped.
   Updated `docs/INITIATIVES.md`, `docs/CODEX_PROMPTS.md`, and
-  `submission/SUBMISSION.md`, and removed the superseded
-  `submission/NEXT_STEPS.md`.
+  `submission/SUBMISSION.md`, and removed the superseded internal
+  next-steps note.
 - Renamed the tracked UI screenshots to a kebab-case set led by the reviewed
   briefing (`01-briefing`), claim evidence (`02-briefing-claim-evidence`), the
   Ask DRIFT box (`03-ask-drift`), two grounded-answer examples
-  (`04.1-ask-drift-grounded-answer-nccl-example`,
-  `04.2-ask-drift-grounded-answer-tensorRT-example`), and the branded API docs
+  (`04.1-ask-drift-gpt5.6-terra-grounded-answer-nccl-example`,
+  `04.2-ask-drift-gpt5.6-terra-grounded-answer-tensorRT-example`), and the branded API docs
   (`05-api-docs`); updated the README gallery image paths to match.
 
 ### Release boundary
@@ -265,7 +347,8 @@ description are unchanged, per the branding boundary in
 - Recorded Codex sessions `019f7190-912d-70e3-be6d-fcc81bf8e203` and
   `019f7213-be19-7e50-92ac-a48bd5ecaacb` as additive
   freeze-plan audit and documentation-synchronization initiative.
-- Corrected `submission/DRIFT_FREEZE_PLAN.md` so unimplemented release-timeline,
+- Corrected the internal submission freeze plan (since removed) so
+  unimplemented release-timeline,
   MCP, tool-calling, and IDE features are not marked as shipped; aligned the
   video requirement with the under-three-minute submission rule and recorded
   the verified screenshot/GIF boundary.
@@ -617,7 +700,7 @@ Bounded local capture-path release with persisted source and model provenance.
 
 - Corrected the generic NCCL fixture from an unsupported `security` label to
   `minor`; fixture records remain examples, not release findings.
-- Removed the superseded `docs/DRIFT_Realistic_Next_Steps.md` plan and
+- Removed the superseded internal realistic-next-steps plan and
   synchronized current-state documentation with the capture boundary.
 - Verified 118 tests at 100.00% backend coverage with Ruff, mypy, and the
   frontend production build passing.
@@ -845,6 +928,7 @@ with explicit live-path architecture and publication-ready quality gates.
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
+[0.10.1]: #0101---2026-07-19
 [0.10.0]: #0100---2026-07-18
 [0.9.1]: #091---2026-07-18
 [0.9.0]: #090---2026-07-17

@@ -19,3 +19,8 @@ build/
 .vercel/
 coverage.xml
 *.tsbuildinfo
+.idea/
+*.swp
+.mypy_cache/
+.ruff_cache/
+Thumbs.db

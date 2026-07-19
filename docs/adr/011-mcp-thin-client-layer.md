@@ -31,9 +31,10 @@ feature:
 
 ## Context
 
-The freeze plan classifies MCP as optional future work and sets a bar: an MCP
-layer must unlock a new workflow — release intelligence inside the editor or
-agent loop — not merely re-expose the HTTP API. At the same time, DRIFT's
+The submission freeze plan (an internal planning document, since removed)
+classified MCP as optional future work and set a bar: an MCP layer must unlock
+a new workflow — release intelligence inside the editor or agent loop — not
+merely re-expose the HTTP API. At the same time, DRIFT's
 safety story depends on every public read passing through the review-gated
 API: human-reviewed, verifier-passed records only, spend guards and budget
 caps enforced server-side, review notes never serialized.
@@ -103,17 +104,21 @@ addendum replaces the transient execution plan with verified facts.
 2. 40 mocked-HTTP tests at 100% coverage of `integrations/`; the backend suite
    is unchanged at 160 tests / 100% backend coverage.
 
-### Remaining operator gates (not yet done)
+### Operator gates — status 2026-07-19
 
-- **Hosted evidence:** one bounded capture against the live Railway API
-  (briefing, search, and 3–5 `ask_drift` questions, ~$0.10–0.25), archived as
-  `assets/evidence/2026-07-XX-mcp-<model>.json` with a SHA-256 manifest. No
-  hosted MCP claim is written anywhere until this has run.
-- **Client screenshot:** one real MCP client (Claude Desktop or Cursor)
-  configured against DRIFT and screenshotted for the numbered gallery.
-- The deployed application is `v0.9.1` (verified 2026-07-18); the `v0.10.0` MCP
-  source is not yet redeployed, and the reviewed live store still serves exactly
-  the five Tier.FINAL Insights (10, 11, 13, 15, 16).
+- **Hosted evidence (still pending):** one bounded scrubbed capture against the
+  live Railway API (briefing, search, and 3–5 `ask_drift` questions,
+  ~$0.10–0.25), archived as `assets/evidence/2026-07-XX-mcp-<model>.json` with
+  a SHA-256 manifest. Beyond the committed client-side captures, no further
+  hosted MCP claim is written until this has run.
+- **Client evidence (done, 2026-07-18):** a VS Code MCP client was configured
+  against the deployed API with only the public `DRIFT_API_URL`
+  (`.vscode/mcp.json`); all three tools were discovered and returned hosted
+  `200` responses, and the four captures are committed to the README gallery
+  (`assets/screenshots/05.0`–`05.3`, `*-mcp-vscode-*`).
+- The deployed application is `v0.10.0` (verified 2026-07-18), and the reviewed
+  live store still serves exactly the five Tier.FINAL Insights
+  (10, 11, 13, 15, 16).
 
 ### Branding boundary (unchanged, still binding)
 

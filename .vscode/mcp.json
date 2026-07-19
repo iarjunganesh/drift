@@ -1,0 +1,19 @@
+{
+  "servers": {
+    "drift": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--group",
+        "integrations",
+        "python",
+        "-m",
+        "integrations.mcp"
+      ],
+      "env": {
+        "DRIFT_API_URL": "https://drift-api-prod.up.railway.app"
+      }
+    }
+  }
+}

@@ -94,7 +94,7 @@ AI-infrastructure release intelligence.
       and build-week-event@openai.com
 - [ ] Submit early
 
-## Targeted release path — after the current `v0.9.1`
+## Targeted release path — after the current hosted `v0.10.0`
 
 - [x] `v0.9.0`: publish verified Tier.FINAL evidence and selected,
       independently verified polish; the source/evidence release is prepared,
@@ -113,11 +113,16 @@ AI-infrastructure release intelligence.
       ADR-011) — three stdio tools over the existing public API, no credentials,
       nothing changed under `backend/`; verified end-to-end against a
       fixture-mode API at $0 with 40 mocked-HTTP tests at 100% `integrations/`
-      coverage. Ruff/mypy/test targets extend to `integrations/`. A bounded
-      hosted MCP capture and a client screenshot remain pending; the deployed app
-      is `v0.9.1` (the `v0.10.0` MCP source is not yet redeployed).
+      coverage. Ruff/mypy/test targets extend to `integrations/`. The `v0.10.0`
+      build was subsequently deployed and verified on 2026-07-18 (`/health` and
+      `/` report `0.10.0`, `/briefing` returns the five reviewed Insights).
 - [x] Record the v0.10.0 MCP thin-client implementation session:
       `019f7607-aa5a-79b2-8101-4cd634495fbe`
+- [x] `v0.10.1`: commit the VS Code MCP client evidence (four gallery captures
+      plus the credential-free `.vscode/mcp.json`), renumber the screenshot
+      gallery, remove the superseded internal freeze plan, and synchronize every
+      current-state record with the hosted `v0.10.0` verification. The bounded
+      scrubbed MCP response archive remains the pending MCP operator gate.
 - [ ] `v1.0.0`: freeze the final judge path, complete the under-three-minute
       public demo video, replace the video placeholder everywhere, and finish
       the Devpost submission records.

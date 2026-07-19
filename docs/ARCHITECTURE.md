@@ -152,9 +152,10 @@ do not hallucinate. The package is outside the backend `--cov=backend` gate and
 carries its own 40 mocked-HTTP tests at 100% `integrations/` coverage; lint and
 type targets extend to it. The full decision, rejected alternative, and dated
 implementation addendum live in ADR-011. The integration is verified end-to-end
-against a fixture-mode API at $0; a bounded hosted MCP capture and a real
-MCP-client screenshot remain operator gates, and the `v0.10.0` MCP source is not
-yet redeployed (the deployed app is `v0.9.1`, verified 2026-07-18).
+against a fixture-mode API at $0 and, since 2026-07-18, from a VS Code MCP
+client against the deployed `v0.10.0` API (client captures are in the README
+gallery); the bounded scrubbed MCP response archive with its SHA-256 manifest
+remains the pending operator gate.
 
 ## Small request flows
 
@@ -280,9 +281,8 @@ remains the no-key path. The hosted deployment served one unreviewed captured
 vLLM Insight through `/briefing` on 2026-07-15 before this gate was implemented.
 On 2026-07-17, the Tier.FINAL pass produced eight verifier-passed drafts; five
 were published after human review, and the live Railway `/briefing` was verified
-to return exactly those five reviewed Sol Insights. The deployed app is `v0.9.1`
-(verified 2026-07-18, still returning those five Insights); the `v0.10.0` MCP
-source is not yet redeployed.
+to return exactly those five reviewed Sol Insights. The deployed app is
+`v0.10.0` (verified 2026-07-18, still returning those five Insights).
 
 ## Model, budget, and safety boundaries
 
@@ -388,6 +388,9 @@ were not re-invoked. On 2026-07-18, the Git-connected `v0.9.1` deployment was
 verified: `/health` and `/` report `0.9.1`, `/docs` returns `200`,
 `/briefing?top_n=10` returns the five reviewed Insights with no review notes, and
 Vercel CORS allows `GET, POST` (paid `/search` and `/chat` again not re-invoked).
+Later the same day, the Git-connected `v0.10.0` deployment was verified with the
+same checks — `/health` and `/` report `0.10.0` in `DRIFT_MODE=live` — and is
+the current verified build.
 See [ADR-007](adr/007-vercel-railway-deployment.md).
 
 The browser can consume the hosted API from Vercel. On 2026-07-15, Vercel CORS
@@ -405,9 +408,10 @@ The `v0.8.1` source patch makes live chat responses structured: the model
 returns the Insight IDs it actually used, and the API cites only that subset
 (falling back to the retrieved window only when no IDs are returned). This
 prevents a question-specific answer from presenting unrelated source links.
-The patch is tagged on `feature/v0.9.0-final-evidence` and is part of the
-`v0.9.x` line now deployed as `v0.9.1` (hosted `/health` verified `0.9.1` on
-2026-07-18; the grounded `/chat` behavior itself was not re-invoked).
+The patch is tagged on `feature/v0.9.0-final-evidence` and shipped in the
+`v0.9.x` line as `v0.9.1` (hosted `/health` verified `0.9.1` on 2026-07-18,
+before the `v0.10.0` redeploy later that day; the grounded `/chat` behavior
+itself was not re-invoked).
 
 ## Verification and readiness
 
