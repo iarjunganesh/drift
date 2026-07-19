@@ -10,18 +10,37 @@ the annotated `v0.1.0` tag.
 
 ## Current source release
 
-`v0.10.1` is the current source release. It commits the VS Code MCP client
-evidence captured against the deployed `v0.10.0` API (four gallery screenshots
-plus the credential-free `.vscode/mcp.json` client configuration), adds the
-demo production shooting script and the nine-clip `tts-1` narration track,
-and fixes a `/chat` grounding bug: a genuine decline (the model reporting zero
+`v0.10.2` is the current source release. It adds a deterministic
+`upstream_release_type` classification: previously, that field was `unknown`
+for any Insight whose upstream release notes did not explicitly state their
+own release shape (per the model instruction, "use unknown unless the source
+itself states it") — this was working as designed, not a bug, but three of
+the five reviewed Insights (JAX, NCCL, TensorRT) had no primary-source
+statement to draw on and so showed `unknown` even though their version
+history could answer the question. `backend/core/versioning.py` now
+mechanically diffs a release's version tag against the immediately prior tag
+on the same public GitHub feed — never a model guess — and
+`scripts/backfill_upstream_release_type.py` applied that diff to the three
+`unknown` Insights (JAX → `minor`, NCCL → `patch`, TensorRT → `minor`) via a
+read-only-by-default script, dry-run first, only ever filling a genuine
+`unknown` gap and never overwriting an explicit source-stated value. See
+[ADR-012](docs/adr/012-deterministic-version-classification.md).
+
+`v0.10.1` (prior release) commits the VS Code MCP client evidence captured
+against the deployed `v0.10.0` API (four gallery screenshots plus the
+credential-free `.vscode/mcp.json` client configuration), adds the demo
+production shooting script and the nine-clip `tts-1` narration track, and
+fixes a `/chat` grounding bug: a genuine decline (the model reporting zero
 `grounded_insight_ids`) was falling back to citing every retrieved insight
 instead of none, so the API returned "Source" links and grounded-insight IDs
-alongside an answer that used no evidence. The hosted API already reports
-`version: 0.10.1` (`/health`, `DRIFT_MODE=live`), but the grounding fix is not
-yet deployed there — a redeploy is required before the decline path on the
-live app matches this release. The bounded scrubbed MCP response archive and
-SHA-256 manifest remain the pending operator gate.
+alongside an answer that used no evidence.
+
+The hosted API reports `version: 0.10.2` after this release's redeploy
+(`/health`, `DRIFT_MODE=live`); the three `upstream_release_type` corrections
+were applied directly to the live database and are already visible on
+`/briefing`, ahead of and independent of the code redeploy. The bounded
+scrubbed MCP response archive and SHA-256 manifest remain the pending
+operator gate.
 
 ## Targeted releases — planned, not released
 
@@ -46,6 +65,53 @@ plus continuous reference track are generated at `assets/demo-voiceover/` by
 `scripts/generate_demo_voiceover.py` (~$0.07, outside the DRIFT spend guard).
 Recording the three silent screen takes, assembling the cut, the public
 YouTube upload, and the link replacement remain the operator gates.
+
+## [0.10.2] - 2026-07-19
+
+### Deterministic upstream version-bump classification — 2026-07-19
+
+- Added `backend/core/versioning.py`: a pure, dependency-free module that
+  parses a release tag into comparable major/minor/patch/build components
+  (handling vendor build suffixes like NCCL's `v2.30.7-1` and short
+  two-component tags like TensorRT's `v11.1`) and classifies the diff
+  between two tags of the same repo. It never guesses a release type from a
+  single version number — the Insight-generation instruction is unchanged,
+  and this only runs when a prior version is available to diff against.
+  `tests/unit/test_versioning.py` adds 29 tests at 100% module coverage.
+- Added `scripts/backfill_upstream_release_type.py`: a read-only-by-default
+  script that re-fetches each source's public GitHub `releases.atom` feed
+  fresh (free, no model call, no new capture), finds the release immediately
+  before the one already cited by a reviewed Insight, and classifies the
+  bump. `--apply` writes the computed value only where the existing column
+  is `unknown` and the diff resolves to something else; explicit
+  source-stated values (Transformers, vLLM) are never touched.
+- Found and fixed a real bug while building the above: `NVIDIA/nccl`'s feed
+  also tags a `nccl4py` sub-package, so the naive "previous chronological
+  entry" paired NCCL's release with an unrelated sibling package's tag
+  (`nccl4py-v0.3.1`) instead of the actual prior NCCL release. Added
+  `tag_prefix()` to restrict diff candidates to the same product line.
+- Applied the backfill to the three reviewed Insights that had
+  `upstream_release_type: unknown` for lack of a self-declared source
+  statement: JAX v0.11.0 → `minor` (prior `jax-v0.10.2`), NCCL v2.30.7-1 →
+  `patch` (prior `v2.30.4-1`), TensorRT 11.1 → `minor` (prior `v11.0`).
+  Applied directly to the three live rows through the public database
+  proxy; no other Insight field was touched. See
+  [ADR-012](docs/adr/012-deterministic-version-classification.md).
+- Refreshed the tracked `gpt-5.6-sol` briefing screenshots
+  (`assets/screenshots/03.3`–`03.4`) against the live app post-backfill, so
+  the gallery shows `Upstream release: patch`/`minor` instead of `unknown`
+  and the corrected footer text. The `gpt-5.6-luna` draft-tier screenshots
+  (`03.1`–`03.2`) are a separate, unaffected illustrative set and were left
+  as they were.
+
+### Release boundary
+
+- Adds no capture, Insight, claim, or provider path; the reviewed Tier.FINAL
+  Insight set (10, 11, 13, 15, and 16) is unchanged except for the three
+  `upstream_release_type` corrections above. Not yet wired into
+  `backend.pipeline` for future captures — deliberately out of scope for
+  this release (see ADR-012's Scope held). The demo video remains the
+  operator gate targeted by `v1.0.0`.
 
 ## [0.10.1] - 2026-07-19
 
@@ -928,6 +994,7 @@ with explicit live-path architecture and publication-ready quality gates.
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
+[0.10.2]: #0102---2026-07-19
 [0.10.1]: #0101---2026-07-19
 [0.10.0]: #0100---2026-07-18
 [0.9.1]: #091---2026-07-18

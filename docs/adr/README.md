@@ -17,6 +17,7 @@ decisions compose.
 | [009](009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery | Accepted |
 | [010](010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication | Accepted; the deployed app is `v0.10.0`, and five human-reviewed Tier.FINAL Insights are the bounded live-store set (verified via `/briefing` 2026-07-18) |
 | [011](011-mcp-thin-client-layer.md) | MCP integration as a thin client over the reviewed API | Accepted; implemented in `v0.10.0` (2026-07-18), fixture-verified at $0, deployed and hosted-verified the same day with VS Code client evidence in the gallery; the scrubbed MCP response archive remains pending |
+| [012](012-deterministic-version-classification.md) | Deterministic upstream version-bump classification | Accepted; implemented in `v0.10.2` (2026-07-19); applied to the three affected live Insights (JAX, NCCL, TensorRT) the same day |
 
 When implementation invalidates a decision, amend the original record or add a
 new ADR. Do not silently rewrite the decision history in code comments or

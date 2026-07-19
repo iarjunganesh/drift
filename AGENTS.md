@@ -11,9 +11,14 @@ answers: what changed, why it matters, and what to check next.
 returns `200`, `/briefing?top_n=10` returns the five reviewed Tier.FINAL Insights
 (10, 11, 13, 15, 16) with no review notes, and a Vercel-origin CORS preflight
 allows `GET, POST` (paid `/search` and `/chat` were not re-invoked). The current
-source release is `v0.10.1`, an evidence/documentation patch that commits the
-VS Code MCP client evidence and synchronizes current-state records; it changes
-no backend behavior and does not require a redeploy. `v0.8.0` —
+source release is `v0.10.2`, which adds a deterministic `upstream_release_type`
+classification (`backend/core/versioning.py`, ADR-012) and applies it to the
+three reviewed Insights that had no self-declared source statement — JAX,
+NCCL, and TensorRT went from `unknown` to `minor`/`patch`/`minor`, written
+directly to the live database independent of any redeploy. `v0.10.1` (prior)
+is an evidence/documentation patch that commits the VS Code MCP client
+evidence and synchronizes current-state records; it changed no backend
+behavior. `v0.8.0` —
 verified on 2026-07-17 (`/health` `0.8.0`, `/docs` `200`, public **Ask DRIFT**,
 Vercel CORS) — added a grounded frontend chat box and made the no-key fixture
 evidence inspectable against checked-in synthetic source files. `v0.7.0` is an
@@ -42,7 +47,7 @@ continuous live-release analysis.
 
 The fixture demo now ships typed claim evidence backed by explicit synthetic
 source files, so the inspect-claim-evidence panel renders without an API key.
-The suite is 160 tests at 100% backend
+The suite is 189 tests at 100% backend
 coverage; `main` branch protection requires the CI quality gate and the Codecov
 `pytest` upload is confirmed (both verified 2026-07-17).
 The 2026-07-17 freeze-plan audit and documentation synchronization is recorded
@@ -72,9 +77,12 @@ no credentials. It changes nothing under
 subsequently deployed and verified live on 2026-07-18, a VS Code MCP client
 exercised the hosted `/briefing`, `/search`, and `/chat` (the four client
 captures are committed to the README gallery, with the credential-free
-`.vscode/mcp.json` configuration), and the current source release is `v0.10.1`
-(this evidence/documentation patch). The bounded scrubbed MCP response archive
-with its SHA-256 manifest remains the pending MCP operator gate.
+`.vscode/mcp.json` configuration), and the source release after that was
+`v0.10.1` (this evidence/documentation patch). The current source release is
+`v0.10.2` (ADR-012's deterministic `upstream_release_type` classification,
+applied to the three affected reviewed Insights on 2026-07-19). The bounded
+scrubbed MCP response archive with its SHA-256 manifest remains the pending
+MCP operator gate.
 
 ## Key commands
 
@@ -298,9 +306,13 @@ The accepted deployment shape is a Vercel project rooted at `frontend/` and a
 Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
-`https://drift-api-prod.up.railway.app`. The current verified hosted application
-build is `v0.10.0` in `DRIFT_MODE=live`; the current source version is `v0.10.1`
-(an evidence/documentation patch that requires no redeploy). On 2026-07-18,
+`https://drift-api-prod.up.railway.app`. The current source version is
+`v0.10.2` (a `/briefing` data patch — three Insights' `upstream_release_type`
+corrected via direct database write, see ADR-012 — plus a code change,
+`backend/core/versioning.py`, that the deployed app does not yet run until
+the next redeploy). Railway auto-deploys from `main`; the deployed build
+version should be reverified against `/health` after this release's commit
+reaches `main`, rather than assumed from the source bump. On 2026-07-18,
 Railway `/health` and `/` reported `0.10.0`,
 `/docs` returned `200`, `/briefing?top_n=10` returned the five reviewed
 Tier.FINAL Insights with no review notes, and a Vercel-origin CORS preflight

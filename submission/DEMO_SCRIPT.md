@@ -57,7 +57,7 @@ use the matching `-dark`/`-light` card variants in the editor.
 ## Step 0 — one-time prep, before recording anything
 
 1. **Verify the hosted state fresh**: `GET /health` must return
-   `{"status":"ok","mode":"live","version":"0.10.1"}` — this exact JSON is
+   `{"status":"ok","mode":"live","version":"0.10.2"}` — this exact JSON is
    filmed in Recording #3.
 2. **Pre-warm `/chat` once off camera** so the first on-camera ask does not
    absorb cold-start latency. Confirm spend-guard headroom for 4–6 paid calls.
@@ -137,7 +137,7 @@ Open these tabs before you start, arranged so you can switch quickly:
 | **NCCL Release** | The real NCCL v2.30.7-1 GitHub release page | Scrolled to the top of the release notes |
 | **JAX Release** | The real JAX v0.11.0 GitHub release page | Top of the release notes |
 | **Live App** | The DRIFT Vercel frontend | `https://dr1ftless.vercel.app`, fresh hero, nothing clicked |
-| **Health JSON** | The hosted API health endpoint | `https://drift-api-prod.up.railway.app/health` showing `{"status":"ok","mode":"live","version":"0.10.1"}` |
+| **Health JSON** | The hosted API health endpoint | `https://drift-api-prod.up.railway.app/health` showing `{"status":"ok","mode":"live","version":"0.10.2"}` |
 
 Now start OBS recording once, and go through these in order without stopping:
 
@@ -187,7 +187,7 @@ after any wording change.
 | # | Beat | VO clip | Source | Screen action | Overlay (lower-third) | Duration | Ends at |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Cold open — real release | `vo_01-hook` | Recording #3 — NCCL Release scroll, cut to JAX Release | Slow scroll of real release notes, no branding yet | `Which line breaks your rollout?` | 12s | 0:12 |
-| 2 | Reveal — live product | `vo_02-reveal` | Recording #3 — Live App hero, then Health JSON | Hero hold 3s → `/health` JSON with `0.10.1` / `live` | `drift-api-prod.up.railway.app/health · v0.10.1 · live` | 14s | 0:26 |
+| 2 | Reveal — live product | `vo_02-reveal` | Recording #3 — Live App hero, then Health JSON | Hero hold 3s → `/health` JSON with `0.10.2` / `live` | `drift-api-prod.up.railway.app/health · v0.10.2 · live` | 14s | 0:26 |
 | 3 | Briefing — five reviewed cards | `vo_03-briefing` | Recording #3 — briefing scroll + NCCL card pause | Cards render, slow scroll, zoom (105–110%) on severity / confidence / `gpt-5.6-sol` / `what_to_check` | `5 reviewed insights · human gate · gpt-5.6-sol` | 26s | 0:52 |
 | 4 | Claim evidence + citation | `vo_04-evidence` | Recording #3 — Inspect claim evidence + source click | Frozen excerpt + claim labels, citation click → GitHub release **held ≥ 2s** → back | `Frozen span · offsets · SHA-256` | 22s | 1:14 |
 | 5 | Ask DRIFT — grounded answer | `vo_05-ask` | Recording #1 — NCCL question | Typing → Ask → jump-cut the wait to ≤ 1.5s (keep the request visibly sent) → answer, Source link, `gpt-5.6-terra`, grounded ID | `Retrieve first → GPT-5.6 Terra → cited answer` | 26s | 1:40 |
@@ -254,7 +254,7 @@ alone). Both must pass.
 
 - [ ] Record at 1920×1080, 30 fps; clean profile; bookmarks/personal tabs
       hidden; one theme (dark or light) across every take and card.
-- [ ] `GET /health` shows `0.10.1` / `live` on shoot day (Step 0.1).
+- [ ] `GET /health` shows `0.10.2` / `live` on shoot day (Step 0.1).
 - [ ] `/chat` pre-warmed and the Kubernetes decline pre-tested off camera
       (Step 0.2–0.3); spend-guard headroom confirmed for 4–6 paid asks.
 - [ ] Recording #1 and #2 done (paid, ~$0.01 per ask); Recording #3 can be

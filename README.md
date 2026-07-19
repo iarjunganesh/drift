@@ -331,7 +331,7 @@ live links live up top in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
 | Surface | Status |
 | --- | --- |
 | **Current hosted release** | `v0.10.0` `live` — verified 2026-07-18: `/health` and `/` report `0.10.0`, `/docs` returns `200`, `/briefing?top_n=10` returns the five reviewed Insights, and Vercel-origin CORS allows `GET, POST`. Paid `/search` and `/chat` were not re-invoked |
-| **Current source release** | `v0.10.1` — evidence/documentation patch on the `v0.10.0` MCP release: commits the VS Code MCP client evidence (gallery `05.x` + credential-free `.vscode/mcp.json`) and synchronizes current-state records; no backend behavior change, no redeploy required. The scrubbed MCP response archive remains pending |
+| **Current source release** | `v0.10.2` — adds a deterministic `upstream_release_type` classification ([ADR-012](docs/adr/012-deterministic-version-classification.md)) and applies it to the three reviewed Insights with no self-declared source statement (JAX, NCCL, TensorRT → `minor`/`patch`/`minor`), written directly to the live database. `v0.10.1` (prior) commits the VS Code MCP client evidence (gallery `05.x` + credential-free `.vscode/mcp.json`) and synchronizes current-state records. The scrubbed MCP response archive remains pending |
 | **Prior hosted release** | `v0.8.0` `live` — verified 2026-07-17: `/health` reported `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and Vercel CORS allowed `GET, POST` |
 | **Earlier hosted release** | `v0.7.0` `live` — `/briefing` (four reviewed Insights, review notes redacted), `/openapi.json`, and the deployed Vercel bundle's `top_n=10` request were verified |
 | **Live reviewed store** | `/briefing?top_n=10` verified 2026-07-18 with exactly five reviewed, verifier-passed Tier.FINAL Insights: 10, 11, 13, 15, and 16 |
@@ -692,7 +692,7 @@ drift/
 push → Ruff → mypy → pytest (100% coverage gate) → Codecov → frontend build → docs hygiene
 ```
 
-The current local result is **160 tests passed and 100.00% backend coverage**.
+The current local result is **189 tests passed and 100.00% backend coverage**.
 The
 enforceable floor is **100% for implemented code**, including branch-critical
 error paths. Explicit, documented live-pipeline boundaries remain visible while

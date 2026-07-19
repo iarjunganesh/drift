@@ -123,6 +123,11 @@ AI-infrastructure release intelligence.
       gallery, remove the superseded internal freeze plan, and synchronize every
       current-state record with the hosted `v0.10.0` verification. The bounded
       scrubbed MCP response archive remains the pending MCP operator gate.
+- [x] `v0.10.2`: add a deterministic `upstream_release_type` classification
+      (`backend/core/versioning.py`, ADR-012) and apply it to the three
+      reviewed Insights with no self-declared source statement (JAX, NCCL,
+      TensorRT), written directly to the live database. Not yet wired into
+      `backend.pipeline` for future captures — deliberately out of scope.
 - [ ] `v1.0.0`: freeze the final judge path, complete the under-three-minute
       public demo video, replace the video placeholder everywhere, and finish
       the Devpost submission records.

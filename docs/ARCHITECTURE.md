@@ -422,7 +422,7 @@ Ruff → mypy → pytest + coverage → Codecov upload → frontend build → do
 ```
 
 The enforceable floor is 100% for implemented code; the current backend suite is
-160 tests at 100.00%. The `v0.10.0` MCP thin client adds 40 mocked-HTTP tests at
+189 tests at 100.00%. The `v0.10.0` MCP thin client adds 40 mocked-HTTP tests at
 100% `integrations/` coverage, run as a separate gate outside `--cov=backend`.
 Deliberately unimplemented live-stage raises remain explicit and are
 excluded only at the boundary itself. New live behavior must arrive with tests
