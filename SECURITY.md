@@ -7,9 +7,9 @@ development baseline while the live pipeline is being implemented.
 
 | Version | Supported |
 | --- | --- |
-| `0.10.2` | Current source release; adds a deterministic `upstream_release_type` classification (ADR-012) and applies it to three reviewed Insights via direct database write — no other Insight field, capture, or provider path changed |
+| `0.10.2` | ✅ Current source release and current hosted application; verified 2026-07-19: Railway `/health` reports `0.10.2`, `/docs` returns `200`, `/briefing?top_n=10` returns the five reviewed Insights with the corrected `upstream_release_type` values (ADR-012) and no review notes, and Vercel CORS allows `GET, POST` (paid `/search`/`/chat` not re-invoked) |
 | `0.10.1` | Prior source release; evidence/documentation patch on `0.10.0` that commits the VS Code MCP client evidence and synchronizes current-state records — no backend behavior change |
-| `0.10.0` | ✅ Current hosted application; verified 2026-07-18: Railway `/health` and `/` report `0.10.0`, `/docs` returns `200`, `/briefing?top_n=10` returns the five reviewed Insights with no review notes, and Vercel CORS allows `GET, POST` (paid `/search`/`/chat` not re-invoked). Adds the `integrations/mcp/` thin-client MCP server, which carries no credentials and cannot reach the review gate; the scrubbed hosted MCP response archive is pending |
+| `0.10.0` | Prior hosted application; verified 2026-07-18: Railway `/health` and `/` reported `0.10.0`, `/docs` returned `200`, `/briefing?top_n=10` returned the five reviewed Insights with no review notes, and Vercel CORS allowed `GET, POST`. Added the `integrations/mcp/` thin-client MCP server, which carries no credentials and cannot reach the review gate; the scrubbed hosted MCP response archive is pending |
 | `0.9.1` | Prior hosted application; verified earlier on 2026-07-18 with the same health/docs/briefing/CORS checks |
 | `0.8.0` | Prior hosted application; on 2026-07-17 Railway `/health` reported `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and Vercel CORS was verified |
 | `0.7.0` | Prior verified hosted application; public review notes are redacted and the frontend requests up to ten briefing records |

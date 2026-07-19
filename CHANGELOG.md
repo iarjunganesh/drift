@@ -35,11 +35,14 @@ fixes a `/chat` grounding bug: a genuine decline (the model reporting zero
 instead of none, so the API returned "Source" links and grounded-insight IDs
 alongside an answer that used no evidence.
 
-The hosted API reports `version: 0.10.2` after this release's redeploy
-(`/health`, `DRIFT_MODE=live`); the three `upstream_release_type` corrections
-were applied directly to the live database and are already visible on
-`/briefing`, ahead of and independent of the code redeploy. The bounded
-scrubbed MCP response archive and SHA-256 manifest remain the pending
+Railway auto-deployed from this release's commit; on 2026-07-19, hosted
+`/health` reported `0.10.2` (`DRIFT_MODE=live`), `/docs` returned `200`,
+`/briefing?top_n=10` returned exactly the five reviewed Tier.FINAL Insights
+with no review notes and the corrected `upstream_release_type` values, and
+Vercel-origin CORS allowed `GET, POST`. The three `upstream_release_type`
+corrections were applied directly to the live database ahead of the code
+redeploy. The bounded scrubbed MCP response archive and SHA-256 manifest
+remain the pending
 operator gate.
 
 ## Targeted releases — planned, not released

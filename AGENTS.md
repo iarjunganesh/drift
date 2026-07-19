@@ -6,19 +6,19 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** the deployed Railway/Vercel app is `v0.10.0`, verified live on
-2026-07-18 — `/health` and `/` report `0.10.0` in `DRIFT_MODE=live`, `/docs`
-returns `200`, `/briefing?top_n=10` returns the five reviewed Tier.FINAL Insights
-(10, 11, 13, 15, 16) with no review notes, and a Vercel-origin CORS preflight
-allows `GET, POST` (paid `/search` and `/chat` were not re-invoked). The current
-source release is `v0.10.2`, which adds a deterministic `upstream_release_type`
+**Current phase:** the deployed Railway/Vercel app is `v0.10.2`, verified live on
+2026-07-19 — `/health` reports `0.10.2` in `DRIFT_MODE=live`, `/docs`
+returns `200`, and `/briefing?top_n=10` returns the five reviewed Tier.FINAL
+Insights (10, 11, 13, 15, 16) with no review notes and the corrected
+`upstream_release_type` values (JAX/TensorRT `minor`, Transformers/vLLM/NCCL
+`patch`). `v0.10.2` adds a deterministic `upstream_release_type`
 classification (`backend/core/versioning.py`, ADR-012) and applies it to the
 three reviewed Insights that had no self-declared source statement — JAX,
 NCCL, and TensorRT went from `unknown` to `minor`/`patch`/`minor`, written
-directly to the live database independent of any redeploy. `v0.10.1` (prior)
-is an evidence/documentation patch that commits the VS Code MCP client
-evidence and synchronizes current-state records; it changed no backend
-behavior. `v0.8.0` —
+directly to the live database, ahead of and independent of this redeploy.
+`v0.10.1` (prior) is an evidence/documentation patch that commits the VS Code
+MCP client evidence and synchronizes current-state records; it changed no
+backend behavior. `v0.8.0` —
 verified on 2026-07-17 (`/health` `0.8.0`, `/docs` `200`, public **Ask DRIFT**,
 Vercel CORS) — added a grounded frontend chat box and made the no-key fixture
 evidence inspectable against checked-in synthetic source files. `v0.7.0` is an
@@ -307,12 +307,15 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The current source version is
-`v0.10.2` (a `/briefing` data patch — three Insights' `upstream_release_type`
-corrected via direct database write, see ADR-012 — plus a code change,
-`backend/core/versioning.py`, that the deployed app does not yet run until
-the next redeploy). Railway auto-deploys from `main`; the deployed build
-version should be reverified against `/health` after this release's commit
-reaches `main`, rather than assumed from the source bump. On 2026-07-18,
+`v0.10.2` and the deployed build now matches it: on 2026-07-19, after the
+`v0.10.2` commit reached `main`, Railway auto-deployed and `/health` reported
+`0.10.2`, `/docs` returned `200`, and `/briefing?top_n=10` returned exactly
+the five reviewed Tier.FINAL Insights (10, 11, 13, 15, 16) with no review
+notes and the corrected `upstream_release_type` values (JAX/TensorRT
+`minor`, Transformers/vLLM/NCCL `patch`) — a `/briefing` data patch (three
+Insights' `upstream_release_type` corrected via direct database write, see
+ADR-012) plus the `backend/core/versioning.py` code the deployed app now
+runs. On 2026-07-18,
 Railway `/health` and `/` reported `0.10.0`,
 `/docs` returned `200`, `/briefing?top_n=10` returned the five reviewed
 Tier.FINAL Insights with no review notes, and a Vercel-origin CORS preflight
