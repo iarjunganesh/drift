@@ -208,7 +208,10 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="footer">DRIFT · fixture-first today · review-gated, claim-grounded live evidence</footer>
+      <footer className="footer">
+        DRIFT · {mode === "live" ? "live and hosted today" : "fixture-first today"} · review-gated,
+        claim-grounded live evidence
+      </footer>
     </main>
   );
 }
