@@ -1,22 +1,17 @@
 # DRIFT
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/drift-banner-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/brand/drift-banner-light.svg">
-    <img width="900" src="assets/brand/drift-banner-light.svg"
-         alt="DRIFT — Release intelligence for GPU and AI infrastructure. Cited, bounded, inspectable."/>
-  </picture>
-</p>
+> Devpost-formatted mirror of [`README.md`](https://github.com/iarjunganesh/drift/blob/main/README.md) — every image swapped to an absolute `raw.githubusercontent.com` URL and every relative link swapped to a full GitHub URL, since Devpost's project description has no repo-root context to resolve relative paths against. The actual repo `README.md` stays the source of truth; re-generate this file from it if it changes.
+
+![DRIFT — Release intelligence for GPU and AI infrastructure. Cited, bounded, inspectable.](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/brand/drift-banner-light.png)
 
 [![CI](https://github.com/iarjunganesh/drift/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/iarjunganesh/drift/actions/workflows/ci.yml)
 [![Codecov](https://codecov.io/gh/iarjunganesh/drift/graph/badge.svg)](https://codecov.io/gh/iarjunganesh/drift)
 [![Release](https://img.shields.io/badge/release-latest-2ea44f?logo=github&logoColor=white)](https://github.com/iarjunganesh/drift/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/iarjunganesh/drift/blob/main/LICENSE)
 [![Watch Video](https://img.shields.io/badge/%E2%96%B6_Watch-3--min_demo-FF0000?logo=youtube&logoColor=white)](https://youtu.be/6sbIz0ZR8Hw)
 
 <!-- Row 2 — AI & agent core -->
-[![Agent Pattern](https://img.shields.io/badge/Agent_Pattern-asyncio_typed_stages-3776AB?logo=python&logoColor=white)](backend/agents/base.py)
+[![Agent Pattern](https://img.shields.io/badge/Agent_Pattern-asyncio_typed_stages-3776AB?logo=python&logoColor=white)](https://github.com/iarjunganesh/drift/blob/main/backend/agents/base.py)
 [![GPT-5.6 Luna](https://img.shields.io/badge/GPT--5.6-Luna-412991?logo=openai&logoColor=white)](https://developers.openai.com/api/docs/models/gpt-5.6-luna)
 [![GPT-5.6 Terra](https://img.shields.io/badge/GPT--5.6-Terra-412991?logo=openai&logoColor=white)](https://developers.openai.com/api/docs/models/gpt-5.6-terra)
 [![GPT-5.6 Sol](https://img.shields.io/badge/GPT--5.6-Sol-412991?logo=openai&logoColor=white)](https://developers.openai.com/api/docs/models/gpt-5.6-sol)
@@ -101,7 +96,7 @@ docker compose up
 Open <http://localhost:3000> for the frontend and
 <http://localhost:8000/docs> for the API. No OpenAI key is required, and every
 record is clearly labelled example data. Full setup, cross-platform commands,
-and the live capture path are in [Quick Start](#quick-start).
+and the live capture path are in [Quick Start](https://github.com/iarjunganesh/drift#quick-start).
 
 ---
 
@@ -134,36 +129,13 @@ never described as fresh live release analysis.
 
 ## Architecture
 
-<p align="center">
-  <a href="assets/architecture/arch-light.svg" target="_blank" rel="noopener noreferrer">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="assets/architecture/arch-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="assets/architecture/arch-light.svg">
-      <img width="960" src="assets/architecture/arch-light.svg"
-           alt="DRIFT trust boundary — untrusted release feeds pass through machine claim extraction and a separate verifier into quarantined drafts; a human review gate is the only bridge to the trusted, published briefing an engineer sees."/>
-    </picture>
-  </a>
-</p>
+[![DRIFT trust boundary — untrusted release feeds pass through machine claim extraction and a separate verifier into quarantined drafts; a human review gate is the only bridge to the trusted, published briefing an engineer sees.](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/architecture/arch-light.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/architecture/arch-light.png)
 
-<p align="center"><sub><b>The trust boundary at a glance.</b> Everything left of the gate is untrusted machine output; a human reviewer is the only path to what an engineer sees. · <a href="assets/architecture/arch-light.svg">light SVG</a> / <a href="assets/architecture/arch-dark.svg">dark SVG</a></sub></p>
+**The trust boundary at a glance.** Everything left of the gate is untrusted machine output; a human reviewer is the only path to what an engineer sees.
 
-<details>
-<summary><b>Detailed pipeline diagram</b> — the same six typed stages, as the maintainable Mermaid source of truth</summary>
+**Detailed pipeline diagram** — the same six typed stages:
 
-<p align="center">
-  <a href="assets/architecture/arch-pipeline-light.svg" target="_blank" rel="noopener noreferrer">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="assets/architecture/arch-pipeline-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="assets/architecture/arch-pipeline-light.svg">
-      <img width="900" src="assets/architecture/arch-pipeline-light.svg"
-           alt="DRIFT architecture — primary release feeds through Scout, Synthesizer, claim extraction, a separate verifier, a human review gate, and Briefing into FastAPI"/>
-    </picture>
-  </a>
-</p>
-
-<sub>Click to enlarge: <a href="assets/architecture/arch-pipeline-light.svg">light SVG</a> / <a href="assets/architecture/arch-pipeline-dark.svg">dark SVG</a> · Downloadable <a href="assets/architecture/arch-pipeline-light.png">light PNG</a> / <a href="assets/architecture/arch-pipeline-dark.png">dark PNG</a> · Source: <a href="assets/architecture/arch-pipeline.mmd"><code>arch-pipeline.mmd</code></a></sub>
-
-</details>
+[![DRIFT architecture — primary release feeds through Scout, Synthesizer, claim extraction, a separate verifier, a human review gate, and Briefing into FastAPI](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/architecture/arch-pipeline-light.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/architecture/arch-pipeline-light.png)
 
 **In short:** the fixture path is complete and no-key. The local live path now
 persists source evidence, generates and separately verifies claim-grounded
@@ -181,7 +153,7 @@ NCCL v2.30.7-1, TensorRT 11.1) through the review gate, and hosted `/briefing`,
 grounded `gpt-5.6-terra` answer with primary-source citations. This is a small,
 bounded reviewed set, not a broad live-release-analysis claim.
 
-> **Deep dive** → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime paths, stage
+> **Deep dive** → [`docs/ARCHITECTURE.md`](https://github.com/iarjunganesh/drift/blob/main/docs/ARCHITECTURE.md) — runtime paths, stage
 > ownership, provenance, retrieval, safety invariants, failure handling, and
 > the Vercel/Railway deployment topology.
 
@@ -209,7 +181,7 @@ the bounded local capture path.
 | v0.9.1 Terra grounded-chat evidence and screenshot pass | `019f7278-ee77-7f02-bafd-6eba8bf046d2` | Captured eight bounded Terra questions, refreshed the nine-image Luna/Sol/Terra gallery, and preserved the no-write boundary |
 | v0.10.0 MCP thin-client integration | `019f7607-aa5a-79b2-8101-4cd634495fbe` | Thin-client MCP server (`integrations/mcp/`, ADR-011) over the public API — three stdio tools, no credentials, nothing changed under `backend/`; fixture-verified at $0 with 40 mocked-HTTP tests, and corrected stale hosted-version records to `v0.9.1` |
 
-See the full [project initiative record](docs/INITIATIVES.md).
+See the full [project initiative record](https://github.com/iarjunganesh/drift/blob/main/docs/INITIATIVES.md).
 
 ### How Codex and GPT-5.6 were used
 
@@ -251,23 +223,23 @@ short; the architecture document explains how they compose.
 
 | ADR | Decision |
 | --- | --- |
-| [001](docs/adr/001-fixture-first-judge-path.md) | Fixture-first judge path with an honest live boundary |
-| [002](docs/adr/002-typed-agents-no-framework.md) | Typed hand-rolled stages instead of a heavyweight agent framework |
-| [003](docs/adr/003-citations-and-visible-uncertainty.md) | Citations, confidence, audit labels, and uncertainty are visible |
-| [004](docs/adr/004-local-budget-guard.md) | Local spend guard around live iteration |
-| [005](docs/adr/005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store |
-| [006](docs/adr/006-ci-quality-gates.md) | CI gates with a 100% implemented-code floor |
-| [007](docs/adr/007-vercel-railway-deployment.md) | Vercel frontend + Railway API/database deployment shape |
-| [008](docs/adr/008-live-grounded-chat.md) | Live grounded chat over the cited fixture store |
-| [009](docs/adr/009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery |
-| [010](docs/adr/010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication |
-| [011](docs/adr/011-mcp-thin-client-layer.md) | MCP integration as a thin client over the reviewed API (`v0.10.0`) |
+| [001](https://github.com/iarjunganesh/drift/blob/main/docs/adr/001-fixture-first-judge-path.md) | Fixture-first judge path with an honest live boundary |
+| [002](https://github.com/iarjunganesh/drift/blob/main/docs/adr/002-typed-agents-no-framework.md) | Typed hand-rolled stages instead of a heavyweight agent framework |
+| [003](https://github.com/iarjunganesh/drift/blob/main/docs/adr/003-citations-and-visible-uncertainty.md) | Citations, confidence, audit labels, and uncertainty are visible |
+| [004](https://github.com/iarjunganesh/drift/blob/main/docs/adr/004-local-budget-guard.md) | Local spend guard around live iteration |
+| [005](https://github.com/iarjunganesh/drift/blob/main/docs/adr/005-postgres-pgvector-live-store.md) | PostgreSQL + pgvector for the live store |
+| [006](https://github.com/iarjunganesh/drift/blob/main/docs/adr/006-ci-quality-gates.md) | CI gates with a 100% implemented-code floor |
+| [007](https://github.com/iarjunganesh/drift/blob/main/docs/adr/007-vercel-railway-deployment.md) | Vercel frontend + Railway API/database deployment shape |
+| [008](https://github.com/iarjunganesh/drift/blob/main/docs/adr/008-live-grounded-chat.md) | Live grounded chat over the cited fixture store |
+| [009](https://github.com/iarjunganesh/drift/blob/main/docs/adr/009-bounded-model-resilience-and-locked-delivery.md) | Bounded model resilience and locked delivery |
+| [010](https://github.com/iarjunganesh/drift/blob/main/docs/adr/010-claim-evidence-and-review-gate.md) | Claim-level evidence, separate verification, and review-first publication |
+| [011](https://github.com/iarjunganesh/drift/blob/main/docs/adr/011-mcp-thin-client-layer.md) | MCP integration as a thin client over the reviewed API (`v0.10.0`) |
 
 ---
 
 ## Model Router & Safety Boundary
 
-Provider calls belong behind [model_router.py](backend/core/model_router.py).
+Provider calls belong behind [model_router.py](https://github.com/iarjunganesh/drift/blob/main/backend/core/model_router.py).
 Agent code must not hard-code provider model names. The intended tiers are:
 
 | Tier | Intended job | Status |
@@ -291,7 +263,7 @@ must never become model instructions or authorization to act on infrastructure.
 Upstream release type is separate from potential operator risk; neither is a
 compatibility verdict.
 
-The local [SpendGuard](backend/core/budget.py) is a development safeguard;
+The local [SpendGuard](https://github.com/iarjunganesh/drift/blob/main/backend/core/budget.py) is a development safeguard;
 provider-side limits remain required for a deployed service.
 
 Live model requests are additionally bounded by a retry envelope, local spend
@@ -308,7 +280,7 @@ conservatively; it is never silently treated as free.
 | --- | --- | --- |
 | **Backend** | [![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/) | Typed HTTP API and explicit pipeline stages |
 | **Contracts** | [![Pydantic](https://img.shields.io/badge/Pydantic-2.13-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/) | Typed raw-item, insight, briefing, and chat contracts |
-| **Agent Pattern** | [![asyncio](https://img.shields.io/badge/asyncio-typed%20stages-3776AB?logo=python&logoColor=white)](backend/agents/base.py) | Small lifecycle-wrapped functions; no orchestration framework |
+| **Agent Pattern** | [![asyncio](https://img.shields.io/badge/asyncio-typed%20stages-3776AB?logo=python&logoColor=white)](https://github.com/iarjunganesh/drift/blob/main/backend/agents/base.py) | Small lifecycle-wrapped functions; no orchestration framework |
 | **Release Feeds** | [![feedparser](https://img.shields.io/badge/feedparser-Atom%20%2F%20RSS-3776AB?logo=python&logoColor=white)](https://feedparser.readthedocs.io/) [![PyYAML](https://img.shields.io/badge/PyYAML-sources-3776AB?logo=python&logoColor=white)](https://pyyaml.org/) | Configured primary-source feed definitions and parsing |
 | **Live Store** | [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/) [![pgvector](https://img.shields.io/badge/pgvector-0.5.0-336791?logo=postgresql&logoColor=white)](https://github.com/pgvector/pgvector) | Durable raw items, insights, and vector retrieval |
 | **Model Boundary** | [![GPT-5.6](https://img.shields.io/badge/OpenAI-GPT--5.6_tiers-412991?logo=openai&logoColor=white)](https://developers.openai.com/api/docs/models) | Provider isolation, GPT-5.6 Luna/Terra/Sol tiers, and budget control |
@@ -317,22 +289,22 @@ conservatively; it is never silently treated as free.
 | **Hosting** | [![Railway](https://img.shields.io/badge/Backend-Railway-0B0D0E?logo=railway&logoColor=white)](https://railway.app/) [![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/) | Railway API/database; Vercel Next.js frontend |
 | **Observability** | [![structlog](https://img.shields.io/badge/structlog-JSON-4A90E2)](https://www.structlog.org/) | Structured logs and explicit request/stage boundaries |
 
-Python dependencies are declared in [pyproject.toml](pyproject.toml) and
-resolved once in [uv.lock](uv.lock); local, CI, and container installs all use
+Python dependencies are declared in [pyproject.toml](https://github.com/iarjunganesh/drift/blob/main/pyproject.toml) and
+resolved once in [uv.lock](https://github.com/iarjunganesh/drift/blob/main/uv.lock); local, CI, and container installs all use
 that frozen lockfile. JavaScript dependencies are locked in
-[frontend/package-lock.json](frontend/package-lock.json).
+[frontend/package-lock.json](https://github.com/iarjunganesh/drift/blob/main/frontend/package-lock.json).
 
 ---
 
 ## Deployment status
 
 Both tiers are live and the deployed app is `v0.10.2`, verified on 2026-07-19 — the
-live links live up top in [Try DRIFT in 60 Seconds](#try-drift-in-60-seconds):
+live links live up top in [Try DRIFT in 60 Seconds](https://github.com/iarjunganesh/drift#try-drift-in-60-seconds):
 
 | Surface | Status |
 | --- | --- |
 | **Current hosted release** | `v0.10.2` `live` — verified 2026-07-19: `/health` reports `0.10.2`, `/docs` returns `200`, `/briefing?top_n=10` returns the five reviewed Insights with the corrected `upstream_release_type` values, and Vercel-origin CORS allows `GET, POST`. Paid `/search` and `/chat` were not re-invoked |
-| **Current source release** | `v0.10.2` — adds a deterministic `upstream_release_type` classification ([ADR-012](docs/adr/012-deterministic-version-classification.md)) and applies it to the three reviewed Insights with no self-declared source statement (JAX, NCCL, TensorRT → `minor`/`patch`/`minor`), written directly to the live database. `v0.10.1` (prior) commits the VS Code MCP client evidence (gallery `05.x` + credential-free `.vscode/mcp.json`) and synchronizes current-state records. The scrubbed MCP response archive remains pending |
+| **Current source release** | `v0.10.2` — adds a deterministic `upstream_release_type` classification ([ADR-012](https://github.com/iarjunganesh/drift/blob/main/docs/adr/012-deterministic-version-classification.md)) and applies it to the three reviewed Insights with no self-declared source statement (JAX, NCCL, TensorRT → `minor`/`patch`/`minor`), written directly to the live database. `v0.10.1` (prior) commits the VS Code MCP client evidence (gallery `05.x` + credential-free `.vscode/mcp.json`) and synchronizes current-state records. The scrubbed MCP response archive remains pending |
 | **Prior hosted release** | `v0.8.0` `live` — verified 2026-07-17: `/health` reported `0.8.0`, `/docs` returned `200`, the public Vercel page rendered Ask DRIFT, and Vercel CORS allowed `GET, POST` |
 | **Earlier hosted release** | `v0.7.0` `live` — `/briefing` (four reviewed Insights, review notes redacted), `/openapi.json`, and the deployed Vercel bundle's `top_n=10` request were verified |
 | **Live reviewed store** | `/briefing?top_n=10` verified 2026-07-18 with exactly five reviewed, verifier-passed Tier.FINAL Insights: 10, 11, 13, 15, and 16 |
@@ -356,7 +328,7 @@ contract. Click any image to open it full size.
 
 | DRIFT landing page |
 | --- |
-| [![DRIFT landing page](assets/screenshots/01-landing.png)](assets/screenshots/01-landing.png) |
+| [![DRIFT landing page](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/01-landing.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/01-landing.png) |
 
 The briefing is shown at two model tiers — `gpt-5.6-luna` (the cheap dev tier
 used for iteration) and `gpt-5.6-sol` (the final tier behind the current
@@ -364,11 +336,11 @@ reviewed live-store capture):
 
 | Briefing — Luna dev tier | Briefing — Sol final tier |
 | --- | --- |
-| [![DRIFT briefing drafted at the gpt-5.6-luna dev tier](assets/screenshots/03.1-gpt5.6-luna-briefing.png)](assets/screenshots/03.1-gpt5.6-luna-briefing.png) | [![DRIFT briefing drafted at the gpt-5.6-sol final tier](assets/screenshots/03.3-gpt5.6-sol-briefing.png)](assets/screenshots/03.3-gpt5.6-sol-briefing.png) |
+| [![DRIFT briefing drafted at the gpt-5.6-luna dev tier](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/03.1-gpt5.6-luna-briefing.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/03.1-gpt5.6-luna-briefing.png) | [![DRIFT briefing drafted at the gpt-5.6-sol final tier](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/03.3-gpt5.6-sol-briefing.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/03.3-gpt5.6-sol-briefing.png) |
 
 | Claim evidence — Luna | Claim evidence — Sol |
 | --- | --- |
-| [![Luna briefing expanded to each claim's primary-source excerpt](assets/screenshots/03.2-gpt5.6-luna-briefing-claim-evidence.png)](assets/screenshots/03.2-gpt5.6-luna-briefing-claim-evidence.png) | [![Sol briefing expanded to each claim's primary-source excerpt](assets/screenshots/03.4-gpt5.6-sol-briefing-claim-evidence.png)](assets/screenshots/03.4-gpt5.6-sol-briefing-claim-evidence.png) |
+| [![Luna briefing expanded to each claim's primary-source excerpt](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/03.2-gpt5.6-luna-briefing-claim-evidence.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/03.2-gpt5.6-luna-briefing-claim-evidence.png) | [![Sol briefing expanded to each claim's primary-source excerpt](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/03.4-gpt5.6-sol-briefing-claim-evidence.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/03.4-gpt5.6-sol-briefing-claim-evidence.png) |
 
 The Next.js briefing view exposes each record's status label, confidence,
 model/audit label, rationale, bounded action, source links, and—when present—
@@ -391,11 +363,11 @@ reviewed Insights:
 
 | Ask DRIFT box | Grounded NCCL answer | Grounded TensorRT answer |
 | --- | --- | --- |
-| [![DRIFT Ask DRIFT grounded chat box](assets/screenshots/04.0-ask-drift.png)](assets/screenshots/04.0-ask-drift.png) | [![Terra grounded NCCL answer](assets/screenshots/04.1-ask-drift-gpt5.6-terra-grounded-answer-nccl-example.png)](assets/screenshots/04.1-ask-drift-gpt5.6-terra-grounded-answer-nccl-example.png) | [![Terra grounded TensorRT answer](assets/screenshots/04.2-ask-drift-gpt5.6-terra-grounded-answer-tensorRT-example.png)](assets/screenshots/04.2-ask-drift-gpt5.6-terra-grounded-answer-tensorRT-example.png) |
+| [![DRIFT Ask DRIFT grounded chat box](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/04.0-ask-drift.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/04.0-ask-drift.png) | [![Terra grounded NCCL answer](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/04.1-ask-drift-gpt5.6-terra-grounded-answer-nccl-example.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/04.1-ask-drift-gpt5.6-terra-grounded-answer-nccl-example.png) | [![Terra grounded TensorRT answer](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/04.2-ask-drift-gpt5.6-terra-grounded-answer-tensorRT-example.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/04.2-ask-drift-gpt5.6-terra-grounded-answer-tensorRT-example.png) |
 
 The Terra answer frames are visual captures from the bounded run and retain
 the IDs shown at capture time. For current publication state and exact Terra
-grounding, use the scrubbed archive in [`assets/evidence/`](assets/evidence/):
+grounding, use the scrubbed archive in [`assets/evidence/`](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/evidence/):
 the live reviewed set is IDs 10, 11, 13, 15, and 16.
 
 The released MCP thin client was also exercised from VS Code against the hosted
@@ -404,7 +376,7 @@ briefing, search, and grounded chat:
 
 | MCP server logs | `drift_briefing` | `drift_search` | `ask_drift` |
 | --- | --- | --- | --- |
-| [![VS Code MCP server logs](assets/screenshots/05.0-mcp-vscode-tool-calling-logs.png)](assets/screenshots/05.0-mcp-vscode-tool-calling-logs.png) | [![VS Code DRIFT briefing tool](assets/screenshots/05.1-mcp-vscode-drift-briefing.png)](assets/screenshots/05.1-mcp-vscode-drift-briefing.png) | [![VS Code DRIFT search tool](assets/screenshots/05.2-mcp-vscode-drift-search-tensorrt.png)](assets/screenshots/05.2-mcp-vscode-drift-search-tensorrt.png) | [![VS Code Ask DRIFT tool](assets/screenshots/05.3-mcp-vscode-ask-drift-nccl.png)](assets/screenshots/05.3-mcp-vscode-ask-drift-nccl.png) |
+| [![VS Code MCP server logs](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/05.0-mcp-vscode-tool-calling-logs.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/05.0-mcp-vscode-tool-calling-logs.png) | [![VS Code DRIFT briefing tool](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/05.1-mcp-vscode-drift-briefing.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/05.1-mcp-vscode-drift-briefing.png) | [![VS Code DRIFT search tool](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/05.2-mcp-vscode-drift-search-tensorrt.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/05.2-mcp-vscode-drift-search-tensorrt.png) | [![VS Code Ask DRIFT tool](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/05.3-mcp-vscode-ask-drift-nccl.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/05.3-mcp-vscode-ask-drift-nccl.png) |
 
 These are client-side hosted MCP captures; the bounded scrubbed MCP response
 archive and SHA-256 manifest remain separate operator evidence.
@@ -413,10 +385,10 @@ The branded Swagger contract is also available as visual evidence:
 
 | API documentation |
 | --- |
-| [![DRIFT branded Swagger API documentation](assets/screenshots/02-api-docs.png)](assets/screenshots/02-api-docs.png) |
+| [![DRIFT branded Swagger API documentation](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/02-api-docs.png)](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/screenshots/02-api-docs.png) |
 
 The scrubbed hosted capture evidence is stored separately in
-[`assets/evidence/`](assets/evidence/), including the verified unreviewed vLLM
+[`assets/evidence/`](https://raw.githubusercontent.com/iarjunganesh/drift/main/assets/evidence/), including the verified unreviewed vLLM
 briefing response and its explicit operational limitations. After a human
 publishes a new notebook capture, its archive cell writes a new dated reviewed
 record and SHA-256 manifest there without including review notes or secrets.
@@ -521,7 +493,7 @@ For the durable PostgreSQL path, start the configured database and run
 store. The fixture path does not require a database.
 
 For a judge-ready all-source demonstration, use the **DRIFT Manual Run** in
-[`notebooks/drift_manual_run.ipynb`](notebooks/drift_manual_run.ipynb). It makes
+[`notebooks/drift_manual_run.ipynb`](https://github.com/iarjunganesh/drift/blob/main/notebooks/drift_manual_run.ipynb). It makes
 the proof chain visible—source roster, spend-gated capture, frozen evidence,
 human review, and immutable archive—while starting with one item per configured
 source (at most eight). It creates drafts only and has a separate
@@ -559,7 +531,7 @@ not a scheduled feed service and does not publish or verify the hosted deploymen
 
 DRIFT's reviewed release intelligence is also available to any MCP-compatible
 assistant — in the browser, over HTTP, and inside your AI assistant. The
-[`integrations/mcp/`](integrations/mcp/) server ([ADR-011](docs/adr/011-mcp-thin-client-layer.md))
+[`integrations/mcp/`](https://github.com/iarjunganesh/drift/tree/main/integrations/mcp/) server ([ADR-011](https://github.com/iarjunganesh/drift/blob/main/docs/adr/011-mcp-thin-client-layer.md))
 is a **thin client** over the same public API the frontend uses. It exposes
 exactly three tools, each a one-to-one call to an existing endpoint:
 
@@ -620,7 +592,7 @@ unrelated library) and watch it decline rather than guess.
 
 ## Synthetic Fixture Data
 
-The fixture path uses [`backend/fixtures/insights.json`](backend/fixtures/insights.json).
+The fixture path uses [`backend/fixtures/insights.json`](https://github.com/iarjunganesh/drift/blob/main/backend/fixtures/insights.json).
 These records are committed examples for deterministic development and judging;
 they are not current release analysis. Each record carries typed `claims` with
 frozen example excerpts, offsets, and source hashes, so the **Inspect claim
@@ -641,50 +613,11 @@ satisfy:
 
 ## Project Structure
 
-```text
-drift/
-├── backend/
-│   ├── agents/               # base, scout, synthesizer, insight, briefing stages
-│   ├── core/                 # config, model_router, store, live_store, budget, resilience
-│   ├── models/schema.py      # Pydantic domain, claim-evidence, and API contracts
-│   ├── fixtures/insights.json # deterministic example insights with claim evidence
-│   ├── main.py               # FastAPI app: health, briefing, search, chat, /brand
-│   ├── pipeline.py           # bounded one-shot live capture CLI (draft-only)
-│   ├── review.py             # explicit human publication gate
-│   ├── evidence_archive.py   # reviewed-evidence archive + SHA-256 manifest writer
-│   └── sources.yaml          # primary release-feed configuration
-├── frontend/                 # Next.js + React + TypeScript briefing view
-│   ├── app/                  # page.tsx, layout.tsx, AskDrift.tsx (grounded chat box)
-│   ├── .nvmrc                # Node.js 24.x local/runtime selection
-│   └── vercel.json           # Vercel build settings and Railway API URL
-├── integrations/mcp/         # thin-client MCP server (no credentials, stdio) + mocked tests
-│   ├── client.py · config.py # one-to-one HTTP wrapper; DRIFT_API_URL only
-│   ├── formatting.py · server.py # response formatters + drift_briefing/drift_search/ask_drift
-│   └── tests/                # 40 mocked-HTTP tests, 100% integrations coverage
-├── assets/
-│   ├── architecture/         # arch-* presentation (build_arch.py) + arch-pipeline-* Mermaid
-│   ├── brand/                # DRIFT brand banners (build_banner.py); API-served
-│   ├── evidence/             # scrubbed hosted-capture records + SHA-256 manifests
-│   └── screenshots/          # live-state UI captures used in the README
-├── tests/
-│   ├── unit/                 # agent, budget, resilience, and configuration tests
-│   └── integration/          # API, lifespan, and evidence-boundary tests
-├── docs/
-│   ├── ARCHITECTURE.md       # runtime and deployment deep dive
-│   ├── INITIATIVES.md        # Codex project initiative/session records
-│   ├── BUILD_SEQUENCE.md     # implementation sequence and GitHub/Codecov setup
-│   ├── RUNBOOK.md · CODEX_PROMPTS.md  # demo procedure and prompt records
-│   └── adr/                  # Architecture Decision Records 001–011
-├── notebooks/                # local bounded capture/review workflow + results record
-├── scripts/                  # check_openai_spend.py (read-only spend reconciliation)
-├── migrations/               # Alembic env + versions (schema and provenance revisions)
-├── submission/               # Developer Tools handoff, checklist, Devpost, demo script
-├── Dockerfile · docker-compose.yml   # Railway image + local API/PostgreSQL/frontend
-├── alembic.ini · Makefile · railway.json · codecov.yml  # tooling and deploy config
-├── pyproject.toml · uv.lock  # Python project + reproducible dependency lock
-├── .gitattributes            # pins evidence JSON to LF for byte-exact manifests
-└── .github/workflows/        # CI quality gate and tagged release workflow
-```
+Typed `backend/` (agents, core, models, fixtures), a Next.js `frontend/`, the
+thin-client `integrations/mcp/`, `tests/` (unit + integration), `docs/`
+(architecture, ADRs, initiative records), and `assets/` (architecture
+diagrams, brand assets, scrubbed evidence, screenshots). Full annotated tree:
+[README.md#project-structure](https://github.com/iarjunganesh/drift/blob/main/README.md#project-structure).
 
 ---
 
@@ -710,7 +643,7 @@ npm --prefix frontend ci
 npm --prefix frontend run build
 ```
 
-Pytest writes `coverage.xml`. CI uploads it with [codecov.yml](codecov.yml) to
+Pytest writes `coverage.xml`. CI uploads it with [codecov.yml](https://github.com/iarjunganesh/drift/blob/main/codecov.yml) to
 the repository-specific [Codecov report](https://codecov.io/gh/iarjunganesh/drift).
 
 ### Load & Resilience
@@ -727,7 +660,7 @@ before any production-readiness claim.
 
 GitHub `main`, the Railway API, and the Vercel frontend are published. The two
 repository-operations steps documented in
-[docs/BUILD_SEQUENCE.md](docs/BUILD_SEQUENCE.md#github-and-codecov-setup) are now
+[docs/BUILD_SEQUENCE.md](https://github.com/iarjunganesh/drift/blob/main/docs/BUILD_SEQUENCE.md#github-and-codecov-setup) are now
 complete:
 
 1. the `pytest` upload is confirmed on Codecov — the repository and `flag=pytest`
@@ -754,11 +687,11 @@ model-router boundary, architecture evidence, CI gates, and deployed Vercel
 frontend.
 
 **Shipped as a consumption channel (`v0.10.0`):** a thin-client MCP server
-(`integrations/mcp/`, [ADR-011](docs/adr/011-mcp-thin-client-layer.md)) exposing
+(`integrations/mcp/`, [ADR-011](https://github.com/iarjunganesh/drift/blob/main/docs/adr/011-mcp-thin-client-layer.md)) exposing
 `drift_briefing`, `drift_search`, and `ask_drift` over the existing public API —
 no credentials, nothing changed under `backend/`, fixture-verified at $0 with 40
 mocked-HTTP tests. See
-[Use DRIFT inside your AI assistant (MCP)](#use-drift-inside-your-ai-assistant-mcp).
+[Use DRIFT inside your AI assistant (MCP)](https://github.com/iarjunganesh/drift#use-drift-inside-your-ai-assistant-mcp).
 It is a channel, not new capability: the tools can offer nothing the public API
 does not.
 
@@ -786,9 +719,9 @@ does not.
   database-backed capture and its hosted search/chat smoke tests are complete);
 - record and submit the public narrated demo.
 
-Full decisions and sequencing live in [docs/adr/](docs/adr/),
-[docs/BUILD_SEQUENCE.md](docs/BUILD_SEQUENCE.md),
-[docs/INITIATIVES.md](docs/INITIATIVES.md), and [CHANGELOG.md](CHANGELOG.md).
+Full decisions and sequencing live in [docs/adr/](https://github.com/iarjunganesh/drift/tree/main/docs/adr/),
+[docs/BUILD_SEQUENCE.md](https://github.com/iarjunganesh/drift/blob/main/docs/BUILD_SEQUENCE.md),
+[docs/INITIATIVES.md](https://github.com/iarjunganesh/drift/blob/main/docs/INITIATIVES.md), and [CHANGELOG.md](https://github.com/iarjunganesh/drift/blob/main/CHANGELOG.md).
 
 ---
 
@@ -820,4 +753,4 @@ priorities, not automation triggers.
 > track. Human review remains required for source fidelity, prompt iteration,
 > final examples, and breaking or security-labelled results.
 
-See [LICENSE](LICENSE) for the MIT license.
+See [LICENSE](https://github.com/iarjunganesh/drift/blob/main/LICENSE) for the MIT license.

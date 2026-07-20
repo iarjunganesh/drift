@@ -9,8 +9,12 @@ a TTS-adjusted spoken variant so acronyms and version numbers read cleanly
 (N-C-C-L, V-L-L-M, "GPT five-point-six", "version zero-point-ten") while the
 on-screen script is unchanged.
 
-- `vo_01-hook … vo_09-close.mp3` — one clip per beat (~2:20 total), for precise
-  placement against the screen recordings.
+- `vo_00-repo-intro`, `vo_01-hook … vo_09-close.mp3`, `vo_02b-repo-revisit` —
+  one clip per beat (~2:43 total), for precise placement against the screen
+  recordings. `vo_00-repo-intro` and `vo_02b-repo-revisit` cover the two
+  GitHub-repo beats (cold open on badges/Problem/What DRIFT Does, and a brief
+  pre-briefing revisit) and are not yet generated as of this writing — run the
+  generator below, which skips existing clips and only synthesizes new ones.
 - `vo_full-reference.mp3` — the whole narration as one continuous track
   (reference/fallback).
 
@@ -22,7 +26,7 @@ run from the repo root:
 uv run python scripts/generate_demo_voiceover.py
 ```
 
-Cost ≈ $0.07 on OpenAI (`tts-1`, ~4.3K input characters). This is a direct
+Cost ≈ $0.08 on OpenAI (`tts-1`, ~5.3K input characters). This is a direct
 provider call outside the DRIFT `SpendGuard`/ledger, like
 `scripts/check_openai_spend.py`, and requires the TTS model to be enabled on
 the DRIFT project. The generator refuses to overwrite existing clips unless

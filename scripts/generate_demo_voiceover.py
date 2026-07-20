@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """One-off demo-voiceover generation for DRIFT.
 
-Generates the nine per-beat narration clips (`vo_01-hook` ... `vo_09-close`)
-plus a continuous `vo_full-reference.mp3` for the submission video, using
+Generates the eleven per-beat narration clips (`vo_00-repo-intro`,
+`vo_01-hook` ... `vo_02b-repo-revisit` ... `vo_09-close`) plus a continuous
+`vo_full-reference.mp3` for the submission video, using
 OpenAI text-to-speech. AI narration is explicitly allowed by the Devpost rules
 ("text-to-speech and AI narration tools are acceptable alternatives to
 recording yourself").
@@ -16,8 +17,8 @@ The API key is read from the OPENAI_API_KEY environment variable, or from the
 gitignored `.env` file at the repository root. Its value is never printed.
 This is a direct provider call outside the DRIFT `SpendGuard`/ledger, like
 `check_openai_spend.py`; the DRIFT project must have the TTS model enabled
-(the default is `tts-1`). Total input is ~4.3K characters, so a full run costs
-about $0.07 at `tts-1` rates ($0.015/1K chars).
+(the default is `tts-1`). Total input is ~5.3K characters, so a full run costs
+about $0.08 at `tts-1` rates ($0.015/1K chars).
 
 Usage:
     uv run python scripts/generate_demo_voiceover.py
@@ -48,6 +49,22 @@ DEFAULT_OUT = REPO_ROOT / "assets" / "demo-voiceover"
 # (name, display text from DEMO_SCRIPT.md, optional TTS-adjusted text)
 CLIPS: list[tuple[str, str, str | None]] = [
     (
+        "vo_00-repo-intro",
+        "DRIFT. Release intelligence for GPU and AI infrastructure — "
+        "cited, bounded, inspectable. Real repo, real CI, real coverage — "
+        "not slides. The problem: GPU and AI platforms move fast — "
+        "PyTorch, vLLM, NCCL — and the line that matters gets buried in "
+        "release notes. DRIFT turns that noise into one engineer-ready "
+        "answer: what changed, why it matters, what to check.",
+        "DRIFT. Release intelligence for GPU and AI infrastructure — "
+        "cited, bounded, inspectable. Real repo, real C-I, real coverage "
+        "— not slides. The problem: GPU and AI platforms move fast — "
+        "PyTorch, V-L-L-M, N-C-C-L — and the line that matters gets "
+        "buried in release notes. DRIFT turns that noise into one "
+        "engineer-ready answer: what changed, why it matters, what to "
+        "check.",
+    ),
+    (
         "vo_01-hook",
         "This is a real NCCL release — dozens of changes: dropped plugin "
         "APIs, new collective paths, new flags. Somewhere in here is the "
@@ -58,10 +75,17 @@ CLIPS: list[tuple[str, str, str | None]] = [
     ),
     (
         "vo_02-reveal",
-        "DRIFT exists to find it first. Release intelligence for GPU and AI "
-        "infrastructure — what changed, why it matters, what to check — "
-        "running live and hosted, right now.",
-        None,
+        "Here it is, live — not a mockup. Hosted right now, answering "
+        "with real reviewed insights over the public API.",
+        "Here it is, live — not a mockup. Hosted right now, answering "
+        "with real reviewed insights over the public A-P-I.",
+    ),
+    (
+        "vo_02b-repo-revisit",
+        "Before we get started — here's the DRIFT repo. Open source, "
+        "MIT licensed, real CI, real coverage, all live.",
+        "Before we get started — here's the DRIFT repo. Open source, "
+        "M-I-T licensed, real C-I, real coverage, all live.",
     ),
     (
         "vo_03-briefing",

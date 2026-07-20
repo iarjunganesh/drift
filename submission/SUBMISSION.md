@@ -3,8 +3,9 @@
 ## Required before submitting
 
 - [ ] Confirm **Developer Tools** as the single selected category.
-- [ ] Create a public repository with a license, or share the private repository
-      with `testing@devpost.com` and `build-week-event@openai.com`.
+- [x] Create a public repository with a license, or share the private repository
+      with `testing@devpost.com` and `build-week-event@openai.com`. Verified
+      via `gh repo view`: `isPrivate: false`, MIT license.
 - [x] Record all project initiative Session IDs in the README and initiative
       register:
       - Foundation: `019f61e7-1ea1-7742-9acc-99d62f39b888`
@@ -61,11 +62,15 @@
       `v0.9.1` (same day) and `v0.8.0` (2026-07-17) verifications are retained
       as historical records. Its
       public `/briefing` and OpenAPI contract omit private human review notes.
-- [ ] Upload a public YouTube video under three minutes with English narration.
-- [ ] Replace the placeholder with the final video URL:
-      `https://youtu.be/TBD` (see [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md)).
-- [ ] In the video, demonstrate the product working and explain both Codex and
-      GPT-5.6’s actual role.
+- [x] Upload a public YouTube video under three minutes with English narration.
+- [x] Replace the placeholder with the final video URL:
+      `https://youtu.be/6sbIz0ZR8Hw` (see [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md)).
+- [x] In the video, demonstrate the product working and explain both Codex and
+      GPT-5.6’s actual role. Verified frame-by-frame: Ask DRIFT grounded
+      answer, the Kubernetes decline, and MCP tool call all show the product
+      working; `vo_08-pipeline` narrates both Codex ("Codex shaped the
+      stages, safeguards, and tests") and GPT-5.6 ("GPT-5.6 powers
+      synthesis, verification, and grounded chat") by name.
 - [ ] Add the video URL, code URL, category, description, and Session ID in Devpost.
 
 See [`docs/INITIATIVES.md`](../docs/INITIATIVES.md) for initiative scope and

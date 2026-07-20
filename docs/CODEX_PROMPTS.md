@@ -243,7 +243,8 @@ rules/FAQ reference copy, not drift's submission draft.
 
 ## What's left for a human after all 7 prompts
 
-- Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6 usage)
+- Record and upload the demo video (<3 min, narrated, covers Codex + GPT-5.6
+  usage) — done: published at <https://youtu.be/6sbIz0ZR8Hw>, 2:45 runtime.
 - Confirm which supplied initiative is the primary `/feedback` session for the
   Devpost form; retain all twelve IDs in the README, changelog, and submission
    notes.
