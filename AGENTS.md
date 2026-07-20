@@ -6,7 +6,12 @@ DRIFT is release intelligence for GPU and AI-infrastructure teams. It turns
 primary release notes into cited, confidence-labelled, engineer-ready
 answers: what changed, why it matters, and what to check next.
 
-**Current phase:** the deployed Railway/Vercel app is `v0.10.2`, verified live on
+**Current phase:** the current source release is `v1.0.0` — the
+submission-final version bump (demo video published, submission docs
+synced); it adds no capture, Insight, claim, or provider path, and
+`backend/`/`frontend/`/`integrations/` behavior is unchanged from `v0.10.2`.
+It is not yet verified as the hosted application — pending push and
+redeploy. The deployed Railway/Vercel app is still `v0.10.2`, verified live on
 2026-07-19 — `/health` reports `0.10.2` in `DRIFT_MODE=live`, `/docs`
 returns `200`, and `/briefing?top_n=10` returns the five reviewed Tier.FINAL
 Insights (10, 11, 13, 15, 16) with no review notes and the corrected
@@ -78,9 +83,11 @@ subsequently deployed and verified live on 2026-07-18, a VS Code MCP client
 exercised the hosted `/briefing`, `/search`, and `/chat` (the four client
 captures are committed to the README gallery, with the credential-free
 `.vscode/mcp.json` configuration), and the source release after that was
-`v0.10.1` (this evidence/documentation patch). The current source release is
+`v0.10.1` (this evidence/documentation patch), and after that
 `v0.10.2` (ADR-012's deterministic `upstream_release_type` classification,
-applied to the three affected reviewed Insights on 2026-07-19). The bounded
+applied to the three affected reviewed Insights on 2026-07-19). The current
+source release is `v1.0.0` (the submission-final version bump; no capture,
+Insight, claim, or provider behavior changed). The bounded
 scrubbed MCP response archive with its SHA-256 manifest remains the pending
 MCP operator gate.
 
@@ -307,8 +314,11 @@ Railway FastAPI service built from the repository root with `Dockerfile` and
 `railway.json`. The public frontend is
 `https://dr1ftless.vercel.app` and the API is
 `https://drift-api-prod.up.railway.app`. The current source version is
-`v0.10.2` and the deployed build now matches it: on 2026-07-19, after the
-`v0.10.2` commit reached `main`, Railway auto-deployed and `/health` reported
+`v1.0.0` (the submission-final version bump; no capture, Insight, claim, or
+provider behavior changed from `v0.10.2`). The deployed build does not yet
+match it — pending push and redeploy. The last verified deployed build was
+`v0.10.2`: on 2026-07-19, after the `v0.10.2` commit reached `main`, Railway
+auto-deployed and `/health` reported
 `0.10.2`, `/docs` returned `200`, and `/briefing?top_n=10` returned exactly
 the five reviewed Tier.FINAL Insights (10, 11, 13, 15, 16) with no review
 notes and the corrected `upstream_release_type` values (JAX/TensorRT

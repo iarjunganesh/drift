@@ -116,7 +116,7 @@ class Settings:
         "DRIFT_SPEND_LEDGER_PATH", str(REPOSITORY_ROOT / ".drift" / "spend-ledger.json")
     )
     app_name: str = "DRIFT"
-    app_version: str = "0.10.2"
+    app_version: str = "1.0.0"
 
     def validate(self) -> None:
         if self.mode not in {"fixture", "live"}:

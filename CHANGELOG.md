@@ -10,64 +10,59 @@ the annotated `v0.1.0` tag.
 
 ## Current source release
 
-`v0.10.2` is the current source release. It adds a deterministic
-`upstream_release_type` classification: previously, that field was `unknown`
-for any Insight whose upstream release notes did not explicitly state their
-own release shape (per the model instruction, "use unknown unless the source
-itself states it") — this was working as designed, not a bug, but three of
-the five reviewed Insights (JAX, NCCL, TensorRT) had no primary-source
-statement to draw on and so showed `unknown` even though their version
-history could answer the question. `backend/core/versioning.py` now
-mechanically diffs a release's version tag against the immediately prior tag
-on the same public GitHub feed — never a model guess — and
-`scripts/backfill_upstream_release_type.py` applied that diff to the three
-`unknown` Insights (JAX → `minor`, NCCL → `patch`, TensorRT → `minor`) via a
-read-only-by-default script, dry-run first, only ever filling a genuine
-`unknown` gap and never overwriting an explicit source-stated value. See
-[ADR-012](docs/adr/012-deterministic-version-classification.md).
+`v1.0.0` is the current source release — the submission-final version bump.
+It adds no capture, Insight, claim, or provider path: the reviewed Tier.FINAL
+Insight set (10, 11, 13, 15, and 16) is unchanged, and `backend/`,
+`frontend/`, and `integrations/` behavior is identical to `v0.10.2`. The bump
+exists to mark the judge path frozen and the Devpost Developer Tools
+submission complete: the public demo video is published
+(<https://youtu.be/6sbIz0ZR8Hw>, 2:45, frame-by-frame verified against
+`submission/DEMO_SCRIPT.md`), every `youtu.be/TBD` placeholder is replaced
+across the README and submission documents, and `submission/DEVPOST_README.md`
+mirrors the README with every relative path resolved to an absolute GitHub
+URL for Devpost's description field. See `submission/SUBMISSION.md` and
+`docs/BUILD_SEQUENCE.md`'s Day 9 checklist for the itemized, verified
+submission gates.
 
-`v0.10.1` (prior release) commits the VS Code MCP client evidence captured
-against the deployed `v0.10.0` API (four gallery screenshots plus the
-credential-free `.vscode/mcp.json` client configuration), adds the demo
-production shooting script and the nine-clip `tts-1` narration track, and
-fixes a `/chat` grounding bug: a genuine decline (the model reporting zero
-`grounded_insight_ids`) was falling back to citing every retrieved insight
-instead of none, so the API returned "Source" links and grounded-insight IDs
-alongside an answer that used no evidence.
+## [1.0.0] - 2026-07-20
 
-Railway auto-deployed from this release's commit; on 2026-07-19, hosted
-`/health` reported `0.10.2` (`DRIFT_MODE=live`), `/docs` returned `200`,
-`/briefing?top_n=10` returned exactly the five reviewed Tier.FINAL Insights
-with no review notes and the corrected `upstream_release_type` values, and
-Vercel-origin CORS allowed `GET, POST`. The three `upstream_release_type`
-corrections were applied directly to the live database ahead of the code
-redeploy. The bounded scrubbed MCP response archive and SHA-256 manifest
-remain the pending
-operator gate.
+### Submission-final version bump — 2026-07-20
 
-## Targeted releases — planned, not released
+- Bumped `pyproject.toml`, `backend/core/config.py` (`app_version`),
+  `frontend/package.json`/`package-lock.json`, and the `/health` version
+  assertion in `tests/integration/test_api.py` together, per `AGENTS.md`'s
+  mandatory version-synchronization rule. No other backend or frontend
+  behavior changed; `ruff`, `mypy`, the full 189-test/100%-coverage suite,
+  and the frontend build all pass unchanged.
+- Published the public demo video: <https://youtu.be/6sbIz0ZR8Hw> (2:45),
+  verified frame-by-frame against every beat in
+  `submission/DEMO_SCRIPT.md` — correct beat order, the Codex
+  sessions-list-then-real-content cut, the two-diagram architecture split,
+  the Codecov beat, and the closing URL fade-in are all confirmed present.
+- Added two narration beats (`vo_00-repo-intro`, `vo_02b-repo-revisit`) and
+  rewrote `vo_02-reveal` to remove a redundant second DRIFT introduction.
+- Added editor-ready image assets fitted to true 1920×1080 RGB (no alpha
+  channel, no corrupted `pHYs` metadata — both caused a black-import bug in
+  a video editor): the banner, both architecture diagrams, and two GitHub
+  repo screenshots.
+- Added `submission/DEVPOST_README.md`, a Devpost-compatible mirror of the
+  README with every relative path resolved to an absolute GitHub URL, since
+  Devpost's description field has no repo-root context and a
+  50,000-character cap.
+- Synced README, `submission/DEMO_SCRIPT.md`, `submission/SUBMISSION.md`,
+  `docs/BUILD_SEQUENCE.md`, and `docs/CODEX_PROMPTS.md`: replaced every
+  `youtu.be/TBD` placeholder, pointed the watch badge at the video directly,
+  and checked off only checklist items with verified evidence (`ffprobe`
+  specs, `gh repo view`, frame-by-frame review) rather than by assumption.
 
-### `v1.0.0` — final submission release
+### Release boundary
 
-Targeted scope:
-
-- final product and documentation polish after the evidence decision;
-- final local/hosted verification of the judge path and bounded claims;
-- a public English YouTube demo under three minutes showing the working
-  workflow, citations, verification, Codex contribution, and GPT-5.6 role; and
-- final README, submission notes, Devpost metadata, and video-link replacement.
-
-`v1.0.0` is the submission-final target, not permission to add further feature
-surfaces such as tool calling, IDE integration, or a release timeline. (The MCP
-consumption channel shipped in `v0.10.0` below; `v1.0.0` still adds no new
-capture, provider, or write path.)
-
-The demo groundwork is already in the tree: `submission/DEMO_SCRIPT.md` is a
-beat-timed production shooting script, and the nine-clip `tts-1` narration
-plus continuous reference track are generated at `assets/demo-voiceover/` by
-`scripts/generate_demo_voiceover.py` (~$0.07, outside the DRIFT spend guard).
-Recording the three silent screen takes, assembling the cut, the public
-YouTube upload, and the link replacement remain the operator gates.
+- Adds no capture, Insight, claim, or provider path; the reviewed Tier.FINAL
+  Insight set (10, 11, 13, 15, and 16) is unchanged. This is a version and
+  documentation release, not a feature release — no new capture surface,
+  tool calling, or IDE integration was added. The bounded scrubbed MCP
+  response archive and SHA-256 manifest remain the pending operator gate,
+  unchanged from `v0.10.2`.
 
 ## [0.10.2] - 2026-07-19
 
@@ -997,6 +992,7 @@ with explicit live-path architecture and publication-ready quality gates.
   `019f61fc-c32e-7d92-9d2e-0bd9083d08e7`.
 - Full scope and submission guidance: [`docs/INITIATIVES.md`](docs/INITIATIVES.md).
 
+[1.0.0]: #100---2026-07-20
 [0.10.2]: #0102---2026-07-19
 [0.10.1]: #0101---2026-07-19
 [0.10.0]: #0100---2026-07-18
