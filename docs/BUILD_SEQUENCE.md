@@ -90,11 +90,11 @@ AI-infrastructure release intelligence.
 - [x] Demo video (<3 min, public YouTube, must narrate Codex AND
       GPT-5.6 usage per submission requirements) — published at
       <https://youtu.be/6sbIz0ZR8Hw>, 2:45 runtime.
-- [ ] Submit under Developer Tools track
+- [x] Submit under Developer Tools track — submitted.
 - [x] Repo public (with license) OR shared with testing@devpost.com
       and build-week-event@openai.com — verified via `gh repo view`:
       `isPrivate: false`, MIT license.
-- [ ] Submit early
+- [x] Submit early — submitted.
 
 ## Targeted release path — after the current hosted `v0.10.0`
 
@@ -130,10 +130,11 @@ AI-infrastructure release intelligence.
       reviewed Insights with no self-declared source statement (JAX, NCCL,
       TensorRT), written directly to the live database. Not yet wired into
       `backend.pipeline` for future captures — deliberately out of scope.
-- [ ] `v1.0.0`: freeze the final judge path and finish the Devpost submission
+- [x] `v1.0.0`: freeze the final judge path and finish the Devpost submission
       records. The under-three-minute public demo video is done — published
-      at <https://youtu.be/6sbIz0ZR8Hw> (2:45), and the placeholder is
-      replaced everywhere.
+      at <https://youtu.be/6sbIz0ZR8Hw> (2:45), placeholder replaced
+      everywhere, and the Devpost submission (Developer Tools track) is
+      submitted.
 
 See the planned-release record in [`CHANGELOG.md`](../CHANGELOG.md). These are
 targets, not current version claims.

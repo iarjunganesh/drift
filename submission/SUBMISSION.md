@@ -2,7 +2,7 @@
 
 ## Required before submitting
 
-- [ ] Confirm **Developer Tools** as the single selected category.
+- [x] Confirm **Developer Tools** as the single selected category.
 - [x] Create a public repository with a license, or share the private repository
       with `testing@devpost.com` and `build-week-event@openai.com`. Verified
       via `gh repo view`: `isPrivate: false`, MIT license.
@@ -71,7 +71,7 @@
       working; `vo_08-pipeline` narrates both Codex ("Codex shaped the
       stages, safeguards, and tests") and GPT-5.6 ("GPT-5.6 powers
       synthesis, verification, and grounded chat") by name.
-- [ ] Add the video URL, code URL, category, description, and Session ID in Devpost.
+- [x] Add the video URL, code URL, category, description, and Session ID in Devpost.
 
 See [`docs/INITIATIVES.md`](../docs/INITIATIVES.md) for initiative scope and
 the distinction between the primary core-functionality session and the earlier
